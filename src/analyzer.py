@@ -78,7 +78,14 @@ class IMDb_Analyzer():
         seasons_count = self._get_seasons_count(series_name)
         series_ratings = SeriesRatings(overall_rating=overall_rating,
                                        seasons_count=seasons_count)
-        print(series_ratings)
+        self._navigate_to_episode_guide(series_name)
+
+    @_Decorators.catch_no_such_element_exception
+    @_Decorators.execute_in_series_homepage
+    def _navigate_to_episode_guide(self, series_name: str) -> None:
+        self.__driver.find_element_by_css_selector(
+            consts.EPISODE_GUIDE_DIV_CSL
+        ).click()
 
     @_Decorators.catch_no_such_element_exception
     @_Decorators.execute_in_series_homepage
