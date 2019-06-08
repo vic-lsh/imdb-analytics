@@ -1,4 +1,6 @@
 import functools
+import sys
+
 from selenium import webdriver
 from selenium.common.exceptions import NoSuchElementException
 from selenium.webdriver.common.keys import Keys
@@ -46,6 +48,7 @@ class IMDb_Analyzer():
                         raise NoSeriesNameAsFirstArgException
                 except NoSuchElementException:
                     print("Series title not found")
+                    sys.exit(1)
                 return func(self, *args, **kwargs)
             return wrapper
 
@@ -55,6 +58,7 @@ class IMDb_Analyzer():
                     return elem_accessing_func(*args, **kwargs)
                 except NoSuchElementException:
                     print("No such element.")
+                    sys.exit(1)
             return wrapper
 
     def __init__(self):
