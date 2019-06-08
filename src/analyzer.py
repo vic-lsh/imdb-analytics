@@ -11,6 +11,52 @@ from series_ratings import SeriesRatings
 class IMDb_Analyzer():
     """Analyzes TV series based on data from IMDb"""
 
+    class _Decorators():
+        def execute_in_series_homepage(func):
+            """Decorator that enforces the wrapped function to be run only if 
+            the driver is on the TV series' home page.
+
+            Raises: 
+                NoSuchElementException:
+                    if the driver is not on the series' home page.
+                NoSeriesNameAsFirstArgException:
+                    if the wrapped function does not provide `series_name` as
+                    its first argument, without which the decorator cannot check.
+            """
+
+            def wrapper(self, *args, **kwargs):
+                class NoSeriesNameAsFirstArgException(Exception):
+                    """To use the `catch_no_such_element_exception` decorator,
+                    the wrapped function must provide `series_name` as its first argument.
+                    """
+
+                    def __init__(self, message=None, payload=None):
+                        self.message = "Please provide `series name` as your first argument."
+                        self.payload = payload
+
+                    def __str__(self):
+                        return str(self.message)
+                try:
+                    series_header = self._IMDb_Analyzer__driver.find_element_by_css_selector(
+                        consts.SERIES_HEADER_CSL
+                    )
+                    if len(args) >= 1:
+                        assert args[0] in series_header.text
+                    else:
+                        raise NoSeriesNameAsFirstArgException
+                except NoSuchElementException:
+                    print("Series title not found")
+                return func(self, *args, **kwargs)
+            return wrapper
+
+        def catch_no_such_element_exception(elem_accessing_func):
+            def wrapper(*args, **kwargs):
+                try:
+                    return elem_accessing_func(*args, **kwargs)
+                except NoSuchElementException:
+                    print("No such element.")
+            return wrapper
+
     def __init__(self):
         chrome_options = Options()
         chrome_options.add_argument("--headless")
@@ -18,19 +64,6 @@ class IMDb_Analyzer():
 
     def __del__(self):
         self.__driver.close()
-
-    def execute_in_series_homepage(func):
-        # try:
-        #     series_header = self.__driver.find_element_by_css_selector(
-        #         consts.SERIES_HEADER_CSL
-        #     )
-        #     assert series_name in series_header.text
-        # except NoSuchElementException:
-        #     print("Series title not found")
-        def wrapper(*args, **kwargs):
-            print(args)
-            func(*args, **kwargs)
-        return wrapper
 
     def query(self, series_name: str) -> None:
         """Query a TV series's ratings with its name.
@@ -43,7 +76,8 @@ class IMDb_Analyzer():
                                        seasons_count=seasons_count)
         print(series_ratings)
 
-    # @execute_in_series_homepage
+    @_Decorators.catch_no_such_element_exception
+    @_Decorators.execute_in_series_homepage
     def _get_seasons_count(self, series_name: str) -> int:
         seasons_count_raw = self.__driver.find_element_by_css_selector(
             consts.SEASONS_COUNT_CSL
@@ -51,6 +85,8 @@ class IMDb_Analyzer():
         seasons_count = int(seasons_count_raw.text)
         return seasons_count
 
+    @_Decorators.catch_no_such_element_exception
+    @_Decorators.execute_in_series_homepage
     def _get_overall_rating(self, series_name: str) -> float:
         overall_rating_raw = self.__driver.find_element_by_css_selector(
             consts.OVERALL_RATINGS_CSL
