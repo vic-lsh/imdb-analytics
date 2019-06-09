@@ -4,18 +4,19 @@ from typing import List
 class SeriesRatings():
     """Data structure that contains rating-related info on a TV series"""
 
-    def __init__(self, overall_rating: float = None, seasons_count: int = None):
-        self.__overall_rating = overall_rating
+    def __init__(self, series_name: str, overall_rating: float = None, seasons_count: int = None):
+        self.__SERIES_NAME = series_name
+        self.__OVERALL_RATING = overall_rating
         self.__SEASONS_COUNT = seasons_count
         self.__episode_ratings = {}
         self.__max_episode_num = 0
 
     def add_overall_rating(self, rating: float) -> None:
         """Add overall rating of a TV series"""
-        if self.__overall_rating != None:
+        if self.__OVERALL_RATING != None:
             print("Warning: overall rating is being modified.",
                   "Once set, overall rating should not be modified.")
-        self.__overall_rating = rating
+        self.__OVERALL_RATING = rating
 
     def set_season_count(self, seasons_count: int) -> None:
         """Set the number of seasons for a TV series.
@@ -38,7 +39,8 @@ class SeriesRatings():
 
     def __repr__(self):
         reprs = []
-        reprs.append("Overall rating: \t{}".format(self.__overall_rating))
+        reprs.append("******************** {} ********************".format(self.__SERIES_NAME))
+        reprs.append("Overall rating: \t{}".format(self.__OVERALL_RATING))
         reprs.append("Seasons count: \t{}".format(self.__SEASONS_COUNT))
         reprs.append(" \t" + "   ".join(["E{}".format(ep_num)
                                         for ep_num in range(self.__max_episode_num)]))
