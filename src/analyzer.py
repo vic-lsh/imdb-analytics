@@ -15,7 +15,7 @@ from selenium.webdriver.support.select import Select
 from selenium.webdriver.support.ui import WebDriverWait
 
 from constants import IMDb_Constants as consts
-from series_ratings import SeriesRatings
+from ratings import SeriesRatings
 from utils import timeout
 
 
