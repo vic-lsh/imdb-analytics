@@ -28,7 +28,9 @@ class SeriesRatings():
             self.__SEASONS_COUNT = seasons_count
 
     def add_season_ratings(self, season_num: int, season_ratings: List[float]) -> None:
-        if self.__episode_ratings[season_num] != None:
+        print("Season {}: {}".format(season_num, str(season_ratings)))
+        if season_num in self.__episode_ratings and \
+                self.__episode_ratings[season_num] != None:
             print("Warning: ratings for season {} has been set.".format(season_num),
                   "Modification of season warnings usually indicates a bug.")
         self.__episode_ratings[season_num] = season_ratings
