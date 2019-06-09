@@ -23,7 +23,7 @@ class IMDb_Constants():
     SERIES_HEADER_CSL = ".title_wrapper > h1:nth-child(1)"
     OVERALL_RATINGS_CSL = ".ratingValue > strong:nth-child(1) > span:nth-child(1)"
     SEASONS_COUNT_CSL = ".seasons-and-year-nav > div:nth-child(4) > a:nth-child(1)"
-    EPISODE_GUIDE_DIV_CSL = ".bp_content"
+    EPISODE_GUIDE_DIV_CSL = "a.bp_item"
 
     # TV Series episode guide page
     SEASONS_DROPDOWN_CSL = "#bySeason"
