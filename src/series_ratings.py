@@ -1,10 +1,14 @@
+from typing import List
+
+
 class SeriesRatings():
     """Data structure that contains rating-related info on a TV series"""
 
     def __init__(self, overall_rating: float = None, seasons_count: int = None):
         self.__overall_rating = overall_rating
         self.__SEASONS_COUNT = seasons_count
-        self.__episode_ratings = []
+        self.__episode_ratings = {}
+        self.__max_episode_num = 0
 
     def add_overall_rating(self, rating: float) -> None:
         """Add overall rating of a TV series"""
@@ -22,6 +26,14 @@ class SeriesRatings():
                   "and cannot be modified once it has been set.")
         else:
             self.__SEASONS_COUNT = seasons_count
+
+    def add_season_ratings(self, season_num: int, season_ratings: List[float]) -> None:
+        if self.__episode_ratings[season_num] != None:
+            print("Warning: ratings for season {} has been set.".format(season_num),
+                  "Modification of season warnings usually indicates a bug.")
+        self.__episode_ratings[season_num] = season_ratings
+        if len(season_ratings) > self.__max_episode_num:
+            self.__max_episode_num = len(season_ratings)
 
     def __repr__(self):
         reprs = []
