@@ -208,7 +208,6 @@ class IMDb_Analyzer():
         serach_bar.clear()
         serach_bar.send_keys(name)
         serach_bar.send_keys(Keys.ENTER)
-        # assert "Find - IMDb" in self.__driver.title
         first_result_box = self.__driver.find_element_by_css_selector(
             consts.SEARCH_RESULT_FIRST_FULL_BOX_CSL
         )
