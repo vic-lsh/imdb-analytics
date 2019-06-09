@@ -2,6 +2,7 @@ import logging
 
 from analyzer import IMDb_Analyzer
 from config import AnalyzerConfig
+from ratings import SeriesRatingsCollection
 from utils import timer
 
 logger = logging.getLogger(__name__)
@@ -23,10 +24,11 @@ logger.addHandler(stream_handler)
 @timer(in_seconds=True)
 def main():
     config = AnalyzerConfig()
+    ratings_collection = SeriesRatingsCollection()
     analyzer = IMDb_Analyzer(config)
     for tv_series in config.tv_series_names:
         ratings = analyzer.query(tv_series)
-        print(ratings)
+        ratings_collection.add(ratings)
 
 
 if __name__ == "__main__":
