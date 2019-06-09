@@ -2,6 +2,7 @@ from datetime import datetime
 import functools
 import sys
 import time
+from typing import List
 
 from selenium import webdriver
 from selenium.common.exceptions import NoSuchElementException, StaleElementReferenceException
@@ -20,10 +21,13 @@ from series_ratings import SeriesRatings
 class IMDb_Analyzer():
     """Analyzes TV series based on data from IMDb"""
 
-    class ElementStalessTimeoutException:
+    class ElementStalessTimeoutException(Exception):
         """Exception raised when element remains stale (accessing it raises 
         StaleElementReferenceException) for `timeout` seconds.
         """
+        pass
+
+    class URLRedirectionTimeoutException(Exception):
         pass
 
     class _Decorators():
@@ -80,10 +84,34 @@ class IMDb_Analyzer():
                 return func(self, *args, **kwargs)
             return wrapper
 
+        def wait_to_execute_in_series_season_page(func):
+            """Decorator that enforces the wrapped function to be executed
+            when the driver is on one of the season pages of a TV Series.
+            """
+
+            def wrapper(self, *args, **kwargs):
+                start_time = datetime.now()
+                while True:
+                    try:
+                        url = self._IMDb_Analyzer__driver.current_url
+                        error_msg = "Driver is currently not on a Season page"
+                        # print(url)
+                        assert(
+                            consts.EPISODE_GUIDE_SEASON_PAGE_IDENTIFIER in url
+                        ), error_msg
+                        return func(self, *args, **kwargs)
+                    except Exception:
+                        continue
+                    finally:
+                        if (datetime.now() - start_time).seconds > self._IMDb_Analyzer__DELAY_SECS:
+                            raise URLRedirectionTimeoutException
+                            break
+            return wrapper
+
         def catch_no_such_element_exception(elem_accessing_func):
-            def wrapper(*args, **kwargs):
+            def wrapper(self, *args, **kwargs):
                 try:
-                    return elem_accessing_func(*args, **kwargs)
+                    return elem_accessing_func(self, *args, **kwargs)
                 except NoSuchElementException:
                     print("No such element.")
                     sys.exit(1)
@@ -93,6 +121,7 @@ class IMDb_Analyzer():
         chrome_options = Options()
         # chrome_options.add_argument("--headless")
         self.__driver = webdriver.Chrome(options=chrome_options)
+        self.__DELAY_SECS = 10
 
     def __del__(self):
         self.__driver.close()
@@ -107,16 +136,16 @@ class IMDb_Analyzer():
         series_ratings = SeriesRatings(overall_rating=overall_rating,
                                        seasons_count=seasons_count)
         self._navigate_to_episode_guide(series_name)
-        self._query_episode_ratings()
+        self._query_episode_ratings(series_ratings)
 
     @_Decorators.catch_no_such_element_exception
     @_Decorators.execute_in_series_episode_guide
-    def _query_episode_ratings(self) -> None:
+    def _query_episode_ratings(self, series_ratings: SeriesRatings) -> None:
         season_dropdown = Select(self.__driver.find_element_by_css_selector(
             consts.SEASONS_DROPDOWN_CSL
         ))
         seasons = season_dropdown.options
-        for index in range(0, len(seasons) - 1):
+        for index in range(0, len(seasons)):
             TIMEOUT_SECS = 10
             start_time = datetime.now()
             while True:
@@ -133,6 +162,23 @@ class IMDb_Analyzer():
                     if (datetime.now() - start_time).seconds > TIMEOUT_SECS:
                         raise ElementStalessTimeoutException
                         break
+            season_ratings = self._query_ratings_in_season()
+            series_ratings.add_season_ratings((index + 1), season_ratings)
+
+    @_Decorators.wait_to_execute_in_series_season_page
+    def _query_ratings_in_season(self) -> List[float]:
+        ratings = []
+        rating_divs = WebDriverWait(self.__driver, self.__DELAY_SECS).until(
+            EC.presence_of_all_elements_located(
+                (By.CSS_SELECTOR, consts.EPISODE_RATINGS_CSL)
+            )
+        )
+        episodes_num = len(rating_divs)
+        for rating in rating_divs:
+            ratings.append(float(rating.text))
+        assert episodes_num == len(ratings), \
+            "# of episodes and # of ratings do not match"
+        return ratings
 
     @_Decorators.catch_no_such_element_exception
     @_Decorators.execute_in_series_homepage
