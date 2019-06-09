@@ -115,6 +115,9 @@ class IMDb_Analyzer():
         chrome_options = Options()
         # chrome_options.add_argument("--headless")
         self.__driver = webdriver.Chrome(options=chrome_options)
+        self.__PAGE_LOAD_TIMEOUT = 10
+        self.__PAGE_LOAD_TIMEOUT_RETRY = 3
+        self.__driver.set_page_load_timeout(self.__PAGE_LOAD_TIMEOUT)
         self.__DELAY_SECS = 10
 
     def __del__(self):
@@ -202,7 +205,7 @@ class IMDb_Analyzer():
         return overall_rating
 
     def _navigate_to_series(self, name: str):
-        self.__driver.get(consts.HOMEPAGE_URL)
+        self._load_url(consts.HOMEPAGE_URL)
         serach_bar = self.__driver.find_element_by_css_selector(
             consts.SEARCH_BAR_CSL
         )
@@ -218,3 +221,14 @@ class IMDb_Analyzer():
         )
         assert name in first_result.text
         first_result.click()
+
+    def _load_url(self, url: str):
+        count = 1
+        while count <= self.__PAGE_LOAD_TIMEOUT_RETRY:
+            try:
+                self.__driver.get(url)
+            except TimeoutException:
+                print("Timeout loading {}, retrying attempt {}...".format(url, count))
+                continue
+            finally:
+                count += 1
