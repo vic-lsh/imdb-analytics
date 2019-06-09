@@ -19,3 +19,22 @@ def timer(in_seconds=False):
                 print("Program runtime: {}".format(duration))
         return wrapper
     return _timer
+
+def timeout(delay, ExceptionType=Exception):
+    def _timeout(func):
+        @functools.wraps(func)
+        def wrapper(self, *args, **kwargs):
+            start = datetime.now()
+            while True:
+                try:
+                    ret = func(self, *args, **kwargs)
+                except ExceptionType:
+                    continue
+                finally:
+                    now = datetime.now()
+                    if (now - start).seconds > delay:
+                        raise TimeoutError
+                        break
+            return ret
+        return wrapper
+    return _timeout

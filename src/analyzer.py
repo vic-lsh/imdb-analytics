@@ -16,6 +16,7 @@ from selenium.webdriver.support.ui import WebDriverWait
 
 from constants import IMDb_Constants as consts
 from series_ratings import SeriesRatings
+from utils import timeout
 
 
 class IMDb_Analyzer():
@@ -31,6 +32,7 @@ class IMDb_Analyzer():
         pass
 
     class _Decorators():
+
         def execute_in_series_homepage(func):
             """Decorator that enforces the wrapped function to be run only if 
             the driver is on the TV series' home page.
@@ -90,22 +92,14 @@ class IMDb_Analyzer():
             """
 
             def wrapper(self, *args, **kwargs):
-                start_time = datetime.now()
-                while True:
-                    try:
-                        url = self._IMDb_Analyzer__driver.current_url
-                        error_msg = "Driver is currently not on a Season page"
-                        # print(url)
-                        assert(
-                            consts.EPISODE_GUIDE_SEASON_PAGE_IDENTIFIER in url
-                        ), error_msg
-                        return func(self, *args, **kwargs)
-                    except Exception:
-                        continue
-                    finally:
-                        if (datetime.now() - start_time).seconds > self._IMDb_Analyzer__DELAY_SECS:
-                            raise URLRedirectionTimeoutException
-                            break
+                @timeout(delay=self._IMDb_Analyzer__DELAY_SECS)
+                def is_on_season_page():
+                    url = self._IMDb_Analyzer__driver.current_url
+                    error_msg = "Driver is currently not on a Season page"
+                    assert(
+                        consts.EPISODE_GUIDE_SEASON_PAGE_IDENTIFIER in url
+                    ), error_msg
+                return func(self, *args, **kwargs)
             return wrapper
 
         def catch_no_such_element_exception(elem_accessing_func):
