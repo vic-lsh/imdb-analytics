@@ -29,3 +29,7 @@ class IMDb_Constants():
     SEASONS_DROPDOWN_CSL = "#bySeason"
     SEASONS_DROPDOWN_ID = "bySeason"
     EPISODES_GUIDE_IDENTIFIER = "episodes?ref_=tt_ov_epl"
+
+    # TV Series season page
+    EPISODE_GUIDE_SEASON_PAGE_IDENTIFIER = "episodes?season="
+    EPISODE_RATINGS_CSL = "div.ipl-rating-star.small > span.ipl-rating-star__rating"
