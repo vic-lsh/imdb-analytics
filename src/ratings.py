@@ -28,7 +28,6 @@ class SeriesRatings():
             self.__SEASONS_COUNT = seasons_count
 
     def add_season_ratings(self, season_num: int, season_ratings: List[float]) -> None:
-        print("Season {}: {}".format(season_num, str(season_ratings)))
         if season_num in self.__episode_ratings and \
                 self.__episode_ratings[season_num] != None:
             print("Warning: ratings for season {} has been set.".format(season_num),
@@ -41,4 +40,8 @@ class SeriesRatings():
         reprs = []
         reprs.append("Overall rating: \t{}".format(self.__overall_rating))
         reprs.append("Seasons count: \t{}".format(self.__SEASONS_COUNT))
+        reprs.append(" \t" + "   ".join(["E{}".format(ep_num)
+                                        for ep_num in range(self.__max_episode_num)]))
+        for season_num, ratings in self.__episode_ratings.items():
+            reprs.append("S{}\t".format(season_num) + "  ".join(map(str, ratings)))
         return "\n".join(reprs)
