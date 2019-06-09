@@ -1,6 +1,5 @@
 from datetime import datetime
 import functools
-import sys
 import time
 from typing import List
 
