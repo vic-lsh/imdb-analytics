@@ -71,7 +71,7 @@ class IMDb_Analyzer():
                         raise NoSeriesNameAsFirstArgException
                 except NoSuchElementException:
                     print("Series title not found")
-                    sys.exit(1)
+                    quit()
                 return func(self, *args, **kwargs)
             return wrapper
 
@@ -109,7 +109,7 @@ class IMDb_Analyzer():
                     return elem_accessing_func(self, *args, **kwargs)
                 except NoSuchElementException:
                     print("No such element.")
-                    sys.exit(1)
+                    quit()
             return wrapper
 
     def __init__(self, config: AnalyzerConfig):
@@ -163,22 +163,27 @@ class IMDb_Analyzer():
                     if (datetime.now() - start_time).seconds > TIMEOUT_SECS:
                         raise ElementStalessTimeoutException
                         break
-            season_ratings = self._query_ratings_in_season()
-            series_ratings.add_season_ratings((index + 1), season_ratings)
+            season_num = index + 1
+            season_ratings = self._query_ratings_in_season(season_num)
+            series_ratings.add_season_ratings(season_num, season_ratings)
 
     @_Decorators.wait_to_execute_in_series_season_page
-    def _query_ratings_in_season(self) -> List[float]:
+    def _query_ratings_in_season(self, season_num: int) -> List[float]:
         ratings = []
-        rating_divs = WebDriverWait(self.__driver, self.__DELAY_SECS).until(
-            EC.presence_of_all_elements_located(
-                (By.CSS_SELECTOR, consts.EPISODE_RATINGS_CSL)
+        try:
+            rating_divs = WebDriverWait(self.__driver, self.__DELAY_SECS).until(
+                EC.presence_of_all_elements_located(
+                    (By.CSS_SELECTOR, consts.EPISODE_RATINGS_CSL)
+                )
             )
-        )
-        episodes_num = len(rating_divs)
-        for rating in rating_divs:
-            ratings.append(float(rating.text))
-        assert episodes_num == len(ratings), \
-            "# of episodes and # of ratings do not match"
+            episodes_num = len(rating_divs)
+            for rating in rating_divs:
+                ratings.append(float(rating.text))
+            assert episodes_num == len(ratings), \
+                "# of episodes and # of ratings do not match"
+        except TimeoutException:
+            print("Timeout in getting ratings for season {}. ".format(season_num),
+                  "This usually indicates this season has not aired yet.")
         return ratings
 
     @_Decorators.catch_no_such_element_exception
@@ -217,7 +222,8 @@ class IMDb_Analyzer():
         first_result_box = self.__driver.find_element_by_css_selector(
             consts.SEARCH_RESULT_FIRST_FULL_BOX_CSL
         )
-        assert any(ID in first_result_box.text for ID in consts.TV_SERIES_IDENTIFIERS)
+        assert any(
+            ID in first_result_box.text for ID in consts.TV_SERIES_IDENTIFIERS)
         first_result = self.__driver.find_element_by_css_selector(
             consts.SEARCH_RESULT_FIRST_URL_CSL
         )
