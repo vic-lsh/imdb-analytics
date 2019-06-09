@@ -1,5 +1,6 @@
 from datetime import datetime
 import functools
+import logging
 import time
 from typing import List
 
@@ -17,6 +18,9 @@ from config import AnalyzerConfig
 from constants import IMDb_Constants as consts
 from ratings import SeriesRatings
 from utils import timeout
+
+
+logger = logging.getLogger(__name__)
 
 
 class IMDb_Analyzer():
@@ -69,7 +73,7 @@ class IMDb_Analyzer():
                     else:
                         raise NoSeriesNameAsFirstArgException
                 except NoSuchElementException:
-                    print("Series title not found")
+                    logger.error("Series title not found")
                     quit()
                 return func(self, *args, **kwargs)
             return wrapper
@@ -107,7 +111,7 @@ class IMDb_Analyzer():
                 try:
                     return elem_accessing_func(self, *args, **kwargs)
                 except NoSuchElementException:
-                    print("No such element.")
+                    logger.error("No such element.")
                     quit()
             return wrapper
 
@@ -181,8 +185,8 @@ class IMDb_Analyzer():
             assert episodes_num == len(ratings), \
                 "# of episodes and # of ratings do not match"
         except TimeoutException:
-            print("Timeout in getting ratings for season {}. ".format(season_num),
-                  "This usually indicates this season has not aired yet.")
+            logger.warning("Timeout in getting ratings for season {}. ".format(season_num),
+                           "This usually indicates this season has not aired yet.")
         return ratings
 
     @_Decorators.catch_no_such_element_exception
@@ -235,7 +239,8 @@ class IMDb_Analyzer():
             try:
                 self.__driver.get(url)
             except TimeoutException:
-                print("Timeout loading {}, retrying attempt {}...".format(url, count))
+                logger.error(
+                    "Timeout loading {}, retrying attempt {}...".format(url, count))
                 continue
             finally:
                 count += 1

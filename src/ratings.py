@@ -1,4 +1,7 @@
+import logging
 from typing import List
+
+logger = logging.getLogger(__name__)
 
 
 class SeriesRatings():
@@ -14,8 +17,8 @@ class SeriesRatings():
     def add_overall_rating(self, rating: float) -> None:
         """Add overall rating of a TV series"""
         if self.__OVERALL_RATING != None:
-            print("Warning: overall rating is being modified.",
-                  "Once set, overall rating should not be modified.")
+            logger.warning("Overall rating is being modified.",
+                           "Once set, overall rating should not be modified.")
         self.__OVERALL_RATING = rating
 
     def set_season_count(self, seasons_count: int) -> None:
@@ -23,16 +26,16 @@ class SeriesRatings():
         The method rejects modifications of season count, once it has been set.
         """
         if self.__SEASONS_COUNT != None:
-            print("Error: season count is a constant ",
-                  "and cannot be modified once it has been set.")
+            logger.error("Season count is a constant ",
+                         "and cannot be modified once it has been set.")
         else:
             self.__SEASONS_COUNT = seasons_count
 
     def add_season_ratings(self, season_num: int, season_ratings: List[float]) -> None:
         if season_num in self.__episode_ratings and \
                 self.__episode_ratings[season_num] != None:
-            print("Warning: ratings for season {} has been set.".format(season_num),
-                  "Modification of season warnings usually indicates a bug.")
+            logger.warning("Ratings for season {} has been set.".format(season_num),
+                           "Modification of season warnings usually indicates a bug.")
         self.__episode_ratings[season_num] = season_ratings
         if len(season_ratings) > self.__max_episode_num:
             self.__max_episode_num = len(season_ratings)

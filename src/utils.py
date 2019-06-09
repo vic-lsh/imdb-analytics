@@ -1,5 +1,8 @@
 from datetime import datetime
 import functools
+import logging
+
+logger = logging.getLogger(__name__)
 
 
 def timer(in_seconds=False):
@@ -7,16 +10,16 @@ def timer(in_seconds=False):
     def _timer(func):
         @functools.wraps(func)
         def wrapper():
-            print("Starting execution...")
+            logger.info("Starting execution...")
             start_time = datetime.now()
             func()
             end_time = datetime.now()
             duration = end_time - start_time
             if in_seconds:
-                print("Program runtime: {}.{} secs".format(
+                logger.info("Program runtime: {}.{} secs".format(
                     duration.seconds, duration.microseconds))
             else:
-                print("Program runtime: {}".format(duration))
+                logger.info("Program runtime: {}".format(duration))
         return wrapper
     return _timer
 
