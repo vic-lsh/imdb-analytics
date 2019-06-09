@@ -39,12 +39,18 @@ class SeriesRatings():
 
     def __repr__(self):
         reprs = []
-        reprs.append(
-            "******************** {} ********************".format(self.__SERIES_NAME))
+        HEADER_STR = "      " + "".join(["E{:<4}".format(ep_num)
+                                         for ep_num in range(self.__max_episode_num)])
+        SPACE_LEN = 2
+        banner_len = (len(HEADER_STR) -
+                      len(self.__SERIES_NAME) - 2 * SPACE_LEN) // 2
+        if banner_len < 2:
+            banner_len = 2
+        reprs.append("*" * banner_len + " " * SPACE_LEN +
+                     self.__SERIES_NAME + " " * SPACE_LEN + "*" * banner_len)
         reprs.append("Overall rating: {}".format(self.__OVERALL_RATING))
         reprs.append("Seasons count:  {}".format(self.__SEASONS_COUNT))
-        reprs.append("      " + "".join(["E{:<4}".format(ep_num)
-                                         for ep_num in range(self.__max_episode_num)]))
+        reprs.append(HEADER_STR)
         for season_num, ratings in self.__episode_ratings.items():
             reprs.append("S{:<5}".format(season_num) +
                          "  ".join(map(str, ratings)))
