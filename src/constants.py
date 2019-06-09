@@ -11,7 +11,7 @@ class IMDb_Constants():
 
     HOMEPAGE_URL = "https://www.imdb.com/"
 
-    TV_SERIES_IDENTIFIER = "TV Series"
+    TV_SERIES_IDENTIFIERS = ["TV Series", "TV Mini-Series"]
 
     # IMDb homepage
     SEARCH_BAR_CSL = "#navbar-query"

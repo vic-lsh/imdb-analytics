@@ -217,7 +217,7 @@ class IMDb_Analyzer():
         first_result_box = self.__driver.find_element_by_css_selector(
             consts.SEARCH_RESULT_FIRST_FULL_BOX_CSL
         )
-        assert consts.TV_SERIES_IDENTIFIER in first_result_box.text
+        assert any(ID in first_result_box.text for ID in consts.TV_SERIES_IDENTIFIERS)
         first_result = self.__driver.find_element_by_css_selector(
             consts.SEARCH_RESULT_FIRST_URL_CSL
         )
