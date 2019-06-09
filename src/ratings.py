@@ -51,8 +51,8 @@ class SeriesRatings():
             banner_len = 2
         reprs.append("*" * banner_len + " " * SPACE_LEN +
                      self.__SERIES_NAME + " " * SPACE_LEN + "*" * banner_len)
-        reprs.append("Overall rating: {}".format(self.__OVERALL_RATING))
-        reprs.append("Seasons count:  {}".format(self.__SEASONS_COUNT))
+        reprs.append("Overall rating: {}\t".format(self.__OVERALL_RATING) +
+                     "Seasons count:  {}".format(self.__SEASONS_COUNT))
         reprs.append(HEADER_STR)
         for season_num, ratings in self.__episode_ratings.items():
             reprs.append("S{:<5}".format(season_num) +
