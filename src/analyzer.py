@@ -127,8 +127,9 @@ class IMDb_Analyzer():
         self._navigate_to_series(series_name)
         overall_rating = self._get_overall_rating(series_name)
         seasons_count = self._get_seasons_count(series_name)
-        rating_series = SeriesRatings(overall_rating=overall_rating,
-                                       seasons_count=seasons_count)
+        rating_series = SeriesRatings(series_name=series_name,
+                                      overall_rating=overall_rating,
+                                      seasons_count=seasons_count)
         self._navigate_to_episode_guide(series_name)
         self._query_episode_ratings(rating_series)
         return rating_series
