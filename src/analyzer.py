@@ -14,6 +14,7 @@ from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.select import Select
 from selenium.webdriver.support.ui import WebDriverWait
 
+from config import AnalyzerConfig
 from constants import IMDb_Constants as consts
 from ratings import SeriesRatings
 from utils import timeout
@@ -111,9 +112,10 @@ class IMDb_Analyzer():
                     sys.exit(1)
             return wrapper
 
-    def __init__(self):
+    def __init__(self, config: AnalyzerConfig):
         chrome_options = Options()
-        # chrome_options.add_argument("--headless")
+        if config.headless:
+            chrome_options.add_argument("--headless")
         self.__driver = webdriver.Chrome(options=chrome_options)
         self.__PAGE_LOAD_TIMEOUT = 10
         self.__PAGE_LOAD_TIMEOUT_RETRY = 3
