@@ -4,6 +4,29 @@ from typing import List
 logger = logging.getLogger(__name__)
 
 
+class SeriesRatingsCollection():
+    """A collection of `SeriesRatings` objects"""
+
+    def __init__(self):
+        self.__ratings_collection = {}
+
+    def add(self, ratings: SeriesRatings) -> None:
+        name = ratings.series_name
+        if name in self.__ratings_collection:
+            logger.warning("Ratings for show {} exists but is being modified.".format(name),
+                           "This is usually unintentional and indicates a bug.")
+        self.__ratings_collection[name] = ratings
+
+    def __len__(self):
+        return len(self.__ratings_collection)
+
+    def __repr__(self):
+        reprs = []
+        for _, ratings in self.__ratings_collection:
+            reprs.append(ratings.__repr__)
+        return "\n".join(reprs)
+
+
 class SeriesRatings():
     """Data structure that contains rating-related info on a TV series"""
 
@@ -13,6 +36,10 @@ class SeriesRatings():
         self.__SEASONS_COUNT = seasons_count
         self.__episode_ratings = {}
         self.__max_episode_num = 0
+
+    @property
+    def series_name(self):
+        return self.__SERIES_NAME
 
     def add_overall_rating(self, rating: float) -> None:
         """Add overall rating of a TV series"""
