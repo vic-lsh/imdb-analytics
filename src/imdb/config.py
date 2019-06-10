@@ -15,7 +15,7 @@ class AnalyzerConfig:
         self.__tv_series_names = []
         self.__headless = True
         self.__serialization = True
-        self.__serialization_fname = "outfile"
+        self.__serialization_fname = "pickle"
 
         with open(fname, 'r') as cfgfile:
             cfg = yaml.safe_load(cfgfile)
