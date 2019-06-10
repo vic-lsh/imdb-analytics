@@ -4,6 +4,9 @@ CONFIG_FNAME = "config.yml"
 
 
 class AnalyzerConfig:
+    """This class contains configurations specified in the config file.
+    The default location for config file is `src/config.yml`.
+    """
 
     class TVSeriesUndefinedException(Exception):
         pass
