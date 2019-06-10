@@ -140,6 +140,9 @@ class IMDb_Analyzer():
             if tv_series not in ratings_collection:
                 ratings = self.query(tv_series)
                 ratings_collection.add(ratings)
+        else:
+            logger.info("Data already exists; Noting to query in {}".format(
+                str(series_names)))
 
     def query(self, series_name: str) -> SeriesRatings:
         """Query a TV series's ratings with its name.
