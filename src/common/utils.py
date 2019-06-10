@@ -13,16 +13,16 @@ def timer(in_seconds=False):
     def _timer(func):
         @functools.wraps(func)
         def wrapper():
-            logger.info("Starting execution...")
+            print("Starting execution...")
             start_time = datetime.now()
             func()
             end_time = datetime.now()
             duration = end_time - start_time
             if in_seconds:
-                logger.info("Program runtime: {}.{} secs".format(
+                print("Program runtime: {}.{} secs".format(
                     duration.seconds, duration.microseconds))
             else:
-                logger.info("Program runtime: {}".format(duration))
+                print("Program runtime: {}".format(duration))
         return wrapper
     return _timer
 
