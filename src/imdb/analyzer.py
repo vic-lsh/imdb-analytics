@@ -268,19 +268,15 @@ def serialize(cls):
     class WrapperClass(cls):
         def __init__(self, *args, **kwargs):
             super(WrapperClass, self).__init__(*args, **kwargs)
-            should_serialize = self._IMDb_Queries_Manager__config.should_serialize
-            pickle_name = self._IMDb_Queries_Manager__config.serialization_filename
-
-            if should_serialize and os.path.isfile(pickle_name):
-                with open(pickle_name, 'rb') as pkl:
+            if self._IMDb_Queries_Manager__should_serialize \
+                    and os.path.isfile(self._IMDb_Queries_Manager__pickle_name):
+                with open(self._IMDb_Queries_Manager__pickle_name, 'rb') as pkl:
                     self._IMDb_Queries_Manager__ratings = pickle.load(pkl)
                     print("Deserialized!")
 
         def __del__(self):
-            should_serialize = self._IMDb_Queries_Manager__config.should_serialize
-            pickle_name = self._IMDb_Queries_Manager__config.serialization_filename
-            if should_serialize:
-                with open(pickle_name, 'w+b') as pkl:
+            if self._IMDb_Queries_Manager__should_serialize:
+                with open(self._IMDb_Queries_Manager__pickle_name, 'w+b') as pkl:
                     pickle.dump(self._IMDb_Queries_Manager__ratings, pkl)
                     print("Serialized!")
     return WrapperClass
@@ -310,6 +306,8 @@ class IMDb_Queries_Manager():
 
     def __init__(self, config: AnalyzerConfig):
         self.__config = config
+        self.__should_serialize = config.should_serialize
+        self.__pickle_name = config.serialization_filename
         self.__analyzer = IMDb_Analyzer(config)
         self.__ratings = SeriesRatingsCollection()
         self.__queries = OrderedDict()
