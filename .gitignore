@@ -5,6 +5,6 @@ __pycache__/
 .DS_Store
 app.log
 config.yml
-outfile
+pickle
 config_logger.yml
 config_imdb.yml
