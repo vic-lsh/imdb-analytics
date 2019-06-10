@@ -123,7 +123,7 @@ class IMDb_Analyzer():
         if config.headless:
             chrome_options.add_argument("--headless")
         self.__driver = webdriver.Chrome(options=chrome_options)
-        self.__PAGE_LOAD_TIMEOUT = 10
+        self.__PAGE_LOAD_TIMEOUT = 30
         self.__PAGE_LOAD_TIMEOUT_RETRY = 3
         self.__driver.set_page_load_timeout(self.__PAGE_LOAD_TIMEOUT)
         self.__DELAY_SECS = 10
@@ -243,8 +243,8 @@ class IMDb_Analyzer():
         )
         assert any(
             ID in first_result_box.text for ID in consts.TV_SERIES_IDENTIFIERS)
-        first_result = self.__driver.find_element_by_css_selector(
-            consts.SEARCH_RESULT_FIRST_URL_CSL
+        first_result = self.__driver.find_element_by_xpath(
+            consts.SEARCH_RESULT_FIRST_URL_XPATH
         )
         assert name in first_result.text
         first_result.click()
