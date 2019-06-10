@@ -201,8 +201,9 @@ class IMDb_Analyzer():
             assert episodes_num == len(ratings), \
                 "# of episodes and # of ratings do not match"
         except TimeoutException:
-            logger.warning("Timeout in getting ratings for season {}. ".format(season_num),
-                           "This usually indicates this season has not aired yet.")
+            logger.warning("Timeout in getting ratings for season {}. ".format(
+                season_num),
+                "This usually indicates this season has not aired yet.")
         return ratings
 
     @_Decorators.catch_no_such_element_exception
@@ -256,7 +257,8 @@ class IMDb_Analyzer():
                 self.__driver.get(url)
             except TimeoutException:
                 logger.error(
-                    "Timeout loading {}, retrying attempt {}...".format(url, count))
+                    "Timeout loading {}, retrying attempt {}...".format(
+                        url, count))
                 continue
             finally:
                 count += 1
@@ -321,8 +323,10 @@ class IMDb_Queries_Manager():
         self.__queries[query] = None
 
     def add_multiple_queries(self, queries: List[str]) -> None:
-        """Queue up multiple queries to be executed. Queries are added onto the 
-        waiting list, but _not executed_. Please call the `execute()` for execution.
+        """Queue up multiple queries to be executed. Queries are added onto 
+        the waiting list, but _not executed_. Please call the `execute()` 
+        for execution.
+
         Adding multiple queries is indempotent; if a certain query alreaady
         exists in the pending list, it would not be added twice.
         """
