@@ -4,29 +4,6 @@ from typing import List
 logger = logging.getLogger(__name__)
 
 
-class SeriesRatingsCollection():
-    """A collection of `SeriesRatings` objects"""
-
-    def __init__(self):
-        self.__ratings_collection = {}
-
-    def add(self, ratings: SeriesRatings) -> None:
-        name = ratings.series_name
-        if name in self.__ratings_collection:
-            logger.warning("Ratings for show {} exists but is being modified.".format(name),
-                           "This is usually unintentional and indicates a bug.")
-        self.__ratings_collection[name] = ratings
-
-    def __len__(self):
-        return len(self.__ratings_collection)
-
-    def __repr__(self):
-        reprs = []
-        for _, ratings in self.__ratings_collection:
-            reprs.append(ratings.__repr__)
-        return "\n".join(reprs)
-
-
 class SeriesRatings():
     """Data structure that contains rating-related info on a TV series"""
 
@@ -67,7 +44,7 @@ class SeriesRatings():
         if len(season_ratings) > self.__max_episode_num:
             self.__max_episode_num = len(season_ratings)
 
-    def __repr__(self):
+    def __str__(self):
         reprs = []
         DESC_STR = ("Overall rating: {}\t".format(self.__OVERALL_RATING) +
                     "Seasons count:  {}".format(self.__SEASONS_COUNT))
@@ -86,4 +63,34 @@ class SeriesRatings():
             reprs.append("S{:<5}".format(season_num) +
                          "  ".join(map(str, ratings)))
         reprs.append("")
+        return "\n".join(reprs)
+
+    def __repr__(self):
+        return self.__str__
+
+
+class SeriesRatingsCollection():
+    """A collection of `SeriesRatings` objects"""
+
+    def __init__(self):
+        self.__ratings_collection = {}
+
+    def add(self, ratings: SeriesRatings) -> None:
+        name = ratings.series_name
+        if name in self.__ratings_collection:
+            logger.warning("Ratings for show {} exists but is being modified.".format(name),
+                           "This is usually unintentional and indicates a bug.")
+        self.__ratings_collection[name] = ratings
+
+    def __contains__(self, item):
+        assert isinstance(item, str)
+        return item in self.__ratings_collection
+
+    def __len__(self):
+        return len(self.__ratings_collection)
+
+    def __repr__(self):
+        reprs = []
+        for _, ratings in self.__ratings_collection.items():
+            reprs.append(ratings.__str__)
         return "\n".join(reprs)
