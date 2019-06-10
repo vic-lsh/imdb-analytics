@@ -92,5 +92,5 @@ class SeriesRatingsCollection():
     def __repr__(self):
         reprs = []
         for _, ratings in self.__ratings_collection.items():
-            reprs.append(ratings.__str__)
+            reprs.append(ratings.__str__())
         return "\n".join(reprs)
