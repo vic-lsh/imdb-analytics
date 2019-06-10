@@ -45,7 +45,7 @@ class AnalyzerConfig:
         if not self.__serialization:
             return None
         else:
-            return self.serialization_filename
+            return self.__serialization_fname
 
     @property
     def tv_series_names(self):
