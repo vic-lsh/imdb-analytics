@@ -7,3 +7,4 @@ app.log
 config.yml
 outfile
 config_logger.yml
+config_imdb.yml
