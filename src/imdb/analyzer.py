@@ -128,8 +128,8 @@ class IMDb_Analyzer():
         self.__driver.set_page_load_timeout(self.__PAGE_LOAD_TIMEOUT)
         self.__DELAY_SECS = 10
 
-    def __del__(self):
-        self.__driver.close()
+    # def __del__(self):
+    #     self.__driver.close()
 
     def multiple_queries(self, series_names: List[str],
                          ratings_collection: SeriesRatingsCollection) -> None:
