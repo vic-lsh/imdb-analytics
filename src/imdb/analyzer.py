@@ -232,12 +232,12 @@ class IMDb_Analyzer():
 
     def _navigate_to_series(self, name: str):
         self._load_url(consts.HOMEPAGE_URL)
-        serach_bar = self.__driver.find_element_by_css_selector(
+        search_bar = self.__driver.find_element_by_css_selector(
             consts.SEARCH_BAR_CSL
         )
-        serach_bar.clear()
-        serach_bar.send_keys(name)
-        serach_bar.send_keys(Keys.ENTER)
+        search_bar.clear()
+        search_bar.send_keys(name)
+        search_bar.send_keys(Keys.ENTER)
         first_result_box = self.__driver.find_element_by_css_selector(
             consts.SEARCH_RESULT_FIRST_FULL_BOX_CSL
         )
