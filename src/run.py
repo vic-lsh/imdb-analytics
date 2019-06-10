@@ -16,13 +16,17 @@ logging.config.dictConfig(cfg)
 logger = logging.getLogger(__name__)
 
 
+def analyze(manager, config):
+    manager.add_multiple_queries(config.tv_series_names)
+    print(manager.pending_queries)
+    manager.execute()
+
+
 @timer(in_seconds=True)
 def main():
     config = AnalyzerConfig()
     manager = IMDb_Queries_Manager(config)
-    manager.add_multiple_queries(config.tv_series_names)
-    print(manager.pending_queries)
-    manager.execute()
+    analyze(manager, config)
 
 
 if __name__ == "__main__":
