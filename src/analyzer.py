@@ -128,7 +128,7 @@ class IMDb_Analyzer():
     def __del__(self):
         self.__driver.close()
 
-    def query(self, series_name: str) -> None:
+    def query(self, series_name: str) -> SeriesRating:
         """Query a TV series's ratings with its name.
         Return: a SeriesRating object
         """
