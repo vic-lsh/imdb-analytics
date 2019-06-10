@@ -262,6 +262,29 @@ class IMDb_Analyzer():
                 count += 1
 
 
+def serialize(cls):
+    class WrapperClass(cls):
+        def __init__(self, *args, **kwargs):
+            super(WrapperClass, self).__init__(*args, **kwargs)
+            should_serialize = self._IMDb_Queries_Manager__config.should_serialize
+            pickle_name = self._IMDb_Queries_Manager__config.serialization_filename
+
+            if should_serialize and os.path.isfile(pickle_name):
+                with open(pickle_name, 'rb') as pkl:
+                    self._IMDb_Queries_Manager__ratings = pickle.load(pkl)
+                    print("Deserialized!")
+
+        def __del__(self):
+            should_serialize = self._IMDb_Queries_Manager__config.should_serialize
+            pickle_name = self._IMDb_Queries_Manager__config.serialization_filename
+            if should_serialize:
+                with open(pickle_name, 'w+b') as pkl:
+                    pickle.dump(self._IMDb_Queries_Manager__ratings, pkl)
+                    print("Serialized!")
+    return WrapperClass
+
+
+@serialize
 class IMDb_Queries_Manager():
     """Fundamentally, an operational cycle involves 2 essential operations:
     querying, and data persistence. The queries manager composes the classes
@@ -282,30 +305,6 @@ class IMDb_Queries_Manager():
             methods modifying the ratings collection, if the serialization 
             option has been configured to be on. 
             """
-
-            def wrapper(self, *args, **kwargs):
-                assert hasattr(self, '_IMDb_Queries_Manager__ratings'),\
-                    "`__ratings` undefined for query manager."
-                assert hasattr(self, '_IMDb_Queries_Manager__config'),\
-                    "`__config` undefined for query manager."
-
-                should_serialize = self._IMDb_Queries_Manager__config.should_serialize
-                pickle_name = self._IMDb_Queries_Manager__config.serialization_filename
-
-                if should_serialize and os.path.isfile(pickle_name):
-                    with open(pickle_name, 'rb') as pkl:
-                        self._IMDb_Queries_Manager__ratings \
-                            = pickle.load(pkl)
-                else:
-                    self._IMDb_Queries_Manager__ratings \
-                        = SeriesRatingsCollection()
-
-                func(self, *args, **kwargs)
-
-                if should_serialize:
-                    with open(pickle_name, 'w+b') as pkl:
-                        pickle.dump(self._IMDb_Queries_Manager__ratings, pkl)
-            return wrapper
 
     def __init__(self, config: AnalyzerConfig):
         self.__config = config
@@ -332,7 +331,6 @@ class IMDb_Queries_Manager():
     def pending_queries(self) -> List[str]:
         return self.__queries
 
-    @_Decorators.serialize_ratings_if_configured
     def execute(self) -> None:
         """Execute all pending queries.
         Executing requires 1) deserialization, 2) querying and persisting data, 
