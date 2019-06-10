@@ -1,6 +1,6 @@
 import yaml
 
-CONFIG_FNAME = "config.yml"
+CONFIG_FNAME = "config_imdb.yml"
 
 
 class AnalyzerConfig:
