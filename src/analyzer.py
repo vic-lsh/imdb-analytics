@@ -274,30 +274,35 @@ class IMDb_Queries_Manager():
     """
 
     class _Decorators():
-        def serialize_ratings_if_configured(config: AnalyzerConfig):
-            """Perform deserialization-serialization if the serialization option
-            has been configured to be on. 
+        def serialize_ratings_if_configured(func):
+            """Perform deserialization setup and serialization teardown for 
+            methods modifying the ratings collection, if the serialization 
+            option has been configured to be on. 
             """
-            # TODO: can we assert that self has __ratings as an attribute?
-            def _serialize(func):
-                @functools.wraps(func)
-                def wrapper(self, *args, **kwargs):
-                    if config.should_serialize and \
-                            os.path.isfile(config.serialization_filename):
-                        with open(config.serialization_filename, 'rb') as pkl:
-                            self._IMDb_Queries_Manager__ratings \
-                                = pickle.load(pkl)
-                    else:
+
+            def wrapper(self, *args, **kwargs):
+                assert hasattr(self, '_IMDb_Queries_Manager__ratings'),\
+                    "`__ratings` undefined for query manager."
+                assert hasattr(self, '_IMDb_Queries_Manager__config'),\
+                    "`__config` undefined for query manager."
+
+                should_serialize = self._IMDb_Queries_Manager__config.should_serialize
+                pickle_name = self._IMDb_Queries_Manager__config.serialization_filename
+
+                if should_serialize and os.path.isfile(pickle_name):
+                    with open(pickle_name, 'rb') as pkl:
                         self._IMDb_Queries_Manager__ratings \
-                            = SeriesRatingsCollection()
+                            = pickle.load(pkl)
+                else:
+                    self._IMDb_Queries_Manager__ratings \
+                        = SeriesRatingsCollection()
 
-                    func(self, *args, **kwargs)
+                func(self, *args, **kwargs)
 
-                    if config.should_serialize:
-                        with open(config.serialization_filename, 'w+b') as pkl:
-                            pickle.dump(
-                                self._IMDb_Queries_Manager__ratings, pkl)
-                return wrapper
+                if should_serialize:
+                    with open(pickle_name, 'w+b') as pkl:
+                        pickle.dump(self._IMDb_Queries_Manager__ratings, pkl)
+            return wrapper
 
     def __init__(self, config: AnalyzerConfig):
         self.__config = config
