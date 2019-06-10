@@ -82,6 +82,10 @@ class SeriesRatingsCollection():
                            "This is usually unintentional and indicates a bug.")
         self.__ratings_collection[name] = ratings
 
+    def add_multiple(self, ratings_list: List[SeriesRatings]) -> None:
+        for ratings in ratings_list:
+            self.add(ratings)
+
     def __contains__(self, item):
         assert isinstance(item, str)
         return item in self.__ratings_collection
