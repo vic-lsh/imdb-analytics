@@ -7,6 +7,7 @@ class IMDb_Constants():
         CSL:    CSS selector
         CSP:    CSS path
         XPATH:  xpath
+        IDENTIFIER(S): words used to assert if an element is selected correctly.
     """
 
     HOMEPAGE_URL = "https://www.imdb.com/"
