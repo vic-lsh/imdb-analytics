@@ -335,4 +335,6 @@ class IMDb_Queries_Manager():
         Executing requires 1) deserialization, 2) querying and persisting data, 
         3) serialization. Only call this method if all queries have been added.
         """
-        pass
+        self.__analyzer.multiple_queries(series_names=self.__queries.keys(),
+                                         ratings_collection=self.__ratings)
+        self.__queries.clear()
