@@ -17,7 +17,7 @@ from selenium.webdriver.support.ui import WebDriverWait
 from config import AnalyzerConfig
 from constants import IMDb_Constants as consts
 from ratings import SeriesRatings, SeriesRatingsCollection
-from utils import timeout
+from utils import timeout, serialize_ratings_if_configured
 
 
 logger = logging.getLogger(__name__)
@@ -254,3 +254,40 @@ class IMDb_Analyzer():
                 continue
             finally:
                 count += 1
+
+
+class IMDb_Queries_Manager():
+    """Fundamentally, an operational cycle involves 2 essential operations:
+    querying, and data persistence. The queries manager composes the classes
+    for these 2 operations together (IMDb_Analyzer for querying, 
+    SeriesRatingsCollection for data persistence).
+
+    Composing these 2 operations allow us to make queries exactly _once_, 
+    thereby avoiding multiple deserialization-serialization processes, which
+    are very costly. 
+
+    Users of the API are therefore advised to utilize this class, rather than
+    the IMDb_Analyzer and SeriesRatingsCollection classes.
+    """
+
+    def __init__(self, config: AnalyzerConfig):
+        self.__config = config
+        self.__analyzer = IMDb_Analyzer(config)
+        self.__ratings = SeriesRatingsCollection()
+        self.__queries = []     # TODO: consider using a set rather than a list
+
+    def add_query(self, query: str) -> None:
+        """Queue up queries that are to be executed"""
+        pass
+
+    @property
+    def pending_queries(self) -> List[str]:
+        return self.__queries
+
+    @serialize_ratings_if_configured(self.__config)
+    def execute(self) -> None:
+        """Execute all pending queries.
+        Executing requires 1) deserialization, 2) querying and persisting data, 
+        3) serialization. Only call this method if all queries have been added.
+        """
+        pass
