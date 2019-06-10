@@ -1,26 +1,19 @@
 import logging
+import logging.config
 import pickle
 import os
+import yaml
 
 from analyzer import IMDb_Queries_Manager
 from config import AnalyzerConfig
 from ratings import SeriesRatingsCollection
 from utils import timer
 
+with open('logger_config.yml', 'r') as f:
+    cfg = yaml.safe_load(f.read())
+logging.config.dictConfig(cfg)
+
 logger = logging.getLogger(__name__)
-logger.setLevel(logging.INFO)
-
-handler = logging.FileHandler('app.log')
-handler.setLevel(logging.INFO)
-
-fmt = '%(asctime)s - %(name)s - %(levelname)s - %(message)s'
-formatter = logging.Formatter(fmt)
-
-handler.setFormatter(formatter)
-logger.addHandler(handler)
-stream_handler = logging.StreamHandler()
-stream_handler.setFormatter(formatter)
-logger.addHandler(stream_handler)
 
 
 @timer(in_seconds=True)
@@ -33,4 +26,5 @@ def main():
 
 
 if __name__ == "__main__":
+
     main()
