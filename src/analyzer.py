@@ -313,14 +313,16 @@ class IMDb_Queries_Manager():
         self.__queries = OrderedDict()
 
     def add_query(self, query: str) -> None:
-        """Queue up queries that are to be executed.
+        """Queue up queries to be executed. Queries are added onto the waiting 
+        list, but _not executed_. Please call the `execute()` for execution.
         Add_query is indempotent; repeatedly adding the same query will not
         raise a warning or error.
         """
         self.__queries[query] = None
 
     def add_multiple_queries(self, queries: List[str]) -> None:
-        """Queue up multiple queries that are to be executed.
+        """Queue up multiple queries to be executed. Queries are added onto the 
+        waiting list, but _not executed_. Please call the `execute()` for execution.
         Adding multiple queries is indempotent; if a certain query alreaady
         exists in the pending list, it would not be added twice.
         """
@@ -332,10 +334,7 @@ class IMDb_Queries_Manager():
         return self.__queries
 
     def execute(self) -> None:
-        """Execute all pending queries.
-        Executing requires 1) deserialization, 2) querying and persisting data, 
-        3) serialization. Only call this method if all queries have been added.
-        """
+        """Execute all pending queries."""
         self.__analyzer.multiple_queries(series_names=self.__queries.keys(),
                                          ratings_collection=self.__ratings)
         self.__queries.clear()
