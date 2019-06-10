@@ -1,8 +1,6 @@
 from datetime import datetime
 import functools
 import logging
-import os
-import pickle
 
 from config import AnalyzerConfig
 from ratings import SeriesRatingsCollection
@@ -47,24 +45,3 @@ def timeout(delay, ExceptionType=Exception):
             return ret
         return wrapper
     return _timeout
-
-
-def serialize_ratings_if_configured(config: AnalyzerConfig):
-    def _serialize(func):
-        @functools.wraps(func)
-        def wrapper(*args, **kwargs):
-            if config.should_serialize and \
-                    os.path.isfile(config.serialization_filename):
-                with open(config.serialization_filename, 'rb') as pkl:
-                    ratings_collection = pickle.load(pkl)
-            else:
-                ratings_collection = SeriesRatingsCollection()
-
-            args[0] = ratings_collection
-            func(*args, **kwargs)
-
-            if config.should_serialize:
-                with open(config.serialization_filename, 'w+b') as pkl:
-                    pickle.dump(ratings_collection, pkl)
-        return wrapper
-    return _serialize

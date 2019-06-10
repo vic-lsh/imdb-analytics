@@ -1,6 +1,8 @@
 from datetime import datetime
 import functools
 import logging
+import os
+import pickle
 import time
 from typing import List
 
@@ -17,7 +19,7 @@ from selenium.webdriver.support.ui import WebDriverWait
 from config import AnalyzerConfig
 from constants import IMDb_Constants as consts
 from ratings import SeriesRatings, SeriesRatingsCollection
-from utils import timeout, serialize_ratings_if_configured
+from utils import timeout
 
 
 logger = logging.getLogger(__name__)
@@ -270,6 +272,28 @@ class IMDb_Queries_Manager():
     the IMDb_Analyzer and SeriesRatingsCollection classes.
     """
 
+    class _Decorators():
+        def serialize_ratings_if_configured(config: AnalyzerConfig):
+            def _serialize(func):
+                @functools.wraps(func)
+                def wrapper(*args, **kwargs):
+                    if config.should_serialize and \
+                            os.path.isfile(config.serialization_filename):
+                        with open(config.serialization_filename, 'rb') as pkl:
+                            ratings_collection = pickle.load(pkl)
+                    else:
+                        ratings_collection = SeriesRatingsCollection()
+
+                    args[0] = ratings_collection
+                    func(*args, **kwargs)
+
+                    if config.should_serialize:
+                        with open(config.serialization_filename, 'w+b') as pkl:
+                            pickle.dump(ratings_collection, pkl)
+                return wrapper
+            return _serialize
+
+
     def __init__(self, config: AnalyzerConfig):
         self.__config = config
         self.__analyzer = IMDb_Analyzer(config)
@@ -284,7 +308,7 @@ class IMDb_Queries_Manager():
     def pending_queries(self) -> List[str]:
         return self.__queries
 
-    @serialize_ratings_if_configured(self.__config)
+    @_Decorators.serialize_ratings_if_configured(self.__config)
     def execute(self) -> None:
         """Execute all pending queries.
         Executing requires 1) deserialization, 2) querying and persisting data, 
