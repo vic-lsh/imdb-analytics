@@ -9,7 +9,7 @@ from imdb.config import AnalyzerConfig
 from imdb.ratings import SeriesRatingsCollection
 from common.utils import timer
 
-with open('logger_config.yml', 'r') as f:
+with open('config_logger.yml', 'r') as f:
     cfg = yaml.safe_load(f.read())
 logging.config.dictConfig(cfg)
 
