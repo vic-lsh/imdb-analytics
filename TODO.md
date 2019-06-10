@@ -13,7 +13,7 @@
 
 - [ ] Create `default_config.yml`, with `config.yml` overriding default options
 - [ ] Decouple queries from config
-- [ ] Move config out of the imdb library, consider renaming to `imdb_config`
+- [x] Move config out of the imdb library, consider renaming to `imdb_config`
 - [ ] Verify that a season is aired before obtaining ratings
 - [ ] Implement plotting with Matplotlib
   - [ ] Mark each season beginning on plot
