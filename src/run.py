@@ -4,10 +4,10 @@ import pickle
 import os
 import yaml
 
-from analyzer import IMDb_Queries_Manager
-from config import AnalyzerConfig
-from ratings import SeriesRatingsCollection
-from utils import timer
+from imdb.analyzer import IMDb_Queries_Manager
+from imdb.config import AnalyzerConfig
+from imdb.ratings import SeriesRatingsCollection
+from common.utils import timer
 
 with open('logger_config.yml', 'r') as f:
     cfg = yaml.safe_load(f.read())
@@ -26,5 +26,4 @@ def main():
 
 
 if __name__ == "__main__":
-
     main()

@@ -17,10 +17,10 @@ from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.select import Select
 from selenium.webdriver.support.ui import WebDriverWait
 
-from config import AnalyzerConfig
-from constants import IMDb_Constants as consts
-from ratings import SeriesRatings, SeriesRatingsCollection
-from utils import timeout
+from imdb.config import AnalyzerConfig
+from imdb.constants import IMDb_Constants as consts
+from imdb.ratings import SeriesRatings, SeriesRatingsCollection
+from common.utils import timeout
 
 
 logger = logging.getLogger(__name__)

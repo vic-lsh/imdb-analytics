@@ -2,8 +2,8 @@ from datetime import datetime
 import functools
 import logging
 
-from config import AnalyzerConfig
-from ratings import SeriesRatingsCollection
+from imdb.config import AnalyzerConfig
+from imdb.ratings import SeriesRatingsCollection
 
 logger = logging.getLogger(__name__)
 
