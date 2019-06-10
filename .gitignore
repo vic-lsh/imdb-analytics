@@ -6,4 +6,4 @@ __pycache__/
 app.log
 config.yml
 outfile
-logger_config.yml
+config_logger.yml
