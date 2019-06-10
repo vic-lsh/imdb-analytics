@@ -16,7 +16,7 @@ from selenium.webdriver.support.ui import WebDriverWait
 
 from config import AnalyzerConfig
 from constants import IMDb_Constants as consts
-from ratings import SeriesRatings
+from ratings import SeriesRatings, SeriesRatingsCollection
 from utils import timeout
 
 
@@ -128,7 +128,17 @@ class IMDb_Analyzer():
     def __del__(self):
         self.__driver.close()
 
-    def query(self, series_name: str) -> SeriesRating:
+    def multiple_queries(self, series_names: List[str],
+                         ratings_collection: SeriesRatingsCollection) -> None:
+        """Query _multiple_ TV series' ratings with a List of their names.
+        This is a convenient API that is equivalent to multiple `query` calls.
+        """
+        for tv_series in series_names:
+            if tv_series not in ratings_collection:
+                ratings = self.query(tv_series)
+                ratings_collection.add(ratings)
+
+    def query(self, series_name: str) -> SeriesRatings:
         """Query a TV series's ratings with its name.
         Return: a SeriesRating object
         """
