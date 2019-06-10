@@ -1,3 +1,4 @@
+from collections import OrderedDict
 from datetime import datetime
 import functools
 import logging
@@ -297,23 +298,33 @@ class IMDb_Queries_Manager():
                             pickle.dump(
                                 self._IMDb_Queries_Manager__ratings, pkl)
                 return wrapper
-            return _serialize
 
     def __init__(self, config: AnalyzerConfig):
         self.__config = config
         self.__analyzer = IMDb_Analyzer(config)
         self.__ratings = SeriesRatingsCollection()
-        self.__queries = []     # TODO: consider using a set rather than a list
+        self.__queries = OrderedDict()
 
     def add_query(self, query: str) -> None:
-        """Queue up queries that are to be executed"""
-        pass
+        """Queue up queries that are to be executed.
+        Add_query is indempotent; repeatedly adding the same query will not
+        raise a warning or error.
+        """
+        self.__queries[query] = None
+
+    def add_multiple_queries(self, queries: List[str]) -> None:
+        """Queue up multiple queries that are to be executed.
+        Adding multiple queries is indempotent; if a certain query alreaady
+        exists in the pending list, it would not be added twice.
+        """
+        for query in queries:
+            self.__queries[query] = None
 
     @property
     def pending_queries(self) -> List[str]:
         return self.__queries
 
-    @_Decorators.serialize_ratings_if_configured(self.__config)
+    @_Decorators.serialize_ratings_if_configured
     def execute(self) -> None:
         """Execute all pending queries.
         Executing requires 1) deserialization, 2) querying and persisting data, 
