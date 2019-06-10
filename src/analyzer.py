@@ -274,25 +274,30 @@ class IMDb_Queries_Manager():
 
     class _Decorators():
         def serialize_ratings_if_configured(config: AnalyzerConfig):
+            """Perform deserialization-serialization if the serialization option
+            has been configured to be on. 
+            """
+            # TODO: can we assert that self has __ratings as an attribute?
             def _serialize(func):
                 @functools.wraps(func)
-                def wrapper(*args, **kwargs):
+                def wrapper(self, *args, **kwargs):
                     if config.should_serialize and \
                             os.path.isfile(config.serialization_filename):
                         with open(config.serialization_filename, 'rb') as pkl:
-                            ratings_collection = pickle.load(pkl)
+                            self._IMDb_Queries_Manager__ratings \
+                                = pickle.load(pkl)
                     else:
-                        ratings_collection = SeriesRatingsCollection()
+                        self._IMDb_Queries_Manager__ratings \
+                            = SeriesRatingsCollection()
 
-                    args[0] = ratings_collection
-                    func(*args, **kwargs)
+                    func(self, *args, **kwargs)
 
                     if config.should_serialize:
                         with open(config.serialization_filename, 'w+b') as pkl:
-                            pickle.dump(ratings_collection, pkl)
+                            pickle.dump(
+                                self._IMDb_Queries_Manager__ratings, pkl)
                 return wrapper
             return _serialize
-
 
     def __init__(self, config: AnalyzerConfig):
         self.__config = config
