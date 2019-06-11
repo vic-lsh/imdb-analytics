@@ -37,9 +37,11 @@ class TVSeries(Document):
         `@name` [pk]: the name of the TV series
         `@last_modified`: automatically updates modification time when updated
         `@season_count`: number of seasons
+        `@overall_rating`: a _float_ definining the season's overall rating (0~10)
         `@ratings`: a list of `SeasonRatings` stores all episode ratings
     """
     name = StringField(max_length=120, required=True, primary_key=True)
     last_modified = DateTimeField(default=datetime.datetime.utcnow)
     seasons_count = IntField(min_value=1)
+    overall_rating = FloatField(min_value=0, max_value=10)
     ratings = EmbeddedDocumentListField(document_type=SeasonRatings)
