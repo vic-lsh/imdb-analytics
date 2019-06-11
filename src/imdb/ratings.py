@@ -90,6 +90,15 @@ class SeriesRatingsCollection():
         assert isinstance(item, str)
         return item in self.__ratings_collection
 
+    def __iter__(self):
+        return self
+
+    def __next__(self):
+        try:
+            return next(self.__ratings_collection)
+        except:
+            raise StopIteration
+
     def __len__(self):
         return len(self.__ratings_collection)
 
