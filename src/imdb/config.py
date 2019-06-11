@@ -1,6 +1,7 @@
+from os.path import abspath
 import yaml
 
-CONFIG_FNAME = "config_imdb.yml"
+CONFIG_FNAME = "src/config_imdb.yml"
 
 
 class AnalyzerConfig:
@@ -17,7 +18,7 @@ class AnalyzerConfig:
         self.__serialization = True
         self.__serialization_fname = "pickle"
 
-        with open(fname, 'r') as cfgfile:
+        with open(abspath(fname), 'r') as cfgfile:
             cfg = yaml.safe_load(cfgfile)
 
         if 'tv_series' not in cfg:
