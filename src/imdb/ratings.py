@@ -7,7 +7,8 @@ logger = logging.getLogger(__name__)
 class SeriesRatings():
     """Data structure that contains rating-related info on a TV series"""
 
-    def __init__(self, series_name: str, overall_rating: float = None, seasons_count: int = None):
+    def __init__(self, series_name: str,
+                 overall_rating: float = None, seasons_count: int = None):
         self.__SERIES_NAME = series_name
         self.__OVERALL_RATING = overall_rating
         self.__SEASONS_COUNT = seasons_count
@@ -35,11 +36,13 @@ class SeriesRatings():
         else:
             self.__SEASONS_COUNT = seasons_count
 
-    def add_season_ratings(self, season_num: int, season_ratings: List[float]) -> None:
+    def add_season_ratings(self, season_num: int,
+                           season_ratings: List[float]) -> None:
         if season_num in self.__episode_ratings and \
                 self.__episode_ratings[season_num] != None:
-            logger.warning("Ratings for season {} has been set.".format(season_num),
-                           "Modification of season warnings usually indicates a bug.")
+            logger.warning("Ratings for season {} has been set. Modification of "
+                           + "season warnings usually indicates "
+                           + "a bug.".format(season_num))
         self.__episode_ratings[season_num] = season_ratings
         if len(season_ratings) > self.__max_episode_num:
             self.__max_episode_num = len(season_ratings)
@@ -49,7 +52,8 @@ class SeriesRatings():
         DESC_STR = ("Overall rating: {}\t".format(self.__OVERALL_RATING) +
                     "Seasons count:  {}".format(self.__SEASONS_COUNT))
         HEADER_STR = "      " + "".join(["E{:<4}".format(ep_num)
-                                         for ep_num in range(self.__max_episode_num)])
+                                         for ep_num in range(
+                                             self.__max_episode_num)])
         SPACE_LEN = 2
         banner_len = (max(len(HEADER_STR), len(DESC_STR)) -
                       len(self.__SERIES_NAME) - 2 * SPACE_LEN) // 2
@@ -78,8 +82,9 @@ class SeriesRatingsCollection():
     def add(self, ratings: SeriesRatings) -> None:
         name = ratings.series_name
         if name in self.__ratings_collection:
-            logger.warning("Ratings for show {} exists but is being modified.".format(name),
-                           "This is usually unintentional and indicates a bug.")
+            logger.warning("Ratings for show {} exists but is being modified. "
+                           + "This is usually unintentional and indicates "
+                           + "a bug.".format(name))
         self.__ratings_collection[name] = ratings
 
     def add_multiple(self, ratings_list: List[SeriesRatings]) -> None:
