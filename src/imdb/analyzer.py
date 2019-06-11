@@ -18,10 +18,11 @@ from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.select import Select
 from selenium.webdriver.support.ui import WebDriverWait
 
+from db.database import IMDb_Database
 from imdb.config import AnalyzerConfig
 from imdb.constants import IMDb_Constants as consts
 from imdb.ratings import SeriesRatings, SeriesRatingsCollection
-from common.utils import timeout
+from common.utils import timeout, db_connect
 
 
 logger = logging.getLogger(__name__)
@@ -334,10 +335,26 @@ class IMDb_Queries_Manager():
 
     @property
     def pending_queries(self) -> List[str]:
-        return self.__queries
+        return self.__queries.keys()
 
-    def execute(self) -> None:
+    def _clear_pending_queries(self) -> None:
+        self.__queries.clear()
+
+    def local_execute(self) -> None:
         """Execute all pending queries."""
         self.__analyzer.multiple_queries(series_names=self.__queries.keys(),
                                          ratings_collection=self.__ratings)
-        self.__queries.clear()
+        self._clear_pending_queries()
+
+    @db_connect
+    def db_execute(self, db: IMDb_Database) -> None:
+        unvisited_queries = []
+
+        for query in self.pending_queries:
+            if not db.if_tv_series_exists(query):
+                unvisited_queries.append(query)
+        self._clear_pending_queries()
+
+        ratings_collection = SeriesRatingsCollection()
+        self.__analyzer.multiple_queries(unvisited_queries, ratings_collection)
+        db.add_multiple_ratings(ratings_collection)
