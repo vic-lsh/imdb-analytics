@@ -19,6 +19,14 @@ class SeriesRatings():
     def series_name(self):
         return self.__SERIES_NAME
 
+    @property
+    def seasons_count(self):
+        return self.__SEASONS_COUNT
+
+    @property
+    def overall_rating(self):
+        return self.__OVERALL_RATING
+
     def add_overall_rating(self, rating: float) -> None:
         """Add overall rating of a TV series"""
         if self.__OVERALL_RATING != None:
