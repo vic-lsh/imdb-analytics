@@ -2,7 +2,7 @@ import traceback
 
 import mongoengine
 
-import db.models as models
+from db.models import TVSeries, SeasonRatings, EpisodeRating
 from imdb.ratings import SeriesRatingsCollection
 
 
@@ -12,7 +12,7 @@ class IMDb_Database():
         pass
 
     def __enter__(self):
-        self.__db = mongoengine.connect(db='IMDb')
+        self.__db = mongoengine.connect(db='imdb')
         return self
 
     def __exit__(self, exception_type, exception_value, traceback):
@@ -27,7 +27,26 @@ class IMDb_Database():
 
     @staticmethod
     def if_tv_series_exists(series_name: str) -> bool:
-        return models.TVSeries.objects(name=series_name).count() > 0
+        return TVSeries.objects(name=series_name).count() > 0
 
-    def add_multiple_ratings(self, ratings: SeriesRatingsCollection) -> None:
-        print(ratings)
+    def add_multiple_ratings(
+            self, ratings_collection: SeriesRatingsCollection) -> None:
+        for series_name, ratings in ratings_collection.collection.items():
+            series_doc = TVSeries(name=series_name,
+                                  seasons_count=ratings.seasons_count,
+                                  overall_rating=ratings.overall_rating)
+
+            for season_num, season_ratings in ratings.rating_values.items():
+                season_rating_doc = SeasonRatings(season_number=season_num,
+                                                  episodes_count=len(season_ratings))
+                episode_ctr = 1
+                for episode_rating in season_ratings:
+                    season_rating_doc.ratings.append(
+                        EpisodeRating(season_number=season_num,
+                                      episode_number=episode_ctr,
+                                      rating=episode_rating)
+                    )
+                    episode_ctr += 1
+                series_doc.ratings.append(season_rating_doc)
+
+            series_doc.save()
