@@ -311,7 +311,7 @@ class IMDb_Queries_Manager():
         self.__config = config
         self.__should_serialize = config.should_serialize
         self.__pickle_name = config.serialization_filename
-        self.__analyzer = IMDb_Analyzer(config)
+        self.__analyzer = None
         self.__ratings = SeriesRatingsCollection()
         self.__queries = set()
 
@@ -357,6 +357,8 @@ class IMDb_Queries_Manager():
                 unvisited_queries.append(query)
 
         if len(unvisited_queries) > 0:
+            if self.__analyzer is None:
+                self.__analyzer = IMDb_Analyzer(self.__config)
             self.__analyzer.multiple_queries(unvisited_queries, self.__ratings)
             db.add_multiple_ratings(self.__ratings)
 
