@@ -1,7 +1,8 @@
-from mongoengine import Document, EmbeddedDocument
-from mongoengine.fields import DateTimeField, EmbeddedDocumentListField, \
-    FloatField, IntField, ListField, StringField
 import datetime
+
+from mongoengine import Document, EmbeddedDocument
+from mongoengine.fields import (DateTimeField, EmbeddedDocumentListField,
+                                FloatField, IntField, ListField, StringField)
 
 
 class EpisodeRating(EmbeddedDocument):
