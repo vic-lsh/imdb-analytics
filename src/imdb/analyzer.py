@@ -1,29 +1,28 @@
-from collections import OrderedDict
-from datetime import datetime
 import functools
 import logging
 import os
 import pickle
 import time
+from collections import OrderedDict
+from datetime import datetime
 from typing import List
 
 from selenium import webdriver
-from selenium.common.exceptions import NoSuchElementException, \
-    StaleElementReferenceException
-from selenium.common.exceptions import TimeoutException
+from selenium.common.exceptions import (NoSuchElementException,
+                                        StaleElementReferenceException,
+                                        TimeoutException)
+from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
-from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.select import Select
 from selenium.webdriver.support.ui import WebDriverWait
 
+from common.utils import db_connect, timeout
 from db.database import IMDb_Database
 from imdb.config import AnalyzerConfig
 from imdb.constants import IMDb_Constants as consts
 from imdb.ratings import SeriesRatings, SeriesRatingsCollection
-from common.utils import timeout, db_connect
-
 
 logger = logging.getLogger(__name__)
 
