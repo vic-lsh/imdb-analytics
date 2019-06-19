@@ -9,23 +9,17 @@ from imdb.ratings import SeriesRatingsCollection
 logger = logging.getLogger(__name__)
 
 
-def timer(in_seconds=False):
+def timer(func):
     """A decorator that times and prints execution time."""
-    def _timer(func):
-        @functools.wraps(func)
-        def wrapper():
-            print("Starting execution...")
-            start_time = datetime.now()
-            func()
-            end_time = datetime.now()
-            duration = end_time - start_time
-            if in_seconds:
-                print("Program runtime: {}.{} secs".format(
-                    duration.seconds, duration.microseconds))
-            else:
-                print("Program runtime: {}".format(duration))
-        return wrapper
-    return _timer
+    def timer_wrapper(*args, **kwargs):
+        start_time = datetime.now()
+        resp = func(*args, **kwargs)
+        end_time = datetime.now()
+        duration = end_time - start_time
+        print("{:<40} runtime: {}.{} secs".format(
+            func.__name__, duration.seconds, duration.microseconds))
+        return resp
+    return timer_wrapper
 
 
 def timeout(delay, ExceptionType=Exception):
@@ -51,5 +45,5 @@ def timeout(delay, ExceptionType=Exception):
 def db_connect(func):
     def wrapper(self, *args, **kwargs):
         with IMDb_Database() as db:
-            func(self, db, *args, **kwargs)
+            func(self, *args, **kwargs, db=db)
     return wrapper
