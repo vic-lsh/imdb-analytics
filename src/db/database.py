@@ -1,3 +1,4 @@
+import json
 import traceback
 
 import mongoengine
@@ -35,6 +36,12 @@ class IMDb_Database():
     def find(self, series_name: str) -> TVSeries:
         if self.if_tv_series_exists(series_name):
             return TVSeries.objects.with_id(series_name)
+        else:
+            return None
+
+    def find_as_json(self, series_name: str):
+        resp = self.find(series_name)
+        return json.loads(resp.to_json()) if resp is not None else resp
 
     def add_multiple_ratings(
             self, ratings_collection: SeriesRatingsCollection) -> None:
