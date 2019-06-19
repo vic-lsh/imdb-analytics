@@ -23,6 +23,8 @@
   - [ ] Average rating for each season
   - [ ] Number of raters for each episode
 
+Note: for now, we maintain local SeriesRatings objects for compatibility purposes (in case we want to store local objects only, and forego DBs). In the future, we expect to use DBs only. Transactions with the DB should be _stateless_. 
+
 ## Medium-term roadmap
 
 - [ ] Package as a pip-package
