@@ -27,6 +27,10 @@ class SeriesRatings():
     def overall_rating(self):
         return self.__OVERALL_RATING
 
+    @property
+    def rating_values(self):
+        return self.__episode_ratings
+
     def add_overall_rating(self, rating: float) -> None:
         """Add overall rating of a TV series"""
         if self.__OVERALL_RATING != None:
@@ -87,6 +91,10 @@ class SeriesRatingsCollection():
     def __init__(self):
         self.__ratings_collection = {}
 
+    @property
+    def collection(self):
+        return self.__ratings_collection
+
     def add(self, ratings: SeriesRatings) -> None:
         name = ratings.series_name
         if name in self.__ratings_collection:
@@ -102,15 +110,6 @@ class SeriesRatingsCollection():
     def __contains__(self, item):
         assert isinstance(item, str)
         return item in self.__ratings_collection
-
-    def __iter__(self):
-        return self
-
-    def __next__(self):
-        try:
-            return next(self.__ratings_collection)
-        except:
-            raise StopIteration
 
     def __len__(self):
         return len(self.__ratings_collection)
