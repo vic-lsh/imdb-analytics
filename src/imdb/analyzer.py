@@ -284,7 +284,7 @@ def serialize(cls):
     return WrapperClass
 
 
-@serialize
+# @serialize
 class IMDb_Queries_Manager():
     """Fundamentally, an operational cycle involves 2 essential operations:
     querying, and data persistence. The queries manager composes the classes
@@ -312,7 +312,7 @@ class IMDb_Queries_Manager():
         self.__pickle_name = config.serialization_filename
         self.__analyzer = IMDb_Analyzer(config)
         self.__ratings = SeriesRatingsCollection()
-        self.__queries = OrderedDict()
+        self.__queries = set()
 
     def add_query(self, query: str) -> None:
         """Queue up queries to be executed. Queries are added onto the waiting 
@@ -320,7 +320,7 @@ class IMDb_Queries_Manager():
         Add_query is indempotent; repeatedly adding the same query will not
         raise a warning or error.
         """
-        self.__queries[query] = None
+        self.__queries.add(query)
 
     def add_multiple_queries(self, queries: List[str]) -> None:
         """Queue up multiple queries to be executed. Queries are added onto 
@@ -330,12 +330,11 @@ class IMDb_Queries_Manager():
         Adding multiple queries is indempotent; if a certain query alreaady
         exists in the pending list, it would not be added twice.
         """
-        for query in queries:
-            self.__queries[query] = None
+        self.__queries.union(set(queries))
 
     @property
     def pending_queries(self) -> List[str]:
-        return self.__queries.keys()
+        return list(self.__queries)
 
     def _clear_pending_queries(self) -> None:
         self.__queries.clear()
@@ -357,4 +356,4 @@ class IMDb_Queries_Manager():
 
         ratings_collection = SeriesRatingsCollection()
         self.__analyzer.multiple_queries(unvisited_queries, ratings_collection)
-        db.add_multiple_ratings(ratings_collection)
+        db.add_multiple_ratings(self.__ratings)
