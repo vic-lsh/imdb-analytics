@@ -9,3 +9,4 @@ config.yml
 pickle
 config_logger.yml
 config_imdb.yml
+profile
