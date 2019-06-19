@@ -1,7 +1,9 @@
 import functools
+import json
 import logging
 import os
 import pickle
+from pprint import pprint
 import time
 from collections import OrderedDict
 from datetime import datetime
@@ -329,7 +331,7 @@ class IMDb_Queries_Manager():
         Adding multiple queries is indempotent; if a certain query alreaady
         exists in the pending list, it would not be added twice.
         """
-        self.__queries.union(set(queries))
+        self.__queries = self.__queries.union(set(queries))
 
     @property
     def pending_queries(self) -> List[str]:
@@ -345,14 +347,20 @@ class IMDb_Queries_Manager():
         self._clear_pending_queries()
 
     @db_connect
-    def db_execute(self, db: IMDb_Database) -> None:
+    def db_execute(self, db: IMDb_Database = None) -> None:
+        assert db is not None
+
         unvisited_queries = []
 
         for query in self.pending_queries:
             if not db.if_tv_series_exists(query):
                 unvisited_queries.append(query)
-        self._clear_pending_queries()
 
-        ratings_collection = SeriesRatingsCollection()
-        self.__analyzer.multiple_queries(unvisited_queries, ratings_collection)
-        db.add_multiple_ratings(self.__ratings)
+        if len(unvisited_queries) > 0:
+            self.__analyzer.multiple_queries(unvisited_queries, self.__ratings)
+            db.add_multiple_ratings(self.__ratings)
+
+        for query in self.__queries:
+            pprint(db.find_as_json(query))
+
+        self._clear_pending_queries()
