@@ -7,7 +7,8 @@ import datetime
 class EpisodeRating(EmbeddedDocument):
     """Model for Episode Rating embedded in `SeasonRatings`
 
-    Attributes include:
+    Attributes
+    ----------
         `@episode_number` [pk]: episode number
         `@season_number`: season number
         `@rating`: a _float_ defining this episode's rating (min: 0, max: 10)
@@ -20,7 +21,8 @@ class EpisodeRating(EmbeddedDocument):
 class SeasonRatings(EmbeddedDocument):
     """Model for Season Ratings embedded in `TVSeries`.
 
-    Attributes include:
+    Attributes
+    ----------
         `@season_number` [pk]: season number
         `@episodes_count`: number of episodes in this season
         `@ratings`: a list of `EpisodeRating` defines ratings in this season
@@ -33,7 +35,8 @@ class SeasonRatings(EmbeddedDocument):
 class TVSeries(Document):
     """Model for TV Series.
 
-    Attributes include:
+    Attributes
+    ----------
         `@name` [pk]: the name of the TV series
         `@last_modified`: automatically updates modification time when updated
         `@season_count`: number of seasons
