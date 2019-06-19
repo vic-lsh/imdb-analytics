@@ -25,9 +25,12 @@ class IMDb_Database():
     def db(self):
         return self.__db
 
-    @staticmethod
-    def if_tv_series_exists(series_name: str) -> bool:
+    def if_tv_series_exists(self, series_name: str) -> bool:
         return TVSeries.objects(name=series_name).count() > 0
+
+    def delete(self, series_name: str):
+        if self.if_tv_series_exists(series_name):
+            TVSeries.objects.with_id(series_name).delete()
 
     def add_multiple_ratings(
             self, ratings_collection: SeriesRatingsCollection) -> None:
