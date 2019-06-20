@@ -21,6 +21,22 @@
         {
           "episode_number": 2,
           "rating": 8.4
+        },
+        {
+          "episode_number": 3,
+          "rating": 8.3
+        },
+        {
+          "episode_number": 4,
+          "rating": 8.4
+        },
+        {
+          "episode_number": 5,
+          "rating": 8.4
+        },
+        {
+          "episode_number": 6,
+          "rating": 8.9
         }
       ]
     }
