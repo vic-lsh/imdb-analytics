@@ -14,7 +14,10 @@ class TVSeriesCollection(Resource):
         return {'hello': 'world'}
 
     def post(self):
-        assert request.is_json, "Fmt error"
+        with Database() as db:
+            resp, msgs = db.add_from_dict(request.json)
+        if resp == False:
+            return {'Messages': msgs}, 400
         return request.json
 
 
