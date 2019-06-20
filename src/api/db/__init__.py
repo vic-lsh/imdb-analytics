@@ -29,8 +29,13 @@ class Database():
             return None
 
     def delete(self, series_name: str):
+        """Deletes a series with the `series_name` provided.
+        Returns True if the object is deleted, False if not deleted.
+        """
         if self.if_tv_series_exists(series_name):
-            TVSeries.objects.with_id(series_name).delete()
+            resp = TVSeries.objects.with_id(series_name).delete()
+            return True
+        return False
 
     def if_tv_series_exists(self, series_name: str) -> bool:
         return TVSeries.objects(name=series_name).count() > 0
