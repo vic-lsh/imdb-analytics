@@ -35,8 +35,17 @@ class TVSeries(Resource):
             return {'Messages': msgs}, 400
         return request.json
 
-    def delete(Resource):
-        return
+    def delete(self):
+        args = self._parser.parse_args()
+        identifier = args['name']
+
+        with Database() as db:
+            status = db.delete(identifier)
+
+        if status == False:
+            return {'message': 'TVSeries not found'}, 404
+        else:
+            return {'message': 'Deleted'}, 204
 
 
 api.add_resource(TVSeries, '/tv-series')
