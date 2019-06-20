@@ -56,8 +56,7 @@ class IMDb_Database():
                 episode_ctr = 1
                 for episode_rating in season_ratings:
                     season_rating_doc.ratings.append(
-                        EpisodeRating(season_number=season_num,
-                                      episode_number=episode_ctr,
+                        EpisodeRating(episode_number=episode_ctr,
                                       rating=episode_rating)
                     )
                     episode_ctr += 1

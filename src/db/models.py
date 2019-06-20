@@ -11,10 +11,8 @@ class EpisodeRating(EmbeddedDocument):
     Attributes
     ----------
         `@episode_number` [pk]: episode number
-        `@season_number`: season number
         `@rating`: a _float_ defining this episode's rating (min: 0, max: 10)
     """
-    season_number = IntField(min_value=1)
     episode_number = IntField(min_value=1, primary_key=True)
     rating = FloatField(min_value=0, max_value=10)
 
