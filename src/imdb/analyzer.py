@@ -151,6 +151,7 @@ class IMDb_Analyzer():
         """Query a TV series's ratings with its name.
         Return: a SeriesRating object
         """
+        print("Querying {}".format(series_name))
         self._navigate_to_series(series_name)
         overall_rating = self._get_overall_rating(series_name)
         seasons_count = self._get_seasons_count(series_name)
@@ -187,7 +188,8 @@ class IMDb_Analyzer():
                         break
             season_num = index + 1
             season_ratings = self._query_ratings_in_season(season_num)
-            series_ratings.add_season_ratings(season_num, season_ratings)
+            if season_ratings is not None:
+                series_ratings.add_season_ratings(season_num, season_ratings)
 
     @_Decorators.wait_to_execute_in_series_season_page
     def _query_ratings_in_season(self, season_num: int) -> List[float]:
@@ -207,7 +209,7 @@ class IMDb_Analyzer():
             logger.warning("Timeout in getting ratings for season {}. ".format(
                 season_num),
                 "This usually indicates this season has not aired yet.")
-        return ratings
+        return ratings if ratings != [] else None
 
     @_Decorators.catch_no_such_element_exception
     @_Decorators.execute_in_series_homepage
