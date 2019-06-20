@@ -9,3 +9,10 @@ services:
       - ./src/api:/usr/src/app
     ports:
       - 8001:80
+    links:
+      - mongo
+  mongo:
+    container_name: mongo
+    image: mongo
+    ports:
+      - '27017:27017'
