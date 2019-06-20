@@ -28,6 +28,10 @@ class Database():
             print("done")
             return None
 
+    def delete(self, series_name: str):
+        if self.if_tv_series_exists(series_name):
+            TVSeries.objects.with_id(series_name).delete()
+
     def if_tv_series_exists(self, series_name: str) -> bool:
         return TVSeries.objects(name=series_name).count() > 0
 
