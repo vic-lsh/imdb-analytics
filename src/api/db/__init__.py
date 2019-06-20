@@ -32,53 +32,47 @@ class Database():
         return TVSeries.objects(name=series_name).count() > 0
 
     def add_from_dict(self, req: dict) -> bool:
-        successful = True
-        msgs = []
+        err = []
 
-        required_first_level_keys = (
-            'name', 'series_rating', 'episode_ratings')
-        if not all(k in req for k in required_first_level_keys):
-            successful = False
-            msgs.append("First-level key error")
-            return successful, msgs
+        MISSING_KEY_MSG = 'Some of the following keys are missing in {}: {}'
+
+        required_root_level_keys = ('name', 'series_rating', 'episode_ratings')
+        required_season_level_keys = ('season', 'ratings')
+        required_episode_keys = ('episode_number', 'rating')
 
         try:
             tv_doc = TVSeries(name=req['name'],
                               seasons_count=len(req['episode_ratings']),
                               overall_rating=req['series_rating'])
+        except KeyError:
+            err.append(MISSING_KEY_MSG.format(
+                'root', required_root_level_keys))
+            return False, err
 
-            try:
-                for season in req['episode_ratings']:
-                    assert type(season) == dict
+        try:
+            for season in req['episode_ratings']:
+                season_doc = SeasonRatings(
+                    season_number=season['season'],
+                    episodes_count=len(season['ratings']))
 
-                    # season_required_keys = ('season', 'ratings')
-                    # missing_keys = filter(lambda k: not(k in season), season_required_keys)
-                    # if len(missing_keys) > 0:
-                    #     msgs.append("Missing key(s) {}".format(str(missing_keys)))
+                try:
+                    for episode in season['ratings']:
+                        season_doc.ratings.append(
+                            EpisodeRating(
+                                episode_number=episode['episode_number'],
+                                rating=episode['rating'])
+                        )
+                except KeyError:
+                    err.append(MISSING_KEY_MSG.format(
+                        'episode_ratings', required_episode_keys))
+                    return False, err
 
-                    season_doc = SeasonRatings(season_number=season['season'],
-                                               episodes_count=len(season['ratings']))
+                tv_doc.ratings.append(season_doc)
 
-                    try:
-                        for episode in season['ratings']:
-                            assert type(episode) == dict
+            tv_doc.save()
+        except KeyError:
+            err.append(MISSING_KEY_MSG.format(
+                'season', required_season_level_keys))
+            return False, err
 
-                            ep = EpisodeRating(episode_number=episode['episode_number'],
-                                               rating=episode['rating'])
-                            season_doc.ratings.append(ep)
-
-                        tv_doc.ratings.append(season_doc)
-                    except:
-                        successful = False
-                        msgs.append("Episode parsing error")
-
-                tv_doc.save()
-            except:
-                successful = False
-                msgs.append("Season parsing error")
-
-        except:
-            successful = False
-            msgs.append("TV Series creation error")
-
-        return successful, msgs
+        return len(err) == 0, err
