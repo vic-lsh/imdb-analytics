@@ -9,18 +9,6 @@ app = Flask(__name__)
 api = Api(app)
 
 
-class TVSeriesCollection(Resource):
-    def get(self):
-        return {'hello': 'world'}
-
-    def post(self):
-        with Database() as db:
-            resp, msgs = db.add_from_dict(request.json)
-        if resp == False:
-            return {'Messages': msgs}, 400
-        return request.json
-
-
 class TVSeries(Resource):
     def get(self, identifier: str):
         with Database() as db:
@@ -30,12 +18,18 @@ class TVSeries(Resource):
         else:
             return resp.to_json()
 
+    def post(self):
+        with Database() as db:
+            resp, msgs = db.add_from_dict(request.json)
+        if resp == False:
+            return {'Messages': msgs}, 400
+        return request.json
+
     def delete(Resource):
         return
 
 
-api.add_resource(TVSeriesCollection, '/tv-series')
-api.add_resource(TVSeries, '/tv-series/<string:identifier>')
+api.add_resource(TVSeries, '/tv-series')
 
 
 if __name__ == '__main__':
