@@ -17,11 +17,22 @@ def get_db():
     return db
 
 
-class HelloWorld(Resource):
+class TVSeriesCollection(Resource):
     def get(self):
         return {'hello': 'world'}
 
-api.add_resource(HelloWorld, '/')
+    def post(self):
+        return
+
+
+class TVSeries(Resource):
+    def get(self):
+        return
+
+    def delete(Resource):
+        return
+
+api.add_resource(TVSeriesCollection, '/tv-series')
 
 if __name__ == '__main__':
     app.run(debug=True)
