@@ -1,6 +1,7 @@
+import json
 import mongoengine
 
-from flask import Flask, request
+from flask import Flask, request, jsonify
 from flask_restful import Resource, Api, reqparse
 
 from db import Database
@@ -10,17 +11,26 @@ api = Api(app)
 
 
 class TVSeries(Resource):
-    def get(self, identifier: str):
+    def __init__(self):
+        self._parser = reqparse.RequestParser()
+        self._parser.add_argument('name', type=str)
+
+    def get(self):
+        args = self._parser.parse_args()
+        identifier = args['name']
+
         with Database() as db:
             resp = db.find(identifier)
+
         if resp is None:
             return {'message': 'TVSeries not found'}, 404
         else:
-            return resp.to_json()
+            return jsonify(json.loads(resp.to_json()))
 
     def post(self):
         with Database() as db:
             resp, msgs = db.add_from_dict(request.json)
+
         if resp == False:
             return {'Messages': msgs}, 400
         return request.json
