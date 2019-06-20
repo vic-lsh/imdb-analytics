@@ -1,7 +1,9 @@
 version: '3'
 
 services:
+
   api:
+    container_name: flask_api
     build:
       context: ./src/api
       dockerfile: dockerfile
@@ -11,12 +13,15 @@ services:
       - 8001:80
     links:
       - mongo
+
   mongo:
     container_name: mongo
     image: mongo
     ports:
       - '27017:27017'
+      
   app:
+    container_name: react_app
     build:
       context: ./src/app
       dockerfile: dockerfile
