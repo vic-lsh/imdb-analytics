@@ -16,3 +16,13 @@ services:
     image: mongo
     ports:
       - '27017:27017'
+  app:
+    build:
+      context: ./src/app
+      dockerfile: dockerfile
+    volumes:
+      - ./src/app:/usr/src/app
+    ports:
+      - 3001:3000
+    depends_on: 
+      - api
