@@ -4,6 +4,7 @@ import logging
 import os
 import pickle
 from pprint import pprint
+import requests
 import time
 from collections import OrderedDict
 from datetime import datetime
@@ -368,3 +369,16 @@ class IMDb_Queries_Manager():
             pprint(db.find_as_json(query))
 
         self._clear_pending_queries()
+
+    def api_execute(self) -> None:
+        if self.__analyzer is None:
+            self.__analyzer = IMDb_Analyzer(self.__config)
+        self.__analyzer.multiple_queries(self.pending_queries, self.__ratings)
+
+        jsons = list(map(lambda r: r.json, self.__ratings.collection.values()))
+        pprint(jsons)
+
+        for json_obj in jsons:
+            r = requests.post(url="http://localhost:8001/tv-series",
+                              json=json_obj)
+            print("POST STATUS: ", r.status_code)

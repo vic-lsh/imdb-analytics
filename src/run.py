@@ -25,7 +25,7 @@ def main():
     config = AnalyzerConfig()
     manager = IMDb_Queries_Manager(config)
     manager.add_multiple_queries(config.tv_series_names)
-    manager.db_execute()
+    manager.api_execute()
 
 
 if __name__ == "__main__":
