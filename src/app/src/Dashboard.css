@@ -11,6 +11,10 @@
   padding: 1rem;
 }
 
+li.episode-rating {
+  list-style: none;
+}
+
 h1 {
   margin: 0;
   padding: 0 1rem;

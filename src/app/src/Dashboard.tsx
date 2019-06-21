@@ -48,7 +48,7 @@ export default class Dashboard extends Component<DashboardProps, DashboardState>
   renderEpisodeRatings(seasonRating: Array<EpisodeRatingObj>) {
     return seasonRating.map((episodeRating: EpisodeRatingObj) => {
       const epNum = episodeRating['_id'];
-      return <li key={epNum}>{epNum}: {episodeRating['rating']}</li>;
+      return <li className="episode-rating" key={epNum}>{epNum}: {episodeRating['rating']}</li>;
     })
   }
 
