@@ -8,9 +8,9 @@ const App: React.FC = () => {
 
   return (
     <div className="App">
-      <div className="query-panel">
+      <div className="home-component query-panel">
       </div>
-      <div className="dashboard">
+      <div className="home-component dashboard">
         <Dashboard />
       </div>
     </div>

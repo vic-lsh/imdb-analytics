@@ -5,6 +5,10 @@
   grid-template-columns: 30% 70%;
 }
 
+.home-component {
+  padding-top: 3rem;
+}
+
 .query-panel {
   background: gray;
 }
