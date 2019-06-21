@@ -25,8 +25,9 @@ export default class Dashboard extends Component<{}, DashboardState> {
   }
 
   async fetchTvStatistics(seriesName: string) {
+    const BASE_URL = 'http://localhost:8001';
     try {
-      const response = await Axios.get('http://localhost:8001/tv-series', {
+      const response = await Axios.get(`${BASE_URL}/tv-series`, {
         params: { name: seriesName }
       })
       this.setState({ tvSeries: response.data });
