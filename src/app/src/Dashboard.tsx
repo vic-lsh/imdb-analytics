@@ -2,6 +2,10 @@ import React, { Component } from 'react';
 import Axios from 'axios';
 import './Dashboard.css';
 
+type DashboardProps = {
+  seriesName: string
+}
+
 type DashboardState = {
   tvSeries: any
 }
@@ -16,9 +20,9 @@ type TVSeriesRatingsObj = {
   [key: string]: any
 }
 
-export default class Dashboard extends Component<{}, DashboardState> {
+export default class Dashboard extends Component<DashboardProps, DashboardState> {
 
-  constructor(props: {}) {
+  constructor(props: DashboardProps) {
     super(props);
     this.state = {
       tvSeries: undefined
@@ -38,8 +42,7 @@ export default class Dashboard extends Component<{}, DashboardState> {
   }
 
   componentDidMount() {
-    // this.fetchTvStatistics('How to Sell Drugs Online (Fast)');
-    this.fetchTvStatistics('Black Mirror');
+    this.fetchTvStatistics(this.props.seriesName);
   }
 
   renderEpisodeRatings(seasonRating: Array<EpisodeRatingObj>) {

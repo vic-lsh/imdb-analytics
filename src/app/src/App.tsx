@@ -11,7 +11,7 @@ const App: React.FC = () => {
       <div className="home-component query-panel">
       </div>
       <div className="home-component dashboard">
-        <Dashboard />
+        <Dashboard seriesName="Black Mirror" />
       </div>
     </div>
   );
