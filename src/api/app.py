@@ -2,11 +2,25 @@ import json
 import mongoengine
 
 from flask import Flask, request, jsonify
+from flask_cors import CORS, cross_origin
 from flask_restful import Resource, Api, reqparse
 
 from db import Database
 
 app = Flask(__name__)
+
+def add_cors_headers(response):
+    response.headers['Access-Control-Allow-Origin'] = 'http://localhost:3000'
+    if request.method == 'OPTIONS':
+        response.headers['Access-Control-Allow-Methods'] = 'DELETE, GET, POST, PUT'
+        headers = request.headers.get('Access-Control-Request-Headers')
+        if headers:
+            response.headers['Access-Control-Allow-Headers'] = headers
+    return response
+app.after_request(add_cors_headers)
+
+CORS(app, resources={r"/tv-series": {"origins": "http://localhost:3001"}})
+
 api = Api(app)
 
 
@@ -52,4 +66,4 @@ api.add_resource(TVSeries, '/tv-series')
 
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run(debug=True, port='0.0.0.0')
