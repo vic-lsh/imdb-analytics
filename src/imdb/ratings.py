@@ -31,6 +31,10 @@ class SeriesRatings():
     def rating_values(self):
         return self.__episode_ratings
 
+    @property
+    def json(self):
+        return self._to_json()
+
     def add_overall_rating(self, rating: float) -> None:
         """Add overall rating of a TV series"""
         if self.__OVERALL_RATING != None:
@@ -83,6 +87,26 @@ class SeriesRatings():
 
     def __repr__(self):
         return self.__str__
+
+    def _to_json(self):
+        json_obj = {
+            'name': self.__SERIES_NAME, 
+            'series_rating': self.__OVERALL_RATING, 
+            'episode_ratings': []
+        }
+        for season_num, season_ratings in self.__episode_ratings.items():
+            obj = {}
+            ep_ctr = 1
+            obj['season'] = season_num
+            obj['ratings'] = []
+            for ep_rating in season_ratings:
+                obj['ratings'].append({
+                    'episode_number': ep_ctr, 
+                    'rating': ep_rating
+                })
+                ep_ctr += 1
+            json_obj['episode_ratings'].append(obj)
+        return json_obj
 
 
 class SeriesRatingsCollection():
