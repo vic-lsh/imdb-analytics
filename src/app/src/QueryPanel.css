@@ -1,0 +1,40 @@
+.search-form {
+  padding: 0 2rem;
+}
+
+.input-label {
+  color: white;
+  font-weight: bold;
+  font-size: 2rem;
+}
+
+.input-label h1 {
+  padding: 0;
+}
+
+.search-field {
+  width: 100%;
+  padding: 0.8rem;
+  margin: 1.83rem 0 1.2rem;
+  box-sizing: border-box;
+  border: 0;
+  font-size: 1.2rem;
+  color: white;
+  background: rgb(63, 63, 63);
+}
+
+.search-field:focus {
+  outline: none;
+}
+
+.submit-btn {
+  background-color: #230fd3; /* Green */
+  border: none;
+  color: white;
+  padding: 0.9rem 1.8rem;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 1.05rem;
+  font-weight: bold;
+}

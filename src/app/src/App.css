@@ -6,9 +6,9 @@
 }
 
 .home-component {
-  padding-top: 3rem;
+  padding-top: 5rem;
 }
 
 .query-panel {
-  background: gray;
+  background: rgb(32, 32, 32);
 }
