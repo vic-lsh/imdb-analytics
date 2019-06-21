@@ -49,7 +49,12 @@ export default class Dashboard extends Component<{}, DashboardState> {
   renderRatings() {
     const ratings = this.state.tvSeries['ratings'];
     return ratings.map((seasonRatingsObj: TVSeriesRatingsObj) => {
-      return this.renderEpisodeRatings(seasonRatingsObj.ratings);
+      return (
+        <div>
+          <h2>Season {seasonRatingsObj['_id']}</h2>
+          <ul>{this.renderEpisodeRatings(seasonRatingsObj.ratings)}</ul>
+        </div>
+      );
     })
   }
 
@@ -62,7 +67,7 @@ export default class Dashboard extends Component<{}, DashboardState> {
       return (
         <div>
           <h1>{this.state.tvSeries['_id']}</h1>
-          <ul>{ratingsList}</ul>
+          <div>{ratingsList}</div>
         </div>
       )
     }
