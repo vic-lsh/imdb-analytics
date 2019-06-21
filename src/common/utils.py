@@ -2,9 +2,8 @@ from datetime import datetime
 import functools
 import logging
 
-from db.database import IMDb_Database
-from imdb.config import AnalyzerConfig
-from imdb.ratings import SeriesRatingsCollection
+from crawler.config import AnalyzerConfig
+from crawler.ratings import SeriesRatingsCollection
 
 logger = logging.getLogger(__name__)
 
@@ -40,10 +39,3 @@ def timeout(delay, ExceptionType=Exception):
             return ret
         return wrapper
     return _timeout
-
-
-def db_connect(func):
-    def wrapper(self, *args, **kwargs):
-        with IMDb_Database() as db:
-            func(self, *args, **kwargs, db=db)
-    return wrapper
