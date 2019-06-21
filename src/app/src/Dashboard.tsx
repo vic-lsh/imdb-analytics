@@ -37,7 +37,8 @@ export default class Dashboard extends Component<{}, DashboardState> {
   }
 
   componentDidMount() {
-    this.fetchTvStatistics('How to Sell Drugs Online (Fast)');
+    // this.fetchTvStatistics('How to Sell Drugs Online (Fast)');
+    this.fetchTvStatistics('Black Mirror');
   }
 
   renderEpisodeRatings(seasonRating: Array<EpisodeRatingObj>) {
