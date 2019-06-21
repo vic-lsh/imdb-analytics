@@ -1,0 +1,12 @@
+.tv-series {
+  padding: 0 1rem;
+}
+
+.ratings-grid {
+  display: grid; 
+  grid-template-columns: repeat(auto-fit, minmax(180px, 2fr));
+}
+
+.tv-series-season {
+  padding: 1rem;
+}

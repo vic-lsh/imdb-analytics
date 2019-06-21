@@ -8,7 +8,11 @@ const App: React.FC = () => {
 
   return (
     <div className="App">
-     <Dashboard />
+      <div className="query-panel">
+      </div>
+      <div className="dashboard">
+        <Dashboard />
+      </div>
     </div>
   );
 }

@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import Axios from 'axios';
+import './Dashboard.css';
 
 type DashboardState = {
   tvSeries: any
@@ -48,16 +49,24 @@ export default class Dashboard extends Component<{}, DashboardState> {
     })
   }
 
-  renderRatings() {
-    const ratings = this.state.tvSeries['ratings'];
-    return ratings.map((seasonRatingsObj: TVSeriesRatingsObj) => {
+  renderSeasonRatings(allRatings: Array<TVSeriesRatingsObj>) {
+    return allRatings.map((seasonRatingsObj: TVSeriesRatingsObj) => {
       return (
-        <div>
+        <div className="tv-series-season">
           <h2>Season {seasonRatingsObj['_id']}</h2>
           <ul>{this.renderEpisodeRatings(seasonRatingsObj.ratings)}</ul>
         </div>
       );
     })
+  }
+
+  renderRatings() {
+    const ratings = this.state.tvSeries['ratings'];
+    return (
+      <div className="ratings-grid">
+        {this.renderSeasonRatings(ratings)}
+      </div>
+    )
   }
 
   render() {
@@ -67,7 +76,7 @@ export default class Dashboard extends Component<{}, DashboardState> {
     else {
       const ratingsList = this.renderRatings();
       return (
-        <div>
+        <div className="tv-series">
           <h1>{this.state.tvSeries['_id']}</h1>
           <div>{ratingsList}</div>
         </div>
