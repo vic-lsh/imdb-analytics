@@ -7,10 +7,9 @@ import yaml
 
 from mongoengine import connect
 
-from db.models import TVSeries, SeasonRatings, EpisodeRating
-from imdb.analyzer import IMDb_Queries_Manager
-from imdb.config import AnalyzerConfig
-from imdb.ratings import SeriesRatingsCollection, SeriesRatings
+from crawler.analyzer import IMDb_Queries_Manager
+from crawler.config import AnalyzerConfig
+from crawler.ratings import SeriesRatingsCollection, SeriesRatings
 from common.utils import timer
 
 with open(abspath('src/config_logger.yml'), 'r') as f:

@@ -22,9 +22,9 @@ from selenium.webdriver.support.select import Select
 from selenium.webdriver.support.ui import WebDriverWait
 
 from common.utils import timeout
-from imdb.config import AnalyzerConfig
-from imdb.constants import IMDb_Constants as consts
-from imdb.ratings import SeriesRatings, SeriesRatingsCollection
+from crawler.config import AnalyzerConfig
+from crawler.constants import IMDb_Constants as consts
+from crawler.ratings import SeriesRatings, SeriesRatingsCollection
 
 logger = logging.getLogger(__name__)
 
