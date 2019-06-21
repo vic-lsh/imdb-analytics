@@ -5,6 +5,16 @@ type DashboardState = {
   tvSeries: any
 }
 
+type EpisodeRatingObj = {
+  rating: number,
+  [key: string]: any
+}
+
+type TVSeriesRatingsObj = {
+  ratings: Array<EpisodeRatingObj>,
+  [key: string]: any
+}
+
 export default class Dashboard extends Component<{}, DashboardState> {
 
   constructor(props: {}) {
@@ -29,9 +39,32 @@ export default class Dashboard extends Component<{}, DashboardState> {
     this.fetchTvStatistics('How to Sell Drugs Online (Fast)');
   }
 
+  renderEpisodeRatings(seasonRating: Array<EpisodeRatingObj>) {
+    return seasonRating.map((episodeRating: EpisodeRatingObj) => {
+      const epNum = episodeRating['_id'];
+      return <li key={epNum}>{epNum}: {episodeRating['rating']}</li>;
+    })
+  }
+
+  renderRatings() {
+    const ratings = this.state.tvSeries['ratings'];
+    return ratings.map((seasonRatingsObj: TVSeriesRatingsObj) => {
+      return this.renderEpisodeRatings(seasonRatingsObj.ratings);
+    })
+  }
+
   render() {
-    return (
-      <p>{JSON.stringify(this.state.tvSeries)}</p>
-    )
+    if (this.state.tvSeries === undefined) {
+      return (<p>loading...</p>);
+    }
+    else {
+      const ratingsList = this.renderRatings();
+      return (
+        <div>
+          <h1>{this.state.tvSeries['_id']}</h1>
+          <ul>{ratingsList}</ul>
+        </div>
+      )
+    }
   }
 }
