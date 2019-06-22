@@ -129,13 +129,13 @@ const RatingsDetail: React.FC<{ tvSeries: any }> = (props) => {
     <div className="tv-series">
       <h1>{props.tvSeries['name']}</h1>
       <div className="ratings-grid">
-        <SeasonRatings seasonRatings={props.tvSeries.ratings} />
+        <SeasonRatingsList seasonRatings={props.tvSeries.ratings} />
       </div>
     </div>
   )
 }
 
-const SeasonRatings: React.FC<{ seasonRatings: SeasonRatingsObj[] }> = (props) => {
+const SeasonRatingsList: React.FC<{ seasonRatings: SeasonRatingsObj[] }> = (props) => {
   return (<React.Fragment>{
     props.seasonRatings.map((seasonRating) => {
       return <SeasonRating seasonRating={seasonRating} key={seasonRating['_id']} />
@@ -147,12 +147,12 @@ const SeasonRating: React.FC<{ seasonRating: SeasonRatingsObj }> = (props) => {
   return (
     <div className="tv-series-season">
       <h2>Season {props.seasonRating['_id']}</h2>
-      <EpisodeRatings ratingsInSeason={props.seasonRating.ratings} />
+      <EpisodeRatingsList ratingsInSeason={props.seasonRating.ratings} />
     </div>
   );
 }
 
-const EpisodeRatings: React.FC<{ ratingsInSeason: EpisodeRatingObj[] }> = (props) => {
+const EpisodeRatingsList: React.FC<{ ratingsInSeason: EpisodeRatingObj[] }> = (props) => {
   return (<React.Fragment>{
     props.ratingsInSeason.map((epRating) => {
       return <EpisodeRating episodeRating={epRating} key={epRating['_id']} />
