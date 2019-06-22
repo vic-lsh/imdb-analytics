@@ -44,9 +44,11 @@ export default class ResultPanel extends Component<ResultPanelProps, ResultPanel
       });
     } catch (err) {
       console.log(err.response);
-      this.setState({
-        responseStatus: err.response.status
-      })
+      if (err.response !== undefined) {
+        this.setState({
+          responseStatus: err.response.status
+        })
+      }
     }
   }
 
