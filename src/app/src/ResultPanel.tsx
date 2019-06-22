@@ -29,7 +29,7 @@ export default class ResultPanel extends Component<ResultPanelProps, ResultPanel
     }
   }
 
-  async fetchTvStatistics(seriesName: string) {
+  fetchTvStatistics = async (seriesName: string) => {
     const BASE_URL = 'http://localhost:8001';
     try {
       const response = await Axios.get(`${BASE_URL}/tv-series`, {
@@ -83,7 +83,7 @@ export default class ResultPanel extends Component<ResultPanelProps, ResultPanel
 
   renderPlaceholder = () => {
     return (
-      <p>Please enter a TV Series name.</p>
+      <h1>Please enter a TV Series name  +_+ </h1>
     )
   }
 
@@ -104,10 +104,12 @@ export default class ResultPanel extends Component<ResultPanelProps, ResultPanel
   }
 
   render() {
-    if (this.props.seriesName === undefined) {
-      return this.renderPlaceholder();
-    } else {
-      return this.renderRatings();
-    }
+    const displayContent = this.props.seriesName === undefined ?
+      this.renderPlaceholder() : this.renderRatings();
+    return (
+      <div className="">
+        {displayContent}
+      </div>
+    )
   }
 }
