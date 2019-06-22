@@ -1,5 +1,5 @@
 import './App.css';
-import Dashboard from './Dashboard';
+import ResultPanel from './ResultPanel';
 import QueryPanel from './QueryPanel';
 
 const React = require('react');
@@ -13,7 +13,7 @@ const App: React.FC = () => {
         <QueryPanel />
       </div>
       <div className="home-component dashboard">
-        <Dashboard seriesName="Black Mirror" />
+        <ResultPanel seriesName="Black Mirror" />
       </div>
     </div>
   );

@@ -1,12 +1,12 @@
 import React, { Component } from 'react';
 import Axios from 'axios';
-import './Dashboard.css';
+import './ResultPanel.css';
 
-type DashboardProps = {
+type ResultPanelProps = {
   seriesName: string
 }
 
-type DashboardState = {
+type ResultPanelState = {
   tvSeries: any
 }
 
@@ -20,9 +20,9 @@ type TVSeriesRatingsObj = {
   [key: string]: any
 }
 
-export default class Dashboard extends Component<DashboardProps, DashboardState> {
+export default class ResultPanel extends Component<ResultPanelProps, ResultPanelState> {
 
-  constructor(props: DashboardProps) {
+  constructor(props: ResultPanelProps) {
     super(props);
     this.state = {
       tvSeries: undefined
