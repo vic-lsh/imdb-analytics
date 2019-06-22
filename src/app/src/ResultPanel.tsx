@@ -94,7 +94,7 @@ export default class ResultPanel extends Component<ResultPanelProps, ResultPanel
     const ratings = this.state.tvSeries['ratings'];
     return (
       <div className="tv-series">
-        <h1>{this.state.tvSeries['_id']}</h1>
+        <h1>{this.state.tvSeries['name']}</h1>
         <div className="ratings-grid">
           {this.renderSeasonRatings(ratings)}
         </div>
@@ -120,7 +120,13 @@ export default class ResultPanel extends Component<ResultPanelProps, ResultPanel
     if (this.props.seriesName === undefined) {
       return this.renderRatingsDecodeError();
     }
-    const seriesNameCapitalized = this.props.seriesName[0].toUpperCase() + this.props.seriesName.slice(1);
+
+    const seriesNameCapitalized = (() => {
+      return this.props.seriesName === undefined ? "" : this.props.seriesName.split(" ").map((word) => {
+        return word[0].toUpperCase() + word.slice(1);
+      }).join(" ");
+    })();
+
     return (
       <div>
         <h1>Sorry, we're unable to find '{seriesNameCapitalized}'</h1>
