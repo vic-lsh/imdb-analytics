@@ -21,6 +21,7 @@
   font-size: 1.2rem;
   color: white;
   background: rgb(63, 63, 63);
+  border-radius: 0.3rem;
 }
 
 .search-field:focus {
@@ -37,4 +38,9 @@
   display: inline-block;
   font-size: 1.05rem;
   font-weight: bold;
+  border-radius: 0.3rem;
+}
+
+.submit-btn:focus {
+  outline: none;
 }

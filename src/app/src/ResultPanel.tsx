@@ -89,7 +89,7 @@ export default class ResultPanel extends Component<ResultPanelProps, ResultPanel
 
   renderRatings = () => {
     if (this.state.tvSeries === undefined) {
-      return (<p>Loading...</p>)
+      return (<p className="helper-msg">Loading...</p>)
     } else {
       const ratings = this.state.tvSeries['ratings'];
       return (

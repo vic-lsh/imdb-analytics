@@ -26,3 +26,7 @@ h1 {
   padding: 0 1rem;
   font-size: 2rem;
 }
+
+.helper-msg {
+  font-weight: bold;
+}
