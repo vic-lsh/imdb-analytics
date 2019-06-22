@@ -38,7 +38,7 @@ class Database():
         return False
 
     def if_tv_series_exists(self, series_name: str) -> bool:
-        return TVSeries.objects(name=series_name).count() > 0
+        return TVSeries.objects(identifier=self._get_id(series_name)).count() > 0
 
     def add_from_dict(self, req: dict) -> bool:
         err = []
@@ -48,7 +48,7 @@ class Database():
         required_root_level_keys = ('name', 'series_rating', 'episode_ratings')
         required_season_level_keys = ('season', 'ratings')
         required_episode_keys = ('episode_number', 'rating')
-        
+
         tv_identifier = self._get_id(req['name'])
 
         try:
@@ -88,7 +88,7 @@ class Database():
 
         return len(err) == 0, err
 
-    def _get_id(self, name: str): 
+    def _get_id(self, name: str):
         def process_char(c: str):
             if c.isalnum():
                 return c.lower()
