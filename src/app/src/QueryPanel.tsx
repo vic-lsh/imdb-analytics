@@ -22,11 +22,18 @@ export default class QueryPanel extends Component<QueryPanelProps, QueryPanelSta
 
   handleChange(event: any) {
     this.setState({ query: event.target.value });
-    this.props.setQueryInParent(this.state.query);
   }
 
   handleSubmit(event: any) {
+    this.props.setQueryInParent(this.state.query);
+    this.setState({ query: "" });
     event.preventDefault();
+  }
+
+  handleEnterKey(event: any) {
+    if (event.keyCode === 13) {
+      this.handleSubmit(event);
+    }
   }
 
   render() {
@@ -35,9 +42,12 @@ export default class QueryPanel extends Component<QueryPanelProps, QueryPanelSta
         <label className="input-label">
           <h1>TV Series</h1>
           <input className="search-field" type="text" name="tv-series"
-            value={this.state.query} onChange={this.handleChange} />
+            value={this.state.query} onChange={this.handleChange} 
+            onKeyDown={this.handleEnterKey} />
         </label>
-        <input className="submit-btn" type="submit" value="Submit" />
+        <button className="submit-btn" type="submit" onClick={this.handleSubmit}>
+          Search
+        </button>
       </form>
     )
   }

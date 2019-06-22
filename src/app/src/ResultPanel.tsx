@@ -3,7 +3,7 @@ import Axios from 'axios';
 import './ResultPanel.css';
 
 type ResultPanelProps = {
-  seriesName: string
+  seriesName: string | undefined
 }
 
 type ResultPanelState = {
@@ -41,8 +41,20 @@ export default class ResultPanel extends Component<ResultPanelProps, ResultPanel
     }
   }
 
+  fetchIfNotUndefined = () => {
+    if (this.props.seriesName !== undefined) {
+      this.fetchTvStatistics(this.props.seriesName);
+    }
+  }
+
   componentDidMount() {
-    this.fetchTvStatistics(this.props.seriesName);
+    this.fetchIfNotUndefined();
+  }
+
+  componentDidUpdate(prevProps: ResultPanelProps) {
+    if (this.props.seriesName !== prevProps.seriesName) {
+      this.fetchIfNotUndefined();
+    }
   }
 
   renderEpisodeRating(seasonRating: Array<EpisodeRatingObj>) {
@@ -69,6 +81,12 @@ export default class ResultPanel extends Component<ResultPanelProps, ResultPanel
     })
   }
 
+  renderPlaceholder = () => {
+    return (
+      <p>Please enter a TV Series name.</p>
+    )
+  }
+
   renderRatings = () => {
     if (this.state.tvSeries === undefined) {
       return (<p>Loading...</p>)
@@ -86,6 +104,10 @@ export default class ResultPanel extends Component<ResultPanelProps, ResultPanel
   }
 
   render() {
-    return this.renderRatings();
+    if (this.props.seriesName === undefined) {
+      return this.renderPlaceholder();
+    } else {
+      return this.renderRatings();
+    }
   }
 }

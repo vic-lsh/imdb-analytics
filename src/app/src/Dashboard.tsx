@@ -5,8 +5,9 @@ import ResultPanel from './ResultPanel';
 import QueryPanel from './QueryPanel';
 
 type DashboardProps = {}
+
 type DashboardState = {
-  query: string
+  query: string | undefined
 }
 
 export default class Dashboard extends Component<DashboardProps, DashboardState> {
@@ -14,11 +15,11 @@ export default class Dashboard extends Component<DashboardProps, DashboardState>
   constructor(props: DashboardProps) {
     super(props);
     this.state = {
-      query: ""
+      query: undefined
     }
   }
 
-  handleQueryChange = (querySetInPanel: string) => {
+  handleQuerySubmission = (querySetInPanel: string) => {
     this.setState({ query: querySetInPanel })
   }
 
@@ -26,10 +27,10 @@ export default class Dashboard extends Component<DashboardProps, DashboardState>
     return (
       <div className="dashboard">
         <div className="home-component query-panel">
-          <QueryPanel setQueryInParent={this.handleQueryChange}/>
+          <QueryPanel setQueryInParent={this.handleQuerySubmission} />
         </div>
         <div className="home-component result-panel">
-          <ResultPanel seriesName="Black Mirror" />
+          <ResultPanel seriesName={this.state.query} />
         </div>
       </div>
     )
