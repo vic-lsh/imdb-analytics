@@ -94,36 +94,6 @@ export default class ResultPanel extends Component<ResultPanelProps, ResultPanel
   }
 }
 
-const RatingsNotFound: React.FC<{ seriesName: string }> = (props) => {
-  const seriesNameCapitalized = (() => {
-    return props.seriesName === undefined ? "" : props.seriesName.split(" ").map((word) => {
-      return word[0].toUpperCase() + word.slice(1);
-    }).join(" ");
-  })();
-
-  return (
-    <div>
-      <h1>Sorry, we're unable to find '{seriesNameCapitalized}'</h1>
-      <p className="helper-msg">
-        This is most likely because our background worker has not processed this series yet =(
-        Please try again sometime soon =)
-      </p>
-    </div>
-  )
-}
-
-const RatingsLoading: React.FC = () => {
-  return (<h1>Loading...</h1>)
-}
-
-const RatingsDecodeError: React.FC = () => {
-  return (<p className="helper-msg">An error has occured in decoding the ratings object.</p>)
-}
-
-const Placeholder: React.FC = () => {
-  return (<h1>Please enter a TV Series name  +_+ </h1>)
-}
-
 const RatingsDetail: React.FC<{ tvSeries: any }> = (props) => {
   return (
     <div className="tv-series">
@@ -168,4 +138,34 @@ const EpisodeRating: React.FC<{ episodeRating: EpisodeRatingObj }> = (props) => 
       <div className="ep-rating">{props.episodeRating['rating']}</div>
     </div>
   );
+}
+
+const RatingsNotFound: React.FC<{ seriesName: string }> = (props) => {
+  const seriesNameCapitalized = (() => {
+    return props.seriesName === undefined ? "" : props.seriesName.split(" ").map((word) => {
+      return word[0].toUpperCase() + word.slice(1);
+    }).join(" ");
+  })();
+
+  return (
+    <div>
+      <h1>Sorry, we're unable to find '{seriesNameCapitalized}'</h1>
+      <p className="helper-msg">
+        This is most likely because our background worker has not processed this series yet =(
+        Please try again sometime soon =)
+      </p>
+    </div>
+  )
+}
+
+const RatingsLoading: React.FC = () => {
+  return (<h1>Loading...</h1>)
+}
+
+const RatingsDecodeError: React.FC = () => {
+  return (<p className="helper-msg">An error has occured in decoding the ratings object.</p>)
+}
+
+const Placeholder: React.FC = () => {
+  return (<h1>Please enter a TV Series name  +_+ </h1>)
 }
