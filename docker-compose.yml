@@ -2,13 +2,13 @@ version: '3'
 
 services:
 
-  api:
-    container_name: flask_api
+  db-service:
+    container_name: db_api
     build:
-      context: ./src/api
+      context: ./src/service-db
       dockerfile: dockerfile
     volumes: 
-      - ./src/api:/usr/src/app
+      - ./src/service-db:/usr/src/app
     ports:
       - 8001:80
     links:
@@ -30,4 +30,4 @@ services:
     ports:
       - 3001:3000
     depends_on: 
-      - api
+      - db-service
