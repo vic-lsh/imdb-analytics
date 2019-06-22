@@ -48,7 +48,12 @@ export default class Dashboard extends Component<DashboardProps, DashboardState>
   renderEpisodeRatings(seasonRating: Array<EpisodeRatingObj>) {
     return seasonRating.map((episodeRating: EpisodeRatingObj) => {
       const epNum = episodeRating['_id'];
-      return <li className="episode-rating" key={epNum}>{epNum}: {episodeRating['rating']}</li>;
+      return (
+        <div className="episode-rating" key={epNum}>
+          <div className="ep-num">E{epNum}</div>
+          <div className="ep-rating">{episodeRating['rating']}</div>
+        </div>
+      );
     })
   }
 
@@ -57,7 +62,7 @@ export default class Dashboard extends Component<DashboardProps, DashboardState>
       return (
         <div className="tv-series-season">
           <h2>Season {seasonRatingsObj['_id']}</h2>
-          <ul>{this.renderEpisodeRatings(seasonRatingsObj.ratings)}</ul>
+          {this.renderEpisodeRatings(seasonRatingsObj.ratings)}
         </div>
       );
     })

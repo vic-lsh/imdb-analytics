@@ -15,6 +15,16 @@ li.episode-rating {
   list-style: none;
 }
 
+.episode-rating {
+  padding: 0 0.3rem 0;
+  display: grid;
+  grid-template-columns: 20% 80%;
+}
+
+.ep-num {
+  font-weight: bold;
+}
+
 h1 {
   margin: 0;
   padding: 0 1rem;
