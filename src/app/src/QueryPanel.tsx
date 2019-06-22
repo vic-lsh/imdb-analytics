@@ -30,20 +30,15 @@ export default class QueryPanel extends Component<QueryPanelProps, QueryPanelSta
     event.preventDefault();
   }
 
-  handleEnterKey(event: any) {
-    if (event.keyCode === 13) {
-      this.handleSubmit(event);
-    }
-  }
-
   render() {
     return (
       <form className="search-form">
         <label className="input-label">
           <h1>TV Series</h1>
-          <input className="search-field" type="text" name="tv-series"
+          <input 
+            className="search-field" type="text" name="tv-series"
             value={this.state.query} onChange={this.handleChange} 
-            onKeyDown={this.handleEnterKey} />
+          />
         </label>
         <button className="submit-btn" type="submit" onClick={this.handleSubmit}>
           Search
