@@ -68,100 +68,104 @@ export default class ResultPanel extends Component<ResultPanelProps, ResultPanel
     }
   }
 
-  renderEpisodeRating(seasonRating: Array<EpisodeRatingObj>) {
-    return seasonRating.map((episodeRating: EpisodeRatingObj) => {
-      const epNum = episodeRating['_id'];
-      return (
-        <div className="episode-rating" key={epNum}>
-          <div className="ep-num">E{epNum}</div>
-          <div className="ep-rating">{episodeRating['rating']}</div>
-        </div>
-      );
-    })
-  }
-
-  renderSeasonRatings(allRatings: Array<SeasonRatingsObj>) {
-    return allRatings.map((seasonRatingsObj: SeasonRatingsObj) => {
-      const seasonNum = seasonRatingsObj['_id'];
-      return (
-        <div className="tv-series-season" key={seasonNum}>
-          <h2>Season {seasonNum}</h2>
-          {this.renderEpisodeRating(seasonRatingsObj.ratings)}
-        </div>
-      );
-    })
-  }
-
-  renderDetailedRatings = () => {
-    const ratings = this.state.tvSeries['ratings'];
-    return (
-      <div className="tv-series">
-        <h1>{this.state.tvSeries['name']}</h1>
-        <div className="ratings-grid">
-          {this.renderSeasonRatings(ratings)}
-        </div>
-      </div>
-    )
-  }
-
-  renderPlaceholder = () => {
-    return (
-      <h1>Please enter a TV Series name  +_+ </h1>
-    )
-  }
-
-  renderLoadingMessage = () => {
-    return (<h1>Loading...</h1>)
-  }
-
-  renderRatingsDecodeError = () => {
-    return (<p className="helper-msg">An error has occured in decoding the ratings object.</p>)
-  }
-
-  renderRatingsNotFound = () => {
-    if (this.props.seriesName === undefined) {
-      return this.renderRatingsDecodeError();
-    }
-
-    const seriesNameCapitalized = (() => {
-      return this.props.seriesName === undefined ? "" : this.props.seriesName.split(" ").map((word) => {
-        return word[0].toUpperCase() + word.slice(1);
-      }).join(" ");
-    })();
-
-    return (
-      <div>
-        <h1>Sorry, we're unable to find '{seriesNameCapitalized}'</h1>
-        <p className="helper-msg">
-          This is most likely because our background worker has not processed this series yet =( 
-          Please try again sometime soon =)
-        </p>
-      </div>
-    )
-  }
-
   renderRatings = () => {
     if (this.state.responseStatus === 404 && this.props.seriesName !== undefined) {
-      return this.renderRatingsNotFound();
+      return <RatingsNotFound seriesName={this.props.seriesName} />
     }
     else if (this.state.responseStatus === 200) {
-      return this.renderDetailedRatings();
+      return <RatingsDetail tvSeries={this.state.tvSeries} />
     }
     else if (this.state.responseStatus === undefined) {
-      return this.renderLoadingMessage();
+      return <RatingsLoading />
     }
     else {
-      return this.renderRatingsDecodeError();
+      return <RatingsDecodeError />
     }
   }
 
   render() {
-    const displayContent = this.props.seriesName === undefined ?
-      this.renderPlaceholder() : this.renderRatings();
+    const displayedContent = this.props.seriesName === undefined ?
+      <Placeholder /> : this.renderRatings();
     return (
       <div className="">
-        {displayContent}
+        {displayedContent}
       </div>
     )
   }
+}
+
+const RatingsNotFound: React.FC<{ seriesName: string }> = (props) => {
+  const seriesNameCapitalized = (() => {
+    return props.seriesName === undefined ? "" : props.seriesName.split(" ").map((word) => {
+      return word[0].toUpperCase() + word.slice(1);
+    }).join(" ");
+  })();
+
+  return (
+    <div>
+      <h1>Sorry, we're unable to find '{seriesNameCapitalized}'</h1>
+      <p className="helper-msg">
+        This is most likely because our background worker has not processed this series yet =(
+        Please try again sometime soon =)
+      </p>
+    </div>
+  )
+}
+
+const RatingsLoading: React.FC = () => {
+  return (<h1>Loading...</h1>)
+}
+
+const RatingsDecodeError: React.FC = () => {
+  return (<p className="helper-msg">An error has occured in decoding the ratings object.</p>)
+}
+
+const Placeholder: React.FC = () => {
+  return (<h1>Please enter a TV Series name  +_+ </h1>)
+}
+
+const RatingsDetail: React.FC<{ tvSeries: any }> = (props) => {
+  return (
+    <div className="tv-series">
+      <h1>{props.tvSeries['name']}</h1>
+      <div className="ratings-grid">
+        <SeasonRatings seasonRatings={props.tvSeries.ratings} />
+      </div>
+    </div>
+  )
+}
+
+const SeasonRatings: React.FC<{ seasonRatings: SeasonRatingsObj[] }> = (props) => {
+  return (<React.Fragment>{
+    props.seasonRatings.map((seasonRating) => {
+      return <SeasonRating seasonRating={seasonRating} key={seasonRating['_id']} />
+    })
+  }</React.Fragment>)
+}
+
+const SeasonRating: React.FC<{ seasonRating: SeasonRatingsObj }> = (props) => {
+  return (
+    <div className="tv-series-season">
+      <h2>Season {props.seasonRating['_id']}</h2>
+      <EpisodeRatings ratingsInSeason={props.seasonRating.ratings} />
+    </div>
+  );
+}
+
+const EpisodeRatings: React.FC<{ ratingsInSeason: EpisodeRatingObj[] }> = (props) => {
+  return (<React.Fragment>{
+    props.ratingsInSeason.map((epRating) => {
+      return <EpisodeRating episodeRating={epRating} key={epRating['_id']} />
+    })
+  }</React.Fragment>)
+}
+
+const EpisodeRating: React.FC<{ episodeRating: EpisodeRatingObj }> = (props) => {
+  const epNum = props.episodeRating['_id'];
+  return (
+    <div className="episode-rating">
+      <div className="ep-num">E{epNum}</div>
+      <div className="ep-rating">{props.episodeRating['rating']}</div>
+    </div>
+  );
 }
