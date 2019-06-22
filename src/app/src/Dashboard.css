@@ -1,0 +1,18 @@
+.dashboard {
+  text-align: left;
+  height: 100vh;
+  display: grid;
+  grid-template-columns: 30% 70%;
+}
+
+.home-component {
+  padding-top: 5rem;
+}
+
+.query-panel {
+  background: rgb(32, 32, 32);
+}
+
+.result-panel {
+  background: rgb(238, 238, 238);
+}
