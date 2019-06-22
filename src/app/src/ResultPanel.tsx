@@ -16,7 +16,7 @@ type EpisodeRatingObj = {
   [key: string]: any
 }
 
-type TVSeriesRatingsObj = {
+type SeasonRatingsObj = {
   ratings: Array<EpisodeRatingObj>,
   [key: string]: any
 }
@@ -78,8 +78,8 @@ export default class ResultPanel extends Component<ResultPanelProps, ResultPanel
     })
   }
 
-  renderSeasonRatings(allRatings: Array<TVSeriesRatingsObj>) {
-    return allRatings.map((seasonRatingsObj: TVSeriesRatingsObj) => {
+  renderSeasonRatings(allRatings: Array<SeasonRatingsObj>) {
+    return allRatings.map((seasonRatingsObj: SeasonRatingsObj) => {
       const seasonNum = seasonRatingsObj['_id'];
       return (
         <div className="tv-series-season" key={seasonNum}>
@@ -90,25 +90,60 @@ export default class ResultPanel extends Component<ResultPanelProps, ResultPanel
     })
   }
 
+  renderDetailedRatings = () => {
+    const ratings = this.state.tvSeries['ratings'];
+    return (
+      <div className="tv-series">
+        <h1>{this.state.tvSeries['_id']}</h1>
+        <div className="ratings-grid">
+          {this.renderSeasonRatings(ratings)}
+        </div>
+      </div>
+    )
+  }
+
   renderPlaceholder = () => {
     return (
       <h1>Please enter a TV Series name  +_+ </h1>
     )
   }
 
+  renderLoadingMessage = () => {
+    return (<h1>Loading...</h1>)
+  }
+
+  renderRatingsDecodeError = () => {
+    return (<p className="helper-msg">An error has occured in decoding the ratings object.</p>)
+  }
+
+  renderRatingsNotFound = () => {
+    if (this.props.seriesName === undefined) {
+      return this.renderRatingsDecodeError();
+    }
+    const seriesNameCapitalized = this.props.seriesName[0].toUpperCase() + this.props.seriesName.slice(1);
+    return (
+      <div>
+        <h1>Sorry, we're unable to find '{seriesNameCapitalized}'</h1>
+        <p>
+          This is most likely because our background worker has not processed this series yet =(
+          rather than an error on your part. Please try again sometime soon =).
+        </p>
+      </div>
+    )
+  }
+
   renderRatings = () => {
-    if (this.state.tvSeries === undefined) {
-      return (<p className="helper-msg">Loading...</p>)
-    } else {
-      const ratings = this.state.tvSeries['ratings'];
-      return (
-        <div className="tv-series">
-          <h1>{this.state.tvSeries['_id']}</h1>
-          <div className="ratings-grid">
-            {this.renderSeasonRatings(ratings)}
-          </div>
-        </div>
-      )
+    if (this.state.responseStatus === 404 && this.props.seriesName !== undefined) {
+      return this.renderRatingsNotFound();
+    }
+    else if (this.state.responseStatus === 200) {
+      return this.renderDetailedRatings();
+    }
+    else if (this.state.responseStatus === undefined) {
+      return this.renderLoadingMessage();
+    }
+    else {
+      return this.renderRatingsDecodeError();
     }
   }
 
