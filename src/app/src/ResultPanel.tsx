@@ -7,7 +7,8 @@ type ResultPanelProps = {
 }
 
 type ResultPanelState = {
-  tvSeries: any
+  tvSeries: any,
+  responseStatus: Number | undefined
 }
 
 type EpisodeRatingObj = {
@@ -25,7 +26,8 @@ export default class ResultPanel extends Component<ResultPanelProps, ResultPanel
   constructor(props: ResultPanelProps) {
     super(props);
     this.state = {
-      tvSeries: undefined
+      tvSeries: undefined,
+      responseStatus: undefined
     }
   }
 
@@ -35,9 +37,16 @@ export default class ResultPanel extends Component<ResultPanelProps, ResultPanel
       const response = await Axios.get(`${BASE_URL}/tv-series`, {
         params: { name: seriesName }
       })
-      this.setState({ tvSeries: response.data });
+      console.log(response);
+      this.setState({
+        tvSeries: response.data,
+        responseStatus: response.status,
+      });
     } catch (err) {
-      console.log(err);
+      console.log(err.response);
+      this.setState({
+        responseStatus: err.response.status
+      })
     }
   }
 
