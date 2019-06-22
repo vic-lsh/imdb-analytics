@@ -59,9 +59,10 @@ export default class ResultPanel extends Component<ResultPanelProps, ResultPanel
 
   renderSeasonRatings(allRatings: Array<TVSeriesRatingsObj>) {
     return allRatings.map((seasonRatingsObj: TVSeriesRatingsObj) => {
+      const seasonNum = seasonRatingsObj['_id'];
       return (
-        <div className="tv-series-season">
-          <h2>Season {seasonRatingsObj['_id']}</h2>
+        <div className="tv-series-season" key={seasonNum}>
+          <h2>Season {seasonNum}</h2>
           {this.renderEpisodeRatings(seasonRatingsObj.ratings)}
         </div>
       );

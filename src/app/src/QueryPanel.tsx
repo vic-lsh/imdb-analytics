@@ -1,7 +1,9 @@
 import React, { Component } from 'react';
 import './QueryPanel.css';
 
-type QueryPanelProps = {}
+type QueryPanelProps = {
+  setQueryInParent: (value: string) => void;
+}
 
 type QueryPanelState = {
   query: string
@@ -20,12 +22,12 @@ export default class QueryPanel extends Component<QueryPanelProps, QueryPanelSta
 
   handleChange(event: any) {
     this.setState({ query: event.target.value });
+    this.props.setQueryInParent(this.state.query);
   }
 
   handleSubmit(event: any) {
     event.preventDefault();
   }
-
 
   render() {
     return (
