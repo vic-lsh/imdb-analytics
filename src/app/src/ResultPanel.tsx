@@ -45,7 +45,7 @@ export default class ResultPanel extends Component<ResultPanelProps, ResultPanel
     this.fetchTvStatistics(this.props.seriesName);
   }
 
-  renderEpisodeRatings(seasonRating: Array<EpisodeRatingObj>) {
+  renderEpisodeRating(seasonRating: Array<EpisodeRatingObj>) {
     return seasonRating.map((episodeRating: EpisodeRatingObj) => {
       const epNum = episodeRating['_id'];
       return (
@@ -63,33 +63,29 @@ export default class ResultPanel extends Component<ResultPanelProps, ResultPanel
       return (
         <div className="tv-series-season" key={seasonNum}>
           <h2>Season {seasonNum}</h2>
-          {this.renderEpisodeRatings(seasonRatingsObj.ratings)}
+          {this.renderEpisodeRating(seasonRatingsObj.ratings)}
         </div>
       );
     })
   }
 
-  renderRatings() {
-    const ratings = this.state.tvSeries['ratings'];
-    return (
-      <div className="ratings-grid">
-        {this.renderSeasonRatings(ratings)}
-      </div>
-    )
-  }
-
-  render() {
+  renderRatings = () => {
     if (this.state.tvSeries === undefined) {
-      return (<p>loading...</p>);
-    }
-    else {
-      const ratingsList = this.renderRatings();
+      return (<p>Loading...</p>)
+    } else {
+      const ratings = this.state.tvSeries['ratings'];
       return (
         <div className="tv-series">
           <h1>{this.state.tvSeries['_id']}</h1>
-          <div>{ratingsList}</div>
+          <div className="ratings-grid">
+            {this.renderSeasonRatings(ratings)}
+          </div>
         </div>
       )
     }
+  }
+
+  render() {
+    return this.renderRatings();
   }
 }
