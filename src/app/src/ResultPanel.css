@@ -1,6 +1,6 @@
 .ratings-grid {
   display: grid; 
-  grid-template-columns: repeat(auto-fit, minmax(180px, 2fr));
+  grid-template-columns: repeat(auto-fit, minmax(100px, 2fr));
 }
 
 .tv-series-season {
