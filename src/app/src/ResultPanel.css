@@ -28,5 +28,6 @@ h1 {
 }
 
 .helper-msg {
-  font-weight: bold;
+  padding: 0 1rem;
+  font-size: 1.4rem;
 }

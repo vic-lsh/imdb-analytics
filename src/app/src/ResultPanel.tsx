@@ -124,9 +124,9 @@ export default class ResultPanel extends Component<ResultPanelProps, ResultPanel
     return (
       <div>
         <h1>Sorry, we're unable to find '{seriesNameCapitalized}'</h1>
-        <p>
-          This is most likely because our background worker has not processed this series yet =(
-          rather than an error on your part. Please try again sometime soon =).
+        <p className="helper-msg">
+          This is most likely because our background worker has not processed this series yet =( 
+          Please try again sometime soon =)
         </p>
       </div>
     )
