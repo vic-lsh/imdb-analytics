@@ -23,7 +23,7 @@ class Database():
         print("querying")
         if self.if_tv_series_exists(series_name):
             print("done")
-            return TVSeries.objects.with_id(series_name)
+            return TVSeries.objects.with_id(self._get_id(series_name))
         else:
             print("done")
             return None
@@ -33,7 +33,7 @@ class Database():
         Returns True if the object is deleted, False if not deleted.
         """
         if self.if_tv_series_exists(series_name):
-            resp = TVSeries.objects.with_id(series_name).delete()
+            resp = TVSeries.objects.with_id(self._get_id(series_name)).delete()
             return True
         return False
 
@@ -48,9 +48,11 @@ class Database():
         required_root_level_keys = ('name', 'series_rating', 'episode_ratings')
         required_season_level_keys = ('season', 'ratings')
         required_episode_keys = ('episode_number', 'rating')
+        
+        tv_identifier = self._get_id(req['name'])
 
         try:
-            tv_doc = TVSeries(name=req['name'],
+            tv_doc = TVSeries(identifier=tv_identifier, name=req['name'],
                               seasons_count=len(req['episode_ratings']),
                               overall_rating=req['series_rating'])
         except KeyError:
@@ -85,3 +87,13 @@ class Database():
             return False, err
 
         return len(err) == 0, err
+
+    def _get_id(self, name: str): 
+        def process_char(c: str):
+            if c.isalnum():
+                return c.lower()
+            elif c == ' ':
+                return '_'
+            else:
+                return ''
+        return ''.join(process_char(c) for c in name)
