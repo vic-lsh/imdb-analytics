@@ -99,10 +99,10 @@ const RatingsDetail: React.FC<{ tvSeries: any }> = (props) => {
   return (
     <div className="tv-series">
       <h1>{props.tvSeries['name']}</h1>
+      <RatingsPlot tvSeries={props.tvSeries} />
       <div className="ratings-grid">
         <SeasonRatingsList seasonRatings={props.tvSeries.ratings} />
       </div>
-      <RatingsPlot tvSeries={props.tvSeries} />
     </div>
   )
 }
