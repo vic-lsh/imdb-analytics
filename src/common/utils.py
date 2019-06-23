@@ -2,8 +2,8 @@ from datetime import datetime
 import functools
 import logging
 
-from crawler.config import AnalyzerConfig
-from crawler.ratings import SeriesRatingsCollection
+crawler.config import AnalyzerConfig
+crawler.ratings import SeriesRatingsCollection
 
 logger = logging.getLogger(__name__)
 

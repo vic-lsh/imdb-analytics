@@ -1,7 +1,7 @@
 from os.path import abspath
 import yaml
 
-CONFIG_FNAME = "src/config_imdb.yml"
+CONFIG_FNAME = "config_imdb.yml"
 
 
 class AnalyzerConfig:

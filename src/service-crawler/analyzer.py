@@ -21,10 +21,10 @@ from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.select import Select
 from selenium.webdriver.support.ui import WebDriverWait
 
-from common.utils import timeout
-from crawler.config import AnalyzerConfig
-from crawler.constants import IMDb_Constants as consts
-from crawler.ratings import SeriesRatings, SeriesRatingsCollection
+# from common.utils import timeout
+from config import AnalyzerConfig
+from constants import IMDb_Constants as consts
+from ratings import SeriesRatings, SeriesRatingsCollection
 
 logger = logging.getLogger(__name__)
 
@@ -102,7 +102,7 @@ class IMDb_Analyzer():
             """
 
             def wrapper(self, *args, **kwargs):
-                @timeout(delay=self._IMDb_Analyzer__DELAY_SECS)
+                # @timeout(delay=self._IMDb_Analyzer__DELAY_SECS)
                 def is_on_season_page():
                     url = self._IMDb_Analyzer__driver.current_url
                     error_msg = "Driver is currently not on a Season page"

@@ -7,19 +7,19 @@ import yaml
 
 from mongoengine import connect
 
-from crawler.analyzer import IMDb_Queries_Manager
-from crawler.config import AnalyzerConfig
-from crawler.ratings import SeriesRatingsCollection, SeriesRatings
-from common.utils import timer
+from analyzer import IMDb_Queries_Manager
+from config import AnalyzerConfig
+from ratings import SeriesRatingsCollection, SeriesRatings
+# from common.utils import timer
 
-with open(abspath('src/config_logger.yml'), 'r') as f:
+with open(abspath('config_logger.yml'), 'r') as f:
     cfg = yaml.safe_load(f.read())
 logging.config.dictConfig(cfg)
 
 logger = logging.getLogger(__name__)
 
 
-@timer
+# @timer
 def main():
     config = AnalyzerConfig()
     manager = IMDb_Queries_Manager(config)
