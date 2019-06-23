@@ -183,18 +183,20 @@ const RatingsPlot: React.FC<{ tvSeries: any }> = (props) => {
   }
 
   return (
-    <Line width={100} height={20}
-      data={{
-        labels: labels,
-        datasets: [{
-          data: ratings,
-          label: props.tvSeries.name,
-          borderColor: "#3e95cd",
-          fill: false
-        }]
-      }}
-      options={plotOptions}
-    />)
+    <div className="ratings-plot">
+      <Line width={100} height={20}
+        data={{
+          labels: labels,
+          datasets: [{
+            data: ratings,
+            label: props.tvSeries.name,
+            borderColor: "#3e95cd",
+            fill: false
+          }]
+        }}
+        options={plotOptions}
+      />
+    </div>)
 }
 
 const RatingsNotFound: React.FC<{ seriesName: string }> = (props) => {

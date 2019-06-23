@@ -4,7 +4,7 @@
 }
 
 .tv-series-season {
-  padding: 1rem;
+  padding: 0 1rem 1rem 1rem;
 }
 
 li.episode-rating {
@@ -30,4 +30,8 @@ h1 {
 .helper-msg {
   padding: 0 1rem;
   font-size: 1.4rem;
+}
+
+.ratings-plot {
+  padding: 2rem 0 0;
 }
