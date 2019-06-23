@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import Axios from 'axios';
 import './ResultPanel.css';
+import { Line } from 'react-chartjs-2';
 
 type ResultPanelProps = {
   seriesName: string | undefined
@@ -101,6 +102,7 @@ const RatingsDetail: React.FC<{ tvSeries: any }> = (props) => {
       <div className="ratings-grid">
         <SeasonRatingsList seasonRatings={props.tvSeries.ratings} />
       </div>
+      <RatingsPlot tvSeries={props.tvSeries} />
     </div>
   )
 }
@@ -138,6 +140,58 @@ const EpisodeRating: React.FC<{ episodeRating: EpisodeRatingObj }> = (props) => 
       <div className="ep-rating">{props.episodeRating['rating']}</div>
     </div>
   );
+}
+
+const flattenArray = (arr: Array<any>) => {
+  return [].concat.apply([], arr);
+}
+
+const extractRatingNumbers = (tvSeries: any) => {
+  return tvSeries.ratings.map((seasonRating: SeasonRatingsObj) => {
+    return seasonRating.ratings.map((epRating: EpisodeRatingObj) => {
+      return epRating.rating;
+    })
+  });
+}
+
+const extractEpisodeLabels = (tvSeries: any) => {
+  return tvSeries.ratings.map((seasonRating: SeasonRatingsObj) => {
+    const seasonNum = seasonRating['_id'];
+    return seasonRating.ratings.map((epRating: EpisodeRatingObj) => {
+      return `S${seasonNum}E${epRating['_id']}`;
+    })
+  });
+}
+
+const RatingsPlot: React.FC<{ tvSeries: any }> = (props) => {
+
+  const ratings = flattenArray(extractRatingNumbers(props.tvSeries));
+  const labels = flattenArray(extractEpisodeLabels(props.tvSeries));
+
+  const plotOptions = {
+    scales: {
+      yAxes: [{
+        ticks: {
+          max: 10,
+          min: 5,
+        }
+      }]
+    }
+  }
+
+  return (
+    <Line width={100} height={20}
+      data={{
+        labels: labels,
+        datasets: [{
+          data: ratings,
+          label: props.tvSeries.name,
+          borderColor: "#3e95cd",
+          fill: false
+        }]
+      }}
+      options={plotOptions}
+    />)
 }
 
 const RatingsNotFound: React.FC<{ seriesName: string }> = (props) => {
