@@ -169,6 +169,9 @@ const RatingsPlot: React.FC<{ tvSeries: any }> = (props) => {
   const labels = flattenArray(extractEpisodeLabels(props.tvSeries));
 
   const plotOptions = {
+    legend: {
+      display: false
+    },
     scales: {
       yAxes: [{
         ticks: {
