@@ -173,7 +173,7 @@ const RatingsPlot: React.FC<{ tvSeries: any }> = (props) => {
       yAxes: [{
         ticks: {
           max: 10,
-          min: 5,
+          min: Math.min(...ratings, 5),
         }
       }]
     }
