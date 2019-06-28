@@ -23,6 +23,8 @@ type SeasonRatingsObj = {
   [key: string]: any
 }
 
+const NETWORK_ERR_INTERNAL = 0;
+
 export default class ResultPanel extends Component<ResultPanelProps, ResultPanelState> {
 
   constructor(props: ResultPanelProps) {
@@ -46,7 +48,11 @@ export default class ResultPanel extends Component<ResultPanelProps, ResultPanel
       });
     } catch (err) {
       console.log(err.response);
-      if (err.response !== undefined) {
+      if (err.response === undefined) {
+        this.setState({
+          responseStatus: NETWORK_ERR_INTERNAL
+        })
+      } else {
         this.setState({
           responseStatus: err.response.status
         })
@@ -73,6 +79,9 @@ export default class ResultPanel extends Component<ResultPanelProps, ResultPanel
   renderRatings = () => {
     if (this.state.responseStatus === 404 && this.props.seriesName !== undefined) {
       return <RatingsNotFound seriesName={this.props.seriesName} />
+    }
+    else if (this.state.responseStatus === NETWORK_ERR_INTERNAL) {
+      return <RatingsFetchingNetworkError />
     }
     else if (this.state.responseStatus === 200) {
       return <RatingsDetail tvSeries={this.state.tvSeries} />
@@ -222,12 +231,30 @@ const RatingsLoading: React.FC = () => {
   return (<h1>Loading...</h1>)
 }
 
+const RatingsFetchingNetworkError: React.FC = () => {
+  return (
+    <React.Fragment>
+      <ErrorHeader />
+      <StyledHelperMsg>
+        An error has occured in fetching the ratings data.
+      </StyledHelperMsg>
+      <StyledHelperMsg>
+        Admin: please double check if the server has been started.
+      </StyledHelperMsg>
+    </React.Fragment>
+  )
+}
+
 const RatingsDecodeError: React.FC = () => {
   return (<StyledHelperMsg>An error has occured in decoding the ratings object.</StyledHelperMsg>)
 }
 
 const Placeholder: React.FC = () => {
   return (<StyledH1>Please enter a TV Series name  +_+ </StyledH1>)
+}
+
+const ErrorHeader: React.FC = () => {
+  return (<StyledH1>An error has occured...oops</StyledH1>)
 }
 
 const StyledEpNumSpan = styled.span`
