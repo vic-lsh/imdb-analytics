@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
+import styled from 'styled-components';
 import './QueryPanel.css';
-import { StyledH1 } from './Dashboard';
+import { StyledH1DarkBg } from './Dashboard';
 
 type QueryPanelProps = {
   setQueryInParent: (value: string) => void;
@@ -33,18 +34,54 @@ export default class QueryPanel extends Component<QueryPanelProps, QueryPanelSta
 
   render() {
     return (
-      <form className="search-form">
-        <label className="input-label">
-          <StyledH1>TV Series</StyledH1>
-          <input 
-            className="search-field" type="text" name="tv-series"
-            value={this.state.query} onChange={this.handleChange} 
+      <StyledQueryForm>
+        <label>
+          <StyledH1DarkBg>TV Series</StyledH1DarkBg>
+          <StyledSearchFieldInput type="text" name="tv-series"
+            value={this.state.query} onChange={this.handleChange}
           />
         </label>
-        <button className="submit-btn" type="submit" onClick={this.handleSubmit}>
+        <StyledSubmitBtn type="submit" onClick={this.handleSubmit}>
           Search
-        </button>
-      </form>
+        </StyledSubmitBtn>
+      </StyledQueryForm>
     )
   }
 }
+
+const StyledSearchFieldInput = styled.input`
+  width: 100%;
+  padding: 0.8rem;
+  margin: 1.83rem 0 1.2rem;
+  box-sizing: border-box;
+  border: 0;
+  font-size: 1.2rem;
+  color: white;
+  background: rgb(63, 63, 63);
+  border-radius: 0.3rem;
+
+  :focus {
+    outline: none;
+  }
+`;
+
+const StyledSubmitBtn = styled.button`
+  background-color: #230fd3;
+  border: none;
+  color: white;
+  padding: 0.9rem 1.8rem;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 1.05rem;
+  font-weight: bold;
+  border-radius: 0.3rem;
+
+  :focus {
+    outline: none;
+  }
+`;
+
+const StyledQueryForm = styled.form`
+  padding: 0 2rem;
+`;
