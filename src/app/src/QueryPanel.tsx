@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import styled from 'styled-components';
-import './QueryPanel.css';
 import { StyledH1DarkBg } from './Dashboard';
 
 type QueryPanelProps = {
