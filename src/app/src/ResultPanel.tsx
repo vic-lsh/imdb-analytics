@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import Axios from 'axios';
+import styled from 'styled-components';
 import './ResultPanel.css';
 import { Line } from 'react-chartjs-2';
 import { StyledH1 } from './Dashboard';
@@ -101,9 +102,9 @@ const RatingsDetail: React.FC<{ tvSeries: any }> = (props) => {
     <div className="tv-series">
       <h1>{props.tvSeries['name']}</h1>
       <RatingsPlot tvSeries={props.tvSeries} />
-      <div className="ratings-grid">
+      <StyledRatingsGridDiv>
         <SeasonRatingsList seasonRatings={props.tvSeries.ratings} />
-      </div>
+      </StyledRatingsGridDiv>
     </div>
   )
 }
@@ -118,10 +119,10 @@ const SeasonRatingsList: React.FC<{ seasonRatings: SeasonRatingsObj[] }> = (prop
 
 const SeasonRating: React.FC<{ seasonRating: SeasonRatingsObj }> = (props) => {
   return (
-    <div className="tv-series-season">
+    <StyledSeasonRatingDiv>
       <h2>Season {props.seasonRating['_id']}</h2>
       <EpisodeRatingsList ratingsInSeason={props.seasonRating.ratings} />
-    </div>
+    </StyledSeasonRatingDiv>
   );
 }
 
@@ -136,10 +137,10 @@ const EpisodeRatingsList: React.FC<{ ratingsInSeason: EpisodeRatingObj[] }> = (p
 const EpisodeRating: React.FC<{ episodeRating: EpisodeRatingObj }> = (props) => {
   const epNum = props.episodeRating['_id'];
   return (
-    <div className="episode-rating">
-      <div className="ep-num">E{epNum}</div>
-      <div className="ep-rating">{props.episodeRating['rating']}</div>
-    </div>
+    <StyledEpisodeRatingDiv>
+      <StyledEpNumSpan>E{epNum}</StyledEpNumSpan>
+      <StyledEpRatingSpan>{props.episodeRating['rating']}</StyledEpRatingSpan>
+    </StyledEpisodeRatingDiv>
   );
 }
 
@@ -184,7 +185,7 @@ const RatingsPlot: React.FC<{ tvSeries: any }> = (props) => {
   }
 
   return (
-    <div className="ratings-plot">
+    <StyledRatingsPlotDiv>
       <Line width={100} height={20}
         data={{
           labels: labels,
@@ -197,7 +198,7 @@ const RatingsPlot: React.FC<{ tvSeries: any }> = (props) => {
         }}
         options={plotOptions}
       />
-    </div>)
+    </StyledRatingsPlotDiv>)
 }
 
 const RatingsNotFound: React.FC<{ seriesName: string }> = (props) => {
@@ -210,10 +211,10 @@ const RatingsNotFound: React.FC<{ seriesName: string }> = (props) => {
   return (
     <div>
       <h1>Sorry, we're unable to find '{seriesNameCapitalized}'</h1>
-      <p className="helper-msg">
+      <StyledHelperMsg>
         This is most likely because our background worker has not processed this series yet =(
         Please try again sometime soon =)
-      </p>
+      </StyledHelperMsg>
     </div>
   )
 }
@@ -223,9 +224,39 @@ const RatingsLoading: React.FC = () => {
 }
 
 const RatingsDecodeError: React.FC = () => {
-  return (<p className="helper-msg">An error has occured in decoding the ratings object.</p>)
+  return (<StyledHelperMsg>An error has occured in decoding the ratings object.</StyledHelperMsg>)
 }
 
 const Placeholder: React.FC = () => {
   return (<StyledH1>Please enter a TV Series name  +_+ </StyledH1>)
 }
+
+const StyledEpNumSpan = styled.span`
+  font-weight: bold;
+`;
+
+const StyledEpRatingSpan = styled.span``;
+
+const StyledEpisodeRatingDiv = styled.div`
+  padding: 0 0.3rem 0;
+  display: grid;
+  grid-template-columns: 40% 60%;
+`;
+
+const StyledSeasonRatingDiv = styled.div`
+  padding: 0 1rem 1rem 1rem;
+`;
+
+const StyledRatingsGridDiv = styled.div`
+  display: grid; 
+  grid-template-columns: repeat(auto-fit, minmax(150px, 2fr));
+`;
+
+const StyledRatingsPlotDiv = styled.div`
+  padding: 2rem 0 0;
+`;
+
+const StyledHelperMsg = styled.p`
+  padding: 0 1rem;
+  font-size: 1.4rem;
+`;
