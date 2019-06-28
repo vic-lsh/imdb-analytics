@@ -254,7 +254,7 @@ const Placeholder: React.FC = () => {
 }
 
 const ErrorHeader: React.FC = () => {
-  return (<StyledH1>An error has occured...oops</StyledH1>)
+  return (<StyledH1>An error has occured...oops :(</StyledH1>)
 }
 
 const StyledEpNumSpan = styled.span`
