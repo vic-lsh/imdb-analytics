@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import './QueryPanel.css';
+import { StyledH1 } from './Dashboard';
 
 type QueryPanelProps = {
   setQueryInParent: (value: string) => void;
@@ -34,7 +35,7 @@ export default class QueryPanel extends Component<QueryPanelProps, QueryPanelSta
     return (
       <form className="search-form">
         <label className="input-label">
-          <h1>TV Series</h1>
+          <StyledH1>TV Series</StyledH1>
           <input 
             className="search-field" type="text" name="tv-series"
             value={this.state.query} onChange={this.handleChange} 

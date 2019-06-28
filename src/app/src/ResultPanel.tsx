@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import Axios from 'axios';
 import './ResultPanel.css';
 import { Line } from 'react-chartjs-2';
+import { StyledH1 } from './Dashboard';
 
 type ResultPanelProps = {
   seriesName: string | undefined
@@ -226,5 +227,5 @@ const RatingsDecodeError: React.FC = () => {
 }
 
 const Placeholder: React.FC = () => {
-  return (<h1>Please enter a TV Series name  +_+ </h1>)
+  return (<StyledH1>Please enter a TV Series name  +_+ </StyledH1>)
 }

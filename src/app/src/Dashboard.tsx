@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import './Dashboard.css';
+import styled from 'styled-components';
 
 import ResultPanel from './ResultPanel';
 import QueryPanel from './QueryPanel';
@@ -36,3 +37,9 @@ export default class Dashboard extends Component<DashboardProps, DashboardState>
     )
   }
 }
+
+export const StyledH1 = styled.h1`
+  margin: 0;
+  padding: 0 1rem;
+  font-size: 2rem;
+`
