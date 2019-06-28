@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import Axios from 'axios';
 import styled from 'styled-components';
-import './ResultPanel.css';
 import { Line } from 'react-chartjs-2';
 import { StyledH1 } from './Dashboard';
 
