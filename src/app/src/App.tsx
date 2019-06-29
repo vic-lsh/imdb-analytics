@@ -1,4 +1,3 @@
-import './App.css';
 import Dashboard from './Dashboard';
 
 const React = require('react');
