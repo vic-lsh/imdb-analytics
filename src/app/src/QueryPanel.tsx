@@ -26,14 +26,16 @@ export default class QueryPanel extends Component<QueryPanelProps, QueryPanelSta
   }
 
   handleSubmit(event: any) {
-    this.props.setQueryInParent(this.state.query);
-    this.setState({ query: "" });
+    if (this.state.query !== "") {
+      this.props.setQueryInParent(this.state.query);
+      this.setState({ query: "" });
+    }
     event.preventDefault();
   }
 
   render() {
     return (
-      <StyledQueryForm>
+      <StyledQueryForm onSubmit={this.handleSubmit}>
         <label>
           <StyledH1DarkBg>TV Series</StyledH1DarkBg>
           <StyledSearchFieldInput type="text" name="tv-series"
