@@ -108,7 +108,7 @@ export default class ResultPanel extends Component<ResultPanelProps, ResultPanel
 const RatingsDetail: React.FC<{ tvSeries: any }> = (props) => {
   return (
     <div className="tv-series">
-      <h1>{props.tvSeries['name']}</h1>
+      <StyledH1>{props.tvSeries['name']}</StyledH1>
       <RatingsPlot tvSeries={props.tvSeries} />
       <StyledRatingsGridDiv>
         <SeasonRatingsList seasonRatings={props.tvSeries.ratings} />
@@ -218,7 +218,7 @@ const RatingsNotFound: React.FC<{ seriesName: string }> = (props) => {
 
   return (
     <div>
-      <h1>Sorry, we're unable to find '{seriesNameCapitalized}'</h1>
+      <StyledH1>Sorry, we're unable to find '{seriesNameCapitalized}'</StyledH1>
       <StyledHelperMsg>
         This is most likely because our background worker has not processed this series yet =(
         Please try again sometime soon =)
@@ -228,7 +228,7 @@ const RatingsNotFound: React.FC<{ seriesName: string }> = (props) => {
 }
 
 const RatingsLoading: React.FC = () => {
-  return (<h1>Loading...</h1>)
+  return (<StyledH1>Loading...</StyledH1>)
 }
 
 const RatingsFetchingNetworkError: React.FC = () => {
