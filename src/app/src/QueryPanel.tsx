@@ -40,7 +40,7 @@ export default class QueryPanel extends Component<QueryPanelProps, QueryPanelSta
             value={this.state.query} onChange={this.handleChange}
           />
         </label>
-        <StyledSubmitBtn type="submit" onClick={this.handleSubmit}>
+        <StyledSubmitBtn type="submit" disabled={this.state.query === ""} onClick={this.handleSubmit}>
           Search
         </StyledSubmitBtn>
       </StyledQueryForm>
@@ -75,9 +75,15 @@ const StyledSubmitBtn = styled.button`
   font-size: 1.05rem;
   font-weight: bold;
   border-radius: 0.3rem;
+  transition: background 0.5s ease-out;
 
   :focus {
     outline: none;
+  }
+
+  :disabled {
+    color: #b5b5b5;
+    background-color: #0f056e;
   }
 `;
 
