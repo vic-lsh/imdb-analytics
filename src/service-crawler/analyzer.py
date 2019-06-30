@@ -16,10 +16,12 @@ from selenium.common.exceptions import (NoSuchElementException,
                                         TimeoutException)
 from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.common.by import By
+from selenium.webdriver.common.desired_capabilities import DesiredCapabilities
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.select import Select
 from selenium.webdriver.support.ui import WebDriverWait
+
 
 # from common.utils import timeout
 from config import AnalyzerConfig
@@ -125,7 +127,10 @@ class IMDb_Analyzer():
         chrome_options = Options()
         if config.headless:
             chrome_options.add_argument("--headless")
-        self.__driver = webdriver.Chrome(options=chrome_options)
+        # self.__driver = webdriver.Chrome(options=chrome_options)
+        self.__driver = webdriver.Remote(
+            command_executor='http://hub:4444/wd/hub',
+            desired_capabilities=DesiredCapabilities.CHROME)
         self.__PAGE_LOAD_TIMEOUT = 30
         self.__PAGE_LOAD_TIMEOUT_RETRY = 3
         self.__driver.set_page_load_timeout(self.__PAGE_LOAD_TIMEOUT)
