@@ -183,7 +183,15 @@ const RatingsPlot: React.FC<{ tvSeries: any }> = (props) => {
       display: false
     },
     scales: {
+      xAxes: [{
+        gridLines: {
+          drawOnChartArea: false
+        },
+      }],
       yAxes: [{
+        gridLines: {
+          drawOnChartArea: false
+        },
         ticks: {
           max: 10,
           min: Math.min(...ratings, 5),
