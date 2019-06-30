@@ -1,7 +1,9 @@
 # IMDb Analyzer
 
-A work in progress...
+A work in progress. More documentation on the way!
 
+**UI**
+![stdui](docs/static/sample_ui.png)
+
+**CLI**
 ![stdout](docs/static/sample_stdout.png)
-
-For sample configuration file, please see [docs/sample_config.yml](docs/sample_config.yml).
