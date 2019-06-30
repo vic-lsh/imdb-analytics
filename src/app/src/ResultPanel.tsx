@@ -302,7 +302,7 @@ const StyledRatingsGridDiv = styled.div`
 `;
 
 const StyledRatingsPlotDiv = styled.div`
-  padding: 2rem 0 0;
+  padding: 2rem 2rem 0 0;
 `;
 
 const StyledHelperMsg = styled.p`

@@ -40,7 +40,7 @@ export default class Dashboard extends Component<DashboardProps, DashboardState>
 
 export const StyledH1 = styled.h1`
   margin: 0;
-  font-size: 2rem;
+  font-size: 2.3rem;
 `
 
 export const StyledH1DarkBg = styled(StyledH1)`
