@@ -232,6 +232,13 @@ const RatingsPlot: React.FC<{ tvSeries: any, plotColor: string }> = (props) => {
             data: ratings,
             label: props.tvSeries.name,
             borderColor: props.plotColor,
+            pointBorderColor: props.plotColor,
+            pointBackgroundColor: props.plotColor,
+            pointBorderWidth: 1,
+            pointHoverRadius: 8,
+            pointHoverBorderWidth: 1,
+            pointRadius: 4,
+            borderWidth: 3.5,
             fill: false
           }]
         }}
