@@ -3,6 +3,7 @@ import Axios from 'axios';
 import styled from 'styled-components';
 import { Line } from 'react-chartjs-2';
 import { StyledH1 } from './Dashboard';
+import { PlotColors } from './styles';
 
 type ResultPanelProps = {
   seriesName: string | undefined
@@ -105,11 +106,16 @@ export default class ResultPanel extends Component<ResultPanelProps, ResultPanel
   }
 }
 
+const pickRandomColor = (colorObj: { [key: string]: string }) => {
+  const keys = Object.keys(colorObj);
+  return colorObj[keys[keys.length * Math.random() << 0]];
+}
+
 const RatingsDetail: React.FC<{ tvSeries: any }> = (props) => {
   return (
     <div className="tv-series">
       <StyledH1>{props.tvSeries['name']}</StyledH1>
-      <RatingsPlot tvSeries={props.tvSeries} />
+      <RatingsPlot tvSeries={props.tvSeries} plotColor={pickRandomColor(PlotColors)} />
       <StyledRatingsGridDiv>
         <SeasonRatingsList seasonRatings={props.tvSeries.ratings} />
       </StyledRatingsGridDiv>
@@ -173,7 +179,7 @@ const extractEpisodeLabels = (tvSeries: any) => {
   });
 }
 
-const RatingsPlot: React.FC<{ tvSeries: any }> = (props) => {
+const RatingsPlot: React.FC<{ tvSeries: any, plotColor: string }> = (props) => {
 
   const ratings = flattenArray(extractRatingNumbers(props.tvSeries));
   const labels = flattenArray(extractEpisodeLabels(props.tvSeries));
@@ -208,7 +214,7 @@ const RatingsPlot: React.FC<{ tvSeries: any }> = (props) => {
           datasets: [{
             data: ratings,
             label: props.tvSeries.name,
-            borderColor: "#3e95cd",
+            borderColor: props.plotColor,
             fill: false
           }]
         }}
