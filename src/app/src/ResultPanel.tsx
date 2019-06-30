@@ -225,7 +225,16 @@ const RatingsPlot: React.FC<{ tvSeries: any, plotColor: string }> = (props) => {
 
 const RatingsNotFound: React.FC<{ seriesName: string }> = (props) => {
   const seriesNameCapitalized = (() => {
-    return props.seriesName === undefined ? "" : props.seriesName.split(" ").map((word) => {
+    if (props.seriesName === undefined) {
+      return "";
+    }
+
+    const seriesName = props.seriesName.trim();
+    if (seriesName === "") {
+      return seriesName;
+    }
+
+    return seriesName.split(" ").map((word) => {
       return word[0].toUpperCase() + word.slice(1);
     }).join(" ");
   })();
