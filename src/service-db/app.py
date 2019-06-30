@@ -9,19 +9,24 @@ from db import Database
 
 app = Flask(__name__)
 
-def add_cors_headers(response):
-    response.headers['Access-Control-Allow-Origin'] = 'http://localhost:3000'
-    if request.method == 'OPTIONS':
-        response.headers['Access-Control-Allow-Methods'] = 'DELETE, GET, POST, PUT'
-        headers = request.headers.get('Access-Control-Request-Headers')
-        if headers:
-            response.headers['Access-Control-Allow-Headers'] = headers
-    return response
-app.after_request(add_cors_headers)
+# def add_cors_headers(response):
+#     response.headers['Access-Control-Allow-Origin'] = 'http://localhost:3001'
+#     if request.method == 'OPTIONS':
+#         response.headers['Access-Control-Allow-Methods'] = 'DELETE, GET, POST, PUT'
+#         headers = request.headers.get('Access-Control-Request-Headers')
+#         if headers:
+#             response.headers['Access-Control-Allow-Headers'] = headers
+#     return response
+# app.after_request(add_cors_headers)
 
-CORS(app, resources={r"/tv-series": {"origins": "http://localhost:3001"}})
+app.config['CORS_HEADERS'] = 'Content-Type'
+
+
+# CORS(app, resources={r"/tv-series": {"origins": "http://localhost:3001"}})
 
 api = Api(app)
+CORS(app)
+
 
 
 class TVSeries(Resource):
