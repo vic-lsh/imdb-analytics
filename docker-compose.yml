@@ -2,6 +2,21 @@ version: '3'
 
 services:
 
+  crawler-service:
+    container_name: crawler
+    build:
+      context: ./src/service-crawler
+      dockerfile: dockerfile
+    volumes:
+      - ./src/service-crawler:/usr/src/app
+    ports:
+      - 9001:80
+    depends_on:
+      - db-service
+      - firefox
+      - chrome
+      - hub
+
   db-service:
     container_name: db_api
     build:
@@ -31,3 +46,29 @@ services:
       - 3001:3000
     depends_on: 
       - db-service
+
+  firefox:
+    container_name: firefox_driver
+    image: selenium/node-firefox:3.14.0-gallium
+    volumes:
+      - /dev/shm:/dev/shm
+    depends_on:
+      - hub
+    environment:
+      HUB_HOST: hub
+
+  chrome:
+    container_name: chrome_driver
+    image: selenium/node-chrome:3.14.0-gallium
+    volumes:
+      - /dev/shm:/dev/shm
+    depends_on:
+      - hub
+    environment:
+      HUB_HOST: hub
+
+  hub:
+    container_name: selenium_hub
+    image: selenium/hub:3.14.0-gallium
+    ports:
+      - "4444:4444"
