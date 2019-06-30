@@ -187,6 +187,16 @@ const RatingsPlot: React.FC<{ tvSeries: any, plotColor: string }> = (props) => {
   const tickerFontColor = "#4d4d4d";
   const axisColor = "#828282";
 
+  const axesGridlineCommonConfig = {
+    drawOnChartArea: false,
+    color: axisColor,
+    lineWidth: 1.5,
+  }
+
+  const axesTicksCommonConfig = {
+    fontColor: tickerFontColor,    
+  }
+
   const plotOptions = {
     legend: {
       display: false
@@ -194,9 +204,7 @@ const RatingsPlot: React.FC<{ tvSeries: any, plotColor: string }> = (props) => {
     scales: {
       xAxes: [{
         gridLines: {
-          drawOnChartArea: false,
-          color: axisColor,
-          lineWidth: 1.5,
+          ...axesGridlineCommonConfig
         },
         ticks: {
           fontColor: tickerFontColor,
@@ -204,14 +212,12 @@ const RatingsPlot: React.FC<{ tvSeries: any, plotColor: string }> = (props) => {
       }],
       yAxes: [{
         gridLines: {
-          drawOnChartArea: false,
-          color: axisColor,
-          lineWidth: 1.5,
+          ...axesGridlineCommonConfig
         },
         ticks: {
           max: 10,
           min: Math.min(...ratings, 5),
-          fontColor: tickerFontColor,
+          ...axesTicksCommonConfig
         }
       }]
     }
