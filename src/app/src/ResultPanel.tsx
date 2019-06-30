@@ -273,7 +273,7 @@ const RatingsDecodeError: React.FC = () => {
 }
 
 const Placeholder: React.FC = () => {
-  return (<StyledH1>Please enter a TV Series name  +_+ </StyledH1>)
+  return (<StyledH1>Please enter a TV Series name  =) </StyledH1>)
 }
 
 const ErrorHeader: React.FC = () => {
