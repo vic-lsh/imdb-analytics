@@ -21,11 +21,11 @@ export default class QueryPanel extends Component<QueryPanelProps, QueryPanelSta
     this.handleSubmit = this.handleSubmit.bind(this);
   }
 
-  handleChange(event: any) {
+  handleChange(event: React.ChangeEvent<HTMLInputElement>) {
     this.setState({ query: event.target.value });
   }
 
-  handleSubmit(event: any) {
+  handleSubmit(event: React.FormEvent | React.MouseEvent) {
     if (this.state.query !== "") {
       this.props.setQueryInParent(this.state.query);
       this.setState({ query: "" });
