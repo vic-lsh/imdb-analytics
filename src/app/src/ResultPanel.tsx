@@ -184,6 +184,9 @@ const RatingsPlot: React.FC<{ tvSeries: any, plotColor: string }> = (props) => {
   const ratings = flattenArray(extractRatingNumbers(props.tvSeries));
   const labels = flattenArray(extractEpisodeLabels(props.tvSeries));
 
+  const tickerFontColor = "#4d4d4d";
+  const axisColor = "#828282";
+
   const plotOptions = {
     legend: {
       display: false
@@ -191,16 +194,24 @@ const RatingsPlot: React.FC<{ tvSeries: any, plotColor: string }> = (props) => {
     scales: {
       xAxes: [{
         gridLines: {
-          drawOnChartArea: false
+          drawOnChartArea: false,
+          color: axisColor,
+          lineWidth: 1.5,
         },
+        ticks: {
+          fontColor: tickerFontColor,
+        }
       }],
       yAxes: [{
         gridLines: {
-          drawOnChartArea: false
+          drawOnChartArea: false,
+          color: axisColor,
+          lineWidth: 1.5,
         },
         ticks: {
           max: 10,
           min: Math.min(...ratings, 5),
+          fontColor: tickerFontColor,
         }
       }]
     }
