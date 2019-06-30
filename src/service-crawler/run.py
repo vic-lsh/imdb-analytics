@@ -10,7 +10,7 @@ from mongoengine import connect
 from analyzer import IMDb_Queries_Manager
 from config import AnalyzerConfig
 from ratings import SeriesRatingsCollection, SeriesRatings
-# from common.utils import timer
+from pypaca import time
 
 with open(abspath('config_logger.yml'), 'r') as f:
     cfg = yaml.safe_load(f.read())
@@ -19,7 +19,7 @@ logging.config.dictConfig(cfg)
 logger = logging.getLogger(__name__)
 
 
-# @timer
+@time.timer
 def main():
     config = AnalyzerConfig()
     manager = IMDb_Queries_Manager(config)
