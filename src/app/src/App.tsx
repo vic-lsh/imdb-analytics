@@ -1,3 +1,4 @@
+import styled from 'styled-components';
 import Dashboard from './Dashboard';
 
 const React = require('react');
@@ -6,10 +7,16 @@ const React = require('react');
 const App: React.FC = () => {
 
   return (
-    <div className="App">
+    <StyledAppDiv>
       <Dashboard />
-    </div>
+    </StyledAppDiv>
   );
 }
+
+const StyledAppDiv = styled.div`
+  overflow: hidden;
+  height: 100%;
+  width: 100%;
+`;
 
 export default App;
