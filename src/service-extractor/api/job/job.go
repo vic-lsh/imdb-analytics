@@ -17,24 +17,30 @@ type TVSeriesExtractionJob struct {
 	Status string `json:"status"`
 }
 
+// Handler encapsulates input and output channels for TVJob
+type Handler struct {
+	in  chan TVSeriesExtractionJob
+	out chan TVSeriesExtractionJob
+}
+
 // Jobs container
 var jobs []TVSeriesExtractionJob
 
-// Routes return a router with routes associated with TVJobs
-func Routes() *mux.Router {
+// Routes return a router with routes associated with TVSeriesExtractionJobs
+func Routes(in chan TVSeriesExtractionJob, out chan TVSeriesExtractionJob) *mux.Router {
 	r := mux.NewRouter()
-
-	r.HandleFunc("/", homeHandler)
-	r.HandleFunc("/jobs", getJobs).Methods("GET")
-	r.HandleFunc("/jobs/{id}", getJob).Methods("GET")
-	r.HandleFunc("/jobs", postJob).Methods("POST")
+	h := &Handler{in: in, out: out}
+	r.HandleFunc("/", h.homeHandler)
+	r.HandleFunc("/jobs", h.getJobs).Methods("GET")
+	r.HandleFunc("/jobs/{id}", h.getJob).Methods("GET")
+	r.HandleFunc("/jobs", h.postJob).Methods("POST")
 
 	return r
 }
 
 // homeHandler responds a helper message that directs client to use
 // the actual API at `/jobs`.
-func homeHandler(w http.ResponseWriter, r *http.Request) {
+func (h *Handler) homeHandler(w http.ResponseWriter, r *http.Request) {
 	json.NewEncoder(w).Encode(&map[string]interface{}{
 		"Message": "This is the home route of the extractor service API. " +
 			"To make RESTful calls visit `/jobs.`",
@@ -42,7 +48,7 @@ func homeHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 // getJob handles querying job with a specific ID.
-func getJob(w http.ResponseWriter, r *http.Request) {
+func (h *Handler) getJob(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 	params := mux.Vars(r)
 	for _, item := range jobs {
@@ -62,7 +68,7 @@ func getJob(w http.ResponseWriter, r *http.Request) {
 }
 
 // getJobs reponds all jobs in the system.
-func getJobs(w http.ResponseWriter, r *http.Request) {
+func (h *Handler) getJobs(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 	if len(jobs) == 0 {
 		json.NewEncoder(w).Encode(&map[string]interface{}{
@@ -74,7 +80,7 @@ func getJobs(w http.ResponseWriter, r *http.Request) {
 }
 
 // postJob creates a new job, if a job with the same Name does not already exist.
-func postJob(w http.ResponseWriter, r *http.Request) {
+func (h *Handler) postJob(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 	if name, ok := r.URL.Query()["name"]; !ok {
 
