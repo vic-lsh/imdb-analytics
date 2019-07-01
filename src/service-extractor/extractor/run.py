@@ -3,6 +3,7 @@ import logging.config
 import pickle
 import os
 from os.path import abspath
+import sys
 import yaml
 
 from mongoengine import connect
@@ -23,7 +24,12 @@ logger = logging.getLogger(__name__)
 def main():
     config = AnalyzerConfig()
     manager = IMDb_Queries_Manager(config)
-    manager.add_multiple_queries(config.tv_series_names)
+    
+    if len(sys.argv) > 1:
+        manager.add_multiple_queries(sys.argv[1:])
+    else:
+        manager.add_multiple_queries(config.tv_series_names)
+        
     manager.api_execute()
 
 
