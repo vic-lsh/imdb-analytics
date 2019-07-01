@@ -50,16 +50,13 @@ func (h *Handler) homeHandler(w http.ResponseWriter, r *http.Request) {
 // getJob handles querying job with a specific ID.
 func (h *Handler) getJob(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
-	queriedID, queryOk := r.URL.Query()["id"]
-	if !queryOk {
-		return
-	}
-	id, err := strconv.Atoi(queriedID[0])
+	params := mux.Vars(r)
+	id, err := strconv.Atoi(params["id"])
 	if err != nil {
 		return
 	}
 	h.in <- id
-	var out interface{} = <- h.in
+	var out interface{} = <-h.in
 	job, typecheckOk := out.(TVSeriesExtractionJob)
 	if !typecheckOk {
 		json.NewEncoder(w).Encode(&map[string]interface{}{
