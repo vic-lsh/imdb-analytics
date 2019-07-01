@@ -4,12 +4,12 @@ A work in progress. More documentation on the way!
 
 ## Getting started
 
-Please follow the following commands to test the application. 
+Please follow the following commands to test the application. Some of the following instructions are mac/linux specific.
 
 Dependencies:
-- docker
-- node
-- brew
+- [docker](https://docs.docker.com/v17.12/docker-for-mac/install/#download-docker-for-mac)
+- [brew](https://brew.sh)
+- [node](https://treehouse.github.io/installation-guides/mac/node-mac.html)
 
 To start up the environment, run:
 
