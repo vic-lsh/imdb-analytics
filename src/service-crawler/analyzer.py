@@ -127,10 +127,10 @@ class IMDb_Analyzer():
         chrome_options = Options()
         if config.headless:
             chrome_options.add_argument("--headless")
-        # self.__driver = webdriver.Chrome(options=chrome_options)
-        self.__driver = webdriver.Remote(
-            command_executor='http://hub:4444/wd/hub',
-            desired_capabilities=DesiredCapabilities.CHROME)
+        self.__driver = webdriver.Chrome(options=chrome_options)
+        # self.__driver = webdriver.Remote(
+            # command_executor='http://hub:4444/wd/hub',
+            # desired_capabilities=DesiredCapabilities.CHROME)
         self.__PAGE_LOAD_TIMEOUT = 30
         self.__PAGE_LOAD_TIMEOUT_RETRY = 3
         self.__driver.set_page_load_timeout(self.__PAGE_LOAD_TIMEOUT)
