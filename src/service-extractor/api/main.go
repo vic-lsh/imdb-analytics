@@ -34,6 +34,8 @@ func main() {
 	log.Fatal(http.ListenAndServe(fmt.Sprintf(":%d", PORT), r))
 }
 
+// homeHandler responds a helper message that directs client to use
+// the actual API at `/jobs`.
 func homeHandler(w http.ResponseWriter, r *http.Request) {
 	json.NewEncoder(w).Encode(&map[string]interface{}{
 		"Message": "This is the home route of the extractor service API. " +
@@ -41,6 +43,7 @@ func homeHandler(w http.ResponseWriter, r *http.Request) {
 	})
 }
 
+// getJob handles querying job with a specific ID.
 func getJob(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 	params := mux.Vars(r)
@@ -60,6 +63,7 @@ func getJob(w http.ResponseWriter, r *http.Request) {
 	})
 }
 
+// getJobs reponds all jobs in the system.
 func getJobs(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 	if len(jobs) == 0 {
@@ -71,6 +75,7 @@ func getJobs(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
+// postJob creates a new job, if a job with the same Name does not already exist.
 func postJob(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 	if name, ok := r.URL.Query()["name"]; !ok {
