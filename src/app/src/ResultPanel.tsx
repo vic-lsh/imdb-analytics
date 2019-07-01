@@ -217,6 +217,7 @@ const RatingsPlot: React.FC<{ tvSeries: any, plotColor: string }> = (props) => {
         ticks: {
           max: 10,
           min: Math.min(...ratings, 5),
+          stepSize: 1,
           ...axesTicksCommonConfig
         }
       }]
