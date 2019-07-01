@@ -241,8 +241,8 @@ const RatingsPlot: React.FC<{ tvSeries: any, plotColor: string }> = (props) => {
         pointBorderWidth: 1,
         pointHoverRadius: 8,
         pointHoverBorderWidth: 1,
-        pointRadius: 4,
-        borderWidth: 3.5,
+        pointRadius: ratings.length < 100 ? 4 : 0,
+        borderWidth: ratings.length < 300 ? 4 : 2.5,
         fill: false
       }]
     };
