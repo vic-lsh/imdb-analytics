@@ -50,25 +50,24 @@ func (h *Handler) homeHandler(w http.ResponseWriter, r *http.Request) {
 // getJob handles querying job with a specific ID.
 func (h *Handler) getJob(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
-	queriedID, ok := r.URL.Query()["id"]
-	if !ok {
+	queriedID, queryOk := r.URL.Query()["id"]
+	if !queryOk {
 		return
 	}
 	id, err := strconv.Atoi(queriedID[0])
 	if err != nil {
 		return
 	}
-
-	for _, item := range jobs {
-		if item.ID == id {
-			json.NewEncoder(w).Encode(item)
-			break
-		}
-		return
+	h.in <- id
+	var out interface{} = <- h.in
+	job, typecheckOk := out.(TVSeriesExtractionJob)
+	if !typecheckOk {
+		json.NewEncoder(w).Encode(&map[string]interface{}{
+			"Message": "No job exists yet.",
+		})
+	} else {
+		json.NewEncoder(w).Encode(job)
 	}
-	json.NewEncoder(w).Encode(&map[string]interface{}{
-		"Message": "No job exists yet.",
-	})
 }
 
 // getJobs reponds all jobs in the system.
