@@ -32,7 +32,7 @@ CORS(app)
 class TVSeries(Resource):
     def __init__(self):
         self._parser = reqparse.RequestParser()
-        self._parser.add_argument('name', type=str)
+        self._parser.add_argument('name', type=str, required=True)
 
     def get(self):
         args = self._parser.parse_args()
