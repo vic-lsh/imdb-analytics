@@ -29,11 +29,11 @@ func sendJob(jobs map[int]job.TVSeriesExtractionJob, in chan interface{}) {
 		id, ok := input.(int)
 		if !ok {
 			in <- -2
-			break
+			continue
 		}
 		if job, found := jobs[id]; found {
 			in <- job
-			break
+			continue
 		}
 		in <- -1
 	}
