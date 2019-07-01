@@ -2,8 +2,6 @@ package job
 
 import (
 	"encoding/json"
-	"fmt"
-	"log"
 	"math/rand"
 	"net/http"
 	"strconv"
@@ -25,14 +23,12 @@ var jobs []TVSeriesExtractionJob
 // Routes return a router with routes associated with TVJobs
 func Routes() *mux.Router {
 	r := mux.NewRouter()
+
 	r.HandleFunc("/", homeHandler)
 	r.HandleFunc("/jobs", getJobs).Methods("GET")
 	r.HandleFunc("/jobs/{id}", getJob).Methods("GET")
 	r.HandleFunc("/jobs", postJob).Methods("POST")
 
-	var PORT = 4000
-	fmt.Printf("Router running on port %d\n", PORT)
-	log.Fatal(http.ListenAndServe(fmt.Sprintf(":%d", PORT), r))
 	return r
 }
 
