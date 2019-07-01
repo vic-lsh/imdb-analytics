@@ -2,13 +2,13 @@ version: '3'
 
 services:
 
-  crawler-service:
-    container_name: crawler
+  extractor-service:
+    container_name: extractor
     build:
-      context: ./src/service-crawler
+      context: ./src/service-extractor
       dockerfile: dockerfile
     volumes:
-      - ./src/service-crawler:/usr/src/app
+      - ./src/service-extractor:/usr/src/app
     ports:
       - 9001:80
     depends_on:

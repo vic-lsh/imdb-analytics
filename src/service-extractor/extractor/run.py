@@ -7,7 +7,7 @@ import yaml
 
 from mongoengine import connect
 
-from analyzer import IMDb_Queries_Manager
+from extractor import IMDb_Queries_Manager
 from config import AnalyzerConfig
 from ratings import SeriesRatingsCollection, SeriesRatings
 from pypaca import time
