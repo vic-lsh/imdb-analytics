@@ -11,3 +11,4 @@ config_logger.yml
 config_imdb.yml
 profile
 node_modules/
+api
