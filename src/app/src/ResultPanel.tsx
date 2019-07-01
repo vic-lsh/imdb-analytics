@@ -194,7 +194,7 @@ const RatingsPlot: React.FC<{ tvSeries: any, plotColor: string }> = (props) => {
   }
 
   const axesTicksCommonConfig = {
-    fontColor: tickerFontColor,    
+    fontColor: tickerFontColor,
   }
 
   const plotOptions = {
@@ -223,25 +223,34 @@ const RatingsPlot: React.FC<{ tvSeries: any, plotColor: string }> = (props) => {
     }
   }
 
+  const data = (canvas: any) => {
+    const ctx = canvas.getContext('2d');
+    const gradient = ctx.createLinearGradient(0, 0, 0, 100);
+    gradient.addColorStop(0, "#1b6dcc");    // up
+    gradient.addColorStop(0.5, "#7f2ab8");
+    gradient.addColorStop(1, "#b92b27");    // down
+    return {
+      labels: labels,
+      datasets: [{
+        data: ratings,
+        label: props.tvSeries.name,
+        borderColor: gradient,
+        pointBorderColor: gradient,
+        pointBackgroundColor: gradient,
+        pointBorderWidth: 1,
+        pointHoverRadius: 8,
+        pointHoverBorderWidth: 1,
+        pointRadius: 4,
+        borderWidth: 3.5,
+        fill: false
+      }]
+    };
+  };
+
   return (
-    <StyledRatingsPlotDiv>
+    <StyledRatingsPlotDiv id="ratings-plot">
       <Line width={100} height={20}
-        data={{
-          labels: labels,
-          datasets: [{
-            data: ratings,
-            label: props.tvSeries.name,
-            borderColor: props.plotColor,
-            pointBorderColor: props.plotColor,
-            pointBackgroundColor: props.plotColor,
-            pointBorderWidth: 1,
-            pointHoverRadius: 8,
-            pointHoverBorderWidth: 1,
-            pointRadius: 4,
-            borderWidth: 3.5,
-            fill: false
-          }]
-        }}
+        data={data}
         options={plotOptions}
       />
     </StyledRatingsPlotDiv>)
