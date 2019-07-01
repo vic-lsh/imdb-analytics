@@ -12,3 +12,4 @@ config_imdb.yml
 profile
 node_modules/
 api
+!api/
