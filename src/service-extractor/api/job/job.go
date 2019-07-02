@@ -20,14 +20,14 @@ type TVSeriesExtractionJob struct {
 // Handler encapsulates input and output channels for TVJob
 type Handler struct {
 	in  chan interface{}
-	out chan<- TVSeriesExtractionJob
+	out chan<- *TVSeriesExtractionJob
 }
 
 // Jobs container
 var jobs []TVSeriesExtractionJob
 
 // Routes return a router with routes associated with TVSeriesExtractionJobs
-func Routes(in chan interface{}, out chan<- TVSeriesExtractionJob) *mux.Router {
+func Routes(in chan interface{}, out chan<- *TVSeriesExtractionJob) *mux.Router {
 	r := mux.NewRouter()
 	h := &Handler{in: in, out: out}
 	r.HandleFunc("/", h.homeHandler)
@@ -97,7 +97,7 @@ func (h *Handler) postJob(w http.ResponseWriter, r *http.Request) {
 			Status: "Ready",
 		}
 		jobs = append(jobs, j)
-		h.out <- j
+		h.out <- &j
 		json.NewEncoder(w).Encode(&j)
 	}
 }
