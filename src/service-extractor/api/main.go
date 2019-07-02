@@ -12,7 +12,7 @@ import (
 	"github.com/vic-lee/site-analyzer/src/service-extractor/api/job"
 )
 
-func router(in chan interface{}, out chan *job.TVSeriesExtractionJob) {
+func router(in chan interface{}, out chan *job.ExtractionJob) {
 	r := job.Routes(in, out)
 
 	var PORT = 4000
@@ -20,7 +20,7 @@ func router(in chan interface{}, out chan *job.TVSeriesExtractionJob) {
 	log.Fatal(http.ListenAndServe(fmt.Sprintf(":%d", PORT), r))
 }
 
-func receiveJobs(jobs map[int]*job.TVSeriesExtractionJob, jobsPending *[]int, out chan *job.TVSeriesExtractionJob) {
+func receiveJobs(jobs map[int]*job.ExtractionJob, jobsPending *[]int, out chan *job.ExtractionJob) {
 	for job := range out {
 		jobs[job.ID] = job
 		*jobsPending = append(*jobsPending, job.ID)
@@ -28,7 +28,7 @@ func receiveJobs(jobs map[int]*job.TVSeriesExtractionJob, jobsPending *[]int, ou
 	}
 }
 
-func sendJob(jobs map[int]*job.TVSeriesExtractionJob, in chan interface{}) {
+func sendJob(jobs map[int]*job.ExtractionJob, in chan interface{}) {
 	for input := range in {
 		id, ok := input.(int)
 		if !ok {
@@ -43,7 +43,7 @@ func sendJob(jobs map[int]*job.TVSeriesExtractionJob, in chan interface{}) {
 	}
 }
 
-func extractorExecutesJob(jobs map[int]*job.TVSeriesExtractionJob, id int) {
+func extractorExecutesJob(jobs map[int]*job.ExtractionJob, id int) {
 	const pyScriptName = "run.py"
 	const dir = "../extractor"
 
@@ -61,7 +61,7 @@ func extractorExecutesJob(jobs map[int]*job.TVSeriesExtractionJob, id int) {
 	}
 }
 
-func processJobs(jobs map[int]*job.TVSeriesExtractionJob, jobsPending *[]int) {
+func processJobs(jobs map[int]*job.ExtractionJob, jobsPending *[]int) {
 	for true {
 		if len(*jobsPending) == 0 {
 			time.Sleep(5 * time.Second)
@@ -77,11 +77,11 @@ func main() {
 	var wg sync.WaitGroup
 	wg.Add(1)
 
-	jobs := make(map[int]*job.TVSeriesExtractionJob)
+	jobs := make(map[int]*job.ExtractionJob)
 	var jobsPending []int
 
 	in := make(chan interface{})
-	out := make(chan *job.TVSeriesExtractionJob)
+	out := make(chan *job.ExtractionJob)
 
 	go func() {
 		go receiveJobs(jobs, &jobsPending, out)

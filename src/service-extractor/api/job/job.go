@@ -9,9 +9,9 @@ import (
 	"github.com/gorilla/mux"
 )
 
-// TVSeriesExtractionJob describes a TVSeries data extraction job.
+// ExtractionJob describes a TVSeries data extraction job.
 // There are 3 possible statuses: Ready | Processing | Completed
-type TVSeriesExtractionJob struct {
+type ExtractionJob struct {
 	ID     int    `json:"id"`
 	Name   string `json:"name"`
 	Status string `json:"status"`
@@ -20,14 +20,14 @@ type TVSeriesExtractionJob struct {
 // Handler encapsulates input and output channels for TVJob
 type Handler struct {
 	in  chan interface{}
-	out chan<- *TVSeriesExtractionJob
+	out chan<- *ExtractionJob
 }
 
 // Jobs container
-var jobs []TVSeriesExtractionJob
+var jobs []ExtractionJob
 
 // Routes return a router with routes associated with TVSeriesExtractionJobs
-func Routes(in chan interface{}, out chan<- *TVSeriesExtractionJob) *mux.Router {
+func Routes(in chan interface{}, out chan<- *ExtractionJob) *mux.Router {
 	r := mux.NewRouter()
 	h := &Handler{in: in, out: out}
 	r.HandleFunc("/", h.homeHandler)
@@ -57,7 +57,7 @@ func (h *Handler) getJob(w http.ResponseWriter, r *http.Request) {
 	}
 	h.in <- id
 	var out interface{} = <-h.in
-	job, typecheckOk := out.(TVSeriesExtractionJob)
+	job, typecheckOk := out.(ExtractionJob)
 	if !typecheckOk {
 		json.NewEncoder(w).Encode(&map[string]interface{}{
 			"Message": "No job exists yet.",
@@ -91,7 +91,7 @@ func (h *Handler) postJob(w http.ResponseWriter, r *http.Request) {
 				return
 			}
 		}
-		j := TVSeriesExtractionJob{
+		j := ExtractionJob{
 			ID:     rand.Intn(1000000000),
 			Name:   name[0],
 			Status: "Ready",
