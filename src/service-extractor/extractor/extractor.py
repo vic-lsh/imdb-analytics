@@ -375,3 +375,5 @@ class IMDb_Queries_Manager():
             r = requests.post(url="http://localhost:8001/tv-series",
                               json=json_obj)
             print("POST STATUS: ", r.status_code)
+
+        self._clear_pending_queries()
