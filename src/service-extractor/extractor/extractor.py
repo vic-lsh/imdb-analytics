@@ -354,9 +354,19 @@ class IMDb_Queries_Manager():
         self._clear_pending_queries()
 
     def api_execute(self) -> None:
+        queries = []
+
+        for q in self.__queries:
+            r = requests.get(url="http://localhost:8001/tv-series")
+            if r.status_code != 200:
+                queries.append(q)
+                
+        if len(queries) == 0:
+            return
+
         if self.__analyzer is None:
             self.__analyzer = IMDb_Analyzer(self.__config)
-        self.__analyzer.multiple_queries(self.pending_queries, self.__ratings)
+        self.__analyzer.multiple_queries(queries, self.__ratings)
 
         jsons = list(map(lambda r: r.json, self.__ratings.collection.values()))
         pprint(jsons)
