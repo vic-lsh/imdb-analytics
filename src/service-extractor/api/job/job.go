@@ -2,6 +2,7 @@ package job
 
 import (
 	"encoding/json"
+	"fmt"
 	"math/rand"
 	"net/http"
 	"strconv"
@@ -15,6 +16,37 @@ type ExtractionJob struct {
 	ID     int    `json:"id"`
 	Name   string `json:"name"`
 	Status string `json:"status"`
+}
+
+// ExtractionJobStatus describes the available statuses for ExtractionJob
+type ExtractionJobStatus int
+
+// Types of ExtractionJobStatus allowed
+const (
+	NotProcessed       ExtractionJobStatus = 0
+	Processing         ExtractionJobStatus = 1
+	CompletedSucceeded ExtractionJobStatus = 2
+	CompletedFailed    ExtractionJobStatus = 3
+)
+
+// Returns the string representation of a ExtractionJobStatus
+func (s ExtractionJobStatus) String() string {
+	statuses := [...]string{
+		"Not processed",
+		"Processing",
+		"Completed successfully",
+		"Failed to complete",
+	}
+
+	if !s.isValid() {
+		return fmt.Sprintf("Type Unknown %d", s)
+	}
+
+	return statuses[s]
+}
+
+func (s ExtractionJobStatus) isValid() bool {
+	return s < NotProcessed || s > CompletedFailed
 }
 
 // Handler encapsulates input and output channels for TVJob
