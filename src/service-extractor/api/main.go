@@ -53,10 +53,10 @@ func extractorExecutesJob(jobs map[int]*job.ExtractionJob, id int) {
 	cmd.Stderr = &stderr
 
 	if err := cmd.Run(); err != nil {
-		jobs[id].Status = "Completed_Failed"
+		jobs[id].Status = job.CompletedFailed
 		fmt.Printf("Failed posting %s", jobs[id].Name)
 	} else {
-		jobs[id].Status = "Completed_Successful"
+		jobs[id].Status = job.CompletedSucceeded
 		fmt.Printf("POSTED %s\n", jobs[id].Name)
 	}
 }
