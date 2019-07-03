@@ -13,6 +13,12 @@ import (
 // ExtractionJob describes a TVSeries data extraction job.
 // There are 3 possible statuses: Ready | Processing | Completed
 type ExtractionJob struct {
+	ID     int
+	Name   string
+	Status ExtractionJobStatus
+}
+
+type extractionJobMarshalled struct {
 	ID     int    `json:"id"`
 	Name   string `json:"name"`
 	Status string `json:"status"`
@@ -126,10 +132,18 @@ func (h *Handler) postJob(w http.ResponseWriter, r *http.Request) {
 		j := ExtractionJob{
 			ID:     rand.Intn(1000000000),
 			Name:   name[0],
-			Status: "Ready",
+			Status: NotProcessed,
 		}
 		jobs = append(jobs, j)
 		h.out <- &j
 		json.NewEncoder(w).Encode(&j)
+	}
+}
+
+func (ej *ExtractionJob) marshall() extractionJobMarshalled {
+	return extractionJobMarshalled{
+		ID:     ej.ID,
+		Name:   ej.Name,
+		Status: ej.Status.String(),
 	}
 }
