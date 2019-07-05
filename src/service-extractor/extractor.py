@@ -13,7 +13,7 @@ from typing import List
 from selenium import webdriver
 from selenium.common.exceptions import (NoSuchElementException,
                                         StaleElementReferenceException,
-                                        TimeoutException)
+                                        TimeoutException, WebDriverException)
 from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.common.by import By
 from selenium.webdriver.common.desired_capabilities import DesiredCapabilities
@@ -127,17 +127,24 @@ class IMDb_Analyzer():
         chrome_options = Options()
         if config.headless:
             chrome_options.add_argument("--headless")
-        self.__driver = webdriver.Chrome(options=chrome_options)
-        # self.__driver = webdriver.Remote(
-            # command_executor='http://hub:4444/wd/hub',
-            # desired_capabilities=DesiredCapabilities.CHROME)
+
+        # try:
+        #     self.__driver = webdriver.Chrome(options=chrome_options)
+        # except WebDriverException as e:
+        #     print(str(e))
+        #     exit(1)
+        print("Initiating driver")
+        self.__driver = webdriver.Remote(
+            command_executor='http://localhost:4444/wd/hub',
+            desired_capabilities=DesiredCapabilities.CHROME)
+        print("Driver initiated")
         self.__PAGE_LOAD_TIMEOUT = 30
         self.__PAGE_LOAD_TIMEOUT_RETRY = 3
         self.__driver.set_page_load_timeout(self.__PAGE_LOAD_TIMEOUT)
         self.__DELAY_SECS = 10
 
     # def __del__(self):
-    #     self.__driver.close()
+        # self.__driver.close()
 
     def multiple_queries(self, series_names: List[str],
                          ratings_collection: SeriesRatingsCollection) -> None:
@@ -360,9 +367,9 @@ class IMDb_Queries_Manager():
             r = requests.get(url="http://localhost:8001/tv-series")
             if r.status_code != 200:
                 queries.append(q)
-                
+
         if len(queries) == 0:
-            return
+            return True
 
         if self.__analyzer is None:
             self.__analyzer = IMDb_Analyzer(self.__config)
@@ -371,9 +378,13 @@ class IMDb_Queries_Manager():
         jsons = list(map(lambda r: r.json, self.__ratings.collection.values()))
         pprint(jsons)
 
+        success = True
         for json_obj in jsons:
             r = requests.post(url="http://localhost:8001/tv-series",
                               json=json_obj)
             print("POST STATUS: ", r.status_code)
+            if r.status_code != 200:
+                success = False
 
         self._clear_pending_queries()
+        return success
