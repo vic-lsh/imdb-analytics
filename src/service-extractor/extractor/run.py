@@ -28,12 +28,12 @@ logger = logging.getLogger(__name__)
 def main():
     config = AnalyzerConfig()
     manager = IMDb_Queries_Manager(config)
-    
+
     if len(sys.argv) > 1:
         manager.add_multiple_queries(sys.argv[1:])
     else:
         manager.add_multiple_queries(config.tv_series_names)
-        
+
     manager.api_execute()
 
 
