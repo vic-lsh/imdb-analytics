@@ -22,11 +22,9 @@ from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.select import Select
 from selenium.webdriver.support.ui import WebDriverWait
 
-
-# from common.utils import timeout
-from config import AnalyzerConfig
-from constants import IMDb_Constants as consts
-from ratings import SeriesRatings, SeriesRatingsCollection
+from extractor.config import AnalyzerConfig
+from extractor.constants import IMDb_Constants as consts
+from extractor.ratings import SeriesRatings, SeriesRatingsCollection
 
 logger = logging.getLogger(__name__)
 
@@ -158,6 +156,7 @@ class IMDb_Analyzer():
         else:
             logger.info("Data already exists; Noting to query in {}".format(
                 str(series_names)))
+        self.__driver.close()
 
     def query(self, series_name: str) -> SeriesRatings:
         """Query a TV series's ratings with its name.

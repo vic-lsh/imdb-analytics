@@ -5,8 +5,8 @@ The API endpoints through which other services may request the crawler.
 from flask import Flask
 from flask_restful import Resource, reqparse, Api
 
-from config import AnalyzerConfig
-from extractor import IMDb_Queries_Manager
+from extractor.config import AnalyzerConfig
+from extractor.extractor import IMDb_Queries_Manager
 
 
 app = Flask(__name__)

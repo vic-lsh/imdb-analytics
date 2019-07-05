@@ -7,9 +7,9 @@ import yaml
 
 from mongoengine import connect
 
-from extractor import IMDb_Queries_Manager
-from config import AnalyzerConfig
-from ratings import SeriesRatingsCollection, SeriesRatings
+from extractor.extractor import IMDb_Queries_Manager
+from extractor.config import AnalyzerConfig
+from extractor.ratings import SeriesRatingsCollection, SeriesRatings
 from pypaca import time
 
 LOGGER_CONFIG_FPATH = 'config_logger.yml'
