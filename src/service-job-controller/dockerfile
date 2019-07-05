@@ -1,0 +1,7 @@
+FROM golang:latest 
+
+WORKDIR /usr/src/app
+
+RUN go build -o bin/exec .
+
+CMD ["./bin/exec"]

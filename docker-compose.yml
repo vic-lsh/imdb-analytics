@@ -17,6 +17,18 @@ services:
       - chrome
       - hub
 
+  job-controller-service:
+    container_name: job_controller
+    build:
+      context: ./src/service-job-controller
+      dockerfile: dockerfile
+    bolumes:
+      - ./src/service-job-controller/:/usr/src/app
+    ports:
+      - 5001:5000
+    depends_on:
+      - extractor-service
+
   db-service:
     container_name: db_api
     build:
