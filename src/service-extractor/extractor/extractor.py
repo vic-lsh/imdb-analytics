@@ -29,6 +29,22 @@ from extractor.ratings import SeriesRatings, SeriesRatingsCollection
 logger = logging.getLogger(__name__)
 
 
+class RemoteDriver():
+    def __init__(self):
+        pass
+
+    def __enter__(self):
+        self.__driver = webdriver.Remote(
+            command_executor='http://localhost:4444/wd/hub',
+            desired_capabilities=DesiredCapabilities.CHROME)
+        return self.__driver
+
+    def __exit__(self, exception_type, exception_value, traceback):
+        if exception_type is not None:
+            print(exception_type, exception_value, traceback)
+        self.__driver.quit()
+
+
 class IMDb_Analyzer():
     """Analyzes TV series based on data from IMDb"""
 
@@ -125,17 +141,15 @@ class IMDb_Analyzer():
         chrome_options = Options()
         if config.headless:
             chrome_options.add_argument("--headless")
-
+        self.__driver = None
         # try:
         #     self.__driver = webdriver.Chrome(options=chrome_options)
         # except WebDriverException as e:
         #     print(str(e))
         #     exit(1)
-        print("Initiating driver")
         self.__driver = webdriver.Remote(
             command_executor='http://localhost:4444/wd/hub',
             desired_capabilities=DesiredCapabilities.CHROME)
-        print("Driver initiated")
         self.__PAGE_LOAD_TIMEOUT = 30
         self.__PAGE_LOAD_TIMEOUT_RETRY = 3
         self.__driver.set_page_load_timeout(self.__PAGE_LOAD_TIMEOUT)
@@ -149,14 +163,15 @@ class IMDb_Analyzer():
         """Query _multiple_ TV series' ratings with a List of their names.
         This is a convenient API that is equivalent to multiple `query` calls.
         """
-        for tv_series in series_names:
-            if tv_series not in ratings_collection:
-                ratings = self.query(tv_series)
-                ratings_collection.add(ratings)
-        else:
-            logger.info("Data already exists; Noting to query in {}".format(
-                str(series_names)))
-        self.__driver.close()
+        with RemoteDriver() as dvr:
+            self.__driver = dvr
+            for tv_series in series_names:
+                if tv_series not in ratings_collection:
+                    ratings = self.query(tv_series)
+                    ratings_collection.add(ratings)
+            else:
+                logger.info("Data already exists; Noting to query in {}".format(
+                    str(series_names)))
 
     def query(self, series_name: str) -> SeriesRatings:
         """Query a TV series's ratings with its name.
