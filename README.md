@@ -20,7 +20,7 @@ docker-compose up
 
 # manually load data into the database
 # during testing, we do not share a single instance of the database
-cd src/service-crawler
+cd src/service-extractor
 virtualenv env
 pip install -r requirements.txt
 brew cask install chromedriver    # unix-only, windows cmds to follow
