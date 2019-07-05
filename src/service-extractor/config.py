@@ -1,16 +1,13 @@
 import os
 import yaml
 
-CONFIG_FNAME = "config_imdb.yml"
+CONFIG_FNAME = "cfg/base_cfg.yml"
 
 
 class AnalyzerConfig:
     """This class contains configurations specified in the config file.
     The default location for config file is `src/config.yml`.
     """
-
-    class TVSeriesUndefinedException(Exception):
-        pass
 
     def __init__(self, fname=CONFIG_FNAME):
         try:
@@ -28,7 +25,6 @@ class AnalyzerConfig:
 
         if 'tv_series' not in cfg:
             self.__tv_series_names = []
-            raise TVSeriesUndefinedException
         else:
             self.__tv_series_names = cfg['tv_series']
 
