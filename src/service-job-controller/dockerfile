@@ -2,6 +2,8 @@ FROM golang:latest
 
 WORKDIR /usr/src/app
 
-RUN go build -o bin/exec .
+COPY . . 
 
-CMD ["./bin/exec"]
+RUN go get -u "github.com/gorilla/mux"
+RUN go build
+CMD ./app
