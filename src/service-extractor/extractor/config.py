@@ -1,4 +1,4 @@
-from os.path import abspath
+import os
 import yaml
 
 CONFIG_FNAME = "config_imdb.yml"
@@ -13,13 +13,18 @@ class AnalyzerConfig:
         pass
 
     def __init__(self, fname=CONFIG_FNAME):
+        try:
+            assert os.path.isfile(fname)
+            with open(os.path.abspath(fname), 'r') as cfgfile:
+                cfg = yaml.safe_load(cfgfile)
+        except AssertionError:
+            print("Error: \tNo config file. Exiting...")
+            exit(1)
+
         self.__tv_series_names = []
         self.__headless = True
         self.__serialization = True
         self.__serialization_fname = "src/pickle"
-
-        with open(abspath(fname), 'r') as cfgfile:
-            cfg = yaml.safe_load(cfgfile)
 
         if 'tv_series' not in cfg:
             self.__tv_series_names = []
