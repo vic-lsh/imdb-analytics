@@ -9,7 +9,7 @@ import (
 	"sync"
 	"time"
 
-	"github.com/vic-lee/site-analyzer/src/service-extractor/api/job"
+	job "./job"
 )
 
 func router(in chan interface{}, out chan *job.ExtractionJob) {
