@@ -22,7 +22,7 @@ services:
     build:
       context: ./src/service-job-controller
       dockerfile: dockerfile
-    bolumes:
+    volumes:
       - ./src/service-job-controller/:/usr/src/app
     ports:
       - 5001:5000
