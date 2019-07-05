@@ -364,7 +364,8 @@ class IMDb_Queries_Manager():
         queries = []
 
         for q in self.__queries:
-            r = requests.get(url="http://localhost:8001/tv-series")
+            r = requests.get(url="http://localhost:8001/tv-series",
+                             params={'name': q})
             if r.status_code != 200:
                 queries.append(q)
 
