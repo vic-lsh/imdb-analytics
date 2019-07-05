@@ -2,7 +2,6 @@ import logging
 import logging.config
 import pickle
 import os
-from os.path import abspath
 import sys
 import yaml
 
@@ -13,9 +12,14 @@ from config import AnalyzerConfig
 from ratings import SeriesRatingsCollection, SeriesRatings
 from pypaca import time
 
-with open(abspath('config_logger.yml'), 'r') as f:
-    cfg = yaml.safe_load(f.read())
-logging.config.dictConfig(cfg)
+LOGGER_CONFIG_FPATH = 'config_logger.yml'
+
+if os.path.isfile(LOGGER_CONFIG_FPATH):
+    with open(os.path.abspath('config_logger.yml'), 'r') as f:
+        cfg = yaml.safe_load(f.read())
+    logging.config.dictConfig(cfg)
+else:
+    print("Warning: logging config file not found.")
 
 logger = logging.getLogger(__name__)
 
