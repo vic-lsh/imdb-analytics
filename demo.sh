@@ -2,7 +2,8 @@
 #
 # This script sets up some data for the front-end to display.
 # 
-# For this script to function properly, start up the service containers first.
+# For this script to function properly, start up the service 
+# containers first.
 
 echo "
 ===============================================================================
