@@ -99,7 +99,7 @@ class IMDb_Extractor():
                             consts.SERIES_HEADER_CSL
                         )
                     if len(args) >= 1:
-                        assert args[0] in series_header.text
+                        assert args[0].lower() in series_header.text.lower()
                     else:
                         raise NoSeriesNameAsFirstArgException
                 except NoSuchElementException:
@@ -275,7 +275,8 @@ class IMDb_Extractor():
         first_result = self.__driver.find_element_by_xpath(
             consts.SEARCH_RESULT_FIRST_URL_XPATH
         )
-        assert name in first_result.text
+        assert name.lower() in first_result.text.lower(), \
+            "{} not found in {}".format(name.lower(), first_result.text.lower())
         first_result.click()
 
     def _load_url(self, url: str):
