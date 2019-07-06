@@ -2,16 +2,9 @@ FROM node:latest
 
 WORKDIR /usr/src/app
 
-COPY package.json .
-# RUN npm install --global yarn
-RUN npm install
-
 COPY . .
 
-# run in development
-CMD  ["yarn", "start"]
+RUN npm install
 
-# for production, do
-# RUN yarn
-# RUN yarn build
-# serve...
+# development
+CMD  ["npm", "start"]
