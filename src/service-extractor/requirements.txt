@@ -2,6 +2,7 @@ aniso8601==7.0.0
 autopep8==1.4.4
 Click==7.0
 cycler==0.10.0
+python-dotenv==0.10.3
 Flask==1.0.3
 Flask-RESTful==0.3.7
 itsdangerous==1.1.0
