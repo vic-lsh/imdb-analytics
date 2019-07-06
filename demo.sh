@@ -11,6 +11,11 @@ echo "
     Loading sample data
     Depending on your network condition, this may take several minutes.
 
+    Beta note:
+        The script ends immediately, but the containers are still processing
+        the script's requests. In a future version, the script won't terminate
+        until all requests are successful, or one of the requests failed.
+
 ===============================================================================
 "
 
