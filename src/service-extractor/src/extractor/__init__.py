@@ -35,6 +35,7 @@ logger = logging.getLogger(__name__)
 env_path = Path('.') / 'dev.env'
 load_dotenv(dotenv_path=env_path)
 DB_API = os.getenv("DB_API")
+SELENIUM_API = os.getenv("SELENIUM_API")
 
 
 class RemoteDriver():
@@ -42,9 +43,8 @@ class RemoteDriver():
         pass
 
     def __enter__(self):
-        self.__driver = webdriver.Remote(
-            command_executor='http://localhost:4444/wd/hub',
-            desired_capabilities=DesiredCapabilities.CHROME)
+        self.__driver = webdriver.Remote(command_executor=SELENIUM_API,
+                                         desired_capabilities=DesiredCapabilities.CHROME)
         return self.__driver
 
     def __exit__(self, exception_type, exception_value, traceback):
