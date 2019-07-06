@@ -2,6 +2,7 @@ import functools
 import json
 import logging
 import os
+from pathlib import Path
 import pickle
 from pprint import pprint
 import requests
@@ -9,6 +10,8 @@ import time
 from collections import OrderedDict
 from datetime import datetime
 from typing import List
+
+from dotenv import load_dotenv
 
 from selenium import webdriver
 from selenium.common.exceptions import (NoSuchElementException,
@@ -27,6 +30,11 @@ from extractor.constants import IMDb_Constants as consts
 from extractor.ratings import SeriesRatings, SeriesRatingsCollection
 
 logger = logging.getLogger(__name__)
+
+
+env_path = Path('.') / 'dev.env'
+load_dotenv(dotenv_path=env_path)
+DB_API = os.getenv("DB_API")
 
 
 class RemoteDriver():
@@ -367,8 +375,7 @@ class IMDb_Queries_Manager():
         queries = []
 
         for q in self.__queries:
-            r = requests.get(url="http://localhost:8001/tv-series",
-                             params={'name': q})
+            r = requests.get(url=DB_API, params={'name': q})
             if r.status_code != 200:
                 queries.append(q)
 
@@ -384,8 +391,7 @@ class IMDb_Queries_Manager():
 
         success = True
         for json_obj in jsons:
-            r = requests.post(url="http://localhost:8001/tv-series",
-                              json=json_obj)
+            r = requests.post(url=DB_API, json=json_obj)
             print("POST STATUS: ", r.status_code)
             if r.status_code != 200:
                 success = False
