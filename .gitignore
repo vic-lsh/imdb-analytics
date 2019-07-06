@@ -3,7 +3,7 @@ env/
 .vscode/
 __pycache__/
 .DS_Store
-.env
+.env/
 app.log
 config.yml
 pickle

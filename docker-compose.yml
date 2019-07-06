@@ -9,7 +9,7 @@ services:
     volumes:
       - ./src/service-extractor:/usr/src/app
     ports:
-      - 9001:80
+      - "${EXTRACTOR_PORT_LOCAL}:${EXTRACTOR_PORT}"
     depends_on:
       - db-service
       - firefox
@@ -26,7 +26,7 @@ services:
     volumes:
       - ./src/service-job-controller/:/usr/src/app
     ports:
-      - 3778:3777
+      - "${JOB_CONTROLLER_PORT_LOCAL}:${JOB_CONTROLLER_PORT}"
     depends_on:
       - extractor-service
     networks: 
@@ -40,7 +40,7 @@ services:
     volumes: 
       - ./src/service-db:/usr/src/app
     ports:
-      - 8001:80
+      - "${DB_API_PORT_LOCAL}:${DB_API_PORT}"
     links:
       - mongo
     networks: 
@@ -51,7 +51,7 @@ services:
     container_name: mongo
     image: mongo
     ports:
-      - '27017:27017'
+      - "${MONGO_PORT}:${MONGO_PORT}"
     networks:
       - mongo-internal
       
@@ -63,7 +63,7 @@ services:
     volumes:
       - ./src/app:/usr/src/app
     ports:
-      - 3001:3000
+      - "${REACT_APP_PORT_LOCAL}:${REACT_APP_PORT}"
     depends_on: 
       - db-service
     networks:
@@ -97,7 +97,7 @@ services:
     container_name: selenium_hub
     image: selenium/hub:3.14.0-gallium
     ports:
-      - "4444:4444"
+      - "${SELENIUM_HUB_PORT}:${SELENIUM_HUB_PORT}"
     networks:
       - spiderweb
       - hub-internal
