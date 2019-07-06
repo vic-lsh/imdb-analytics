@@ -6,18 +6,25 @@ import (
 	"log"
 	"net/http"
 	"net/url"
+	"os"
 	"sync"
 	"time"
 
 	"./job"
+
+	"github.com/joho/godotenv"
 )
 
 func router(in chan interface{}, out chan *job.ExtractionJob) {
+	if err := godotenv.Load("dev.env"); err != nil {
+		log.Fatal("Error loading .env file")
+	}
+	port := os.Getenv("PORT")
+
 	r := job.Routes(in, out)
 
-	var PORT = 3777
-	fmt.Printf("Router running on port %d\n", PORT)
-	log.Fatal(http.ListenAndServe(fmt.Sprintf(":%d", PORT), r))
+	fmt.Printf("Router running on port %s\n", port)
+	log.Fatal(http.ListenAndServe(fmt.Sprintf(":%s", port), r))
 }
 
 func receiveJobs(jobs map[int]*job.ExtractionJob, jobsPending *[]int, out chan *job.ExtractionJob) {
