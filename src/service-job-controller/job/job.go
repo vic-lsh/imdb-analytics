@@ -101,7 +101,7 @@ func (h *Handler) getJob(w http.ResponseWriter, r *http.Request) {
 			"Message": "No job exists yet.",
 		})
 	} else {
-		json.NewEncoder(w).Encode(job)
+		json.NewEncoder(w).Encode(job.marshall())
 	}
 }
 
