@@ -150,30 +150,27 @@ func (h *Handler) getJobs(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-// postJob creates a new job, if a job with the same Name does not already exist.
+// postJob creates a new job.
 func (h *Handler) postJob(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
-	if name, ok := r.URL.Query()["name"]; !ok {
+	name, ok := r.URL.Query()["name"]
+	if !ok {
 		w.WriteHeader(http.StatusBadRequest)
 		json.NewEncoder(w).Encode(&map[string]interface{}{
 			"Message": "`name` is a required query.",
 		})
-	} else {
-		for _, item := range jobs {
-			if item.Name == name[0] {
-				json.NewEncoder(w).Encode(item)
-				return
-			}
-		}
-		j := ExtractionJob{
-			ID:     rand.Intn(1000000000),
-			Name:   name[0],
-			Status: NotProcessed,
-		}
-		jobs = append(jobs, j)
-		h.out <- &j
-		json.NewEncoder(w).Encode(j.marshall())
+		return
 	}
+
+	j := ExtractionJob{
+		ID:     rand.Intn(1000000000),
+		Name:   name[0],
+		Status: NotProcessed,
+	}
+
+	h.out <- &j
+	json.NewEncoder(w).Encode(j.marshall())
+
 }
 
 func (ej *ExtractionJob) marshall() extractionJobMarshalled {
