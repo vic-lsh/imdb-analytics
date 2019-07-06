@@ -4,7 +4,11 @@ WORKDIR /usr/src/app
 
 COPY . . 
 
-RUN go get -u "github.com/gorilla/mux"
-RUN go get -u "github.com/joho/godotenv"
+ENV GOBIN=/usr/local/bin/ 
 
-CMD ["make", "run"]
+RUN ["go", "get", "github.com/githubnemo/CompileDaemon"]
+RUN go get -d -v ./...
+RUN go install -v ./...
+
+# CMD ["make", "run"]
+ENTRYPOINT CompileDaemon -log-prefix=false -build="go build -o bin/exec . " -command="./bin/exec"
