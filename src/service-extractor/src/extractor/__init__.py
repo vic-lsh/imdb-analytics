@@ -142,17 +142,9 @@ class IMDb_Analyzer():
         if config.headless:
             chrome_options.add_argument("--headless")
         self.__driver = None
-        # try:
-        #     self.__driver = webdriver.Chrome(options=chrome_options)
-        # except WebDriverException as e:
-        #     print(str(e))
-        #     exit(1)
-        self.__driver = webdriver.Remote(
-            command_executor='http://localhost:4444/wd/hub',
-            desired_capabilities=DesiredCapabilities.CHROME)
         self.__PAGE_LOAD_TIMEOUT = 30
         self.__PAGE_LOAD_TIMEOUT_RETRY = 3
-        self.__driver.set_page_load_timeout(self.__PAGE_LOAD_TIMEOUT)
+
         self.__DELAY_SECS = 10
 
     # def __del__(self):
