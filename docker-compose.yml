@@ -1,7 +1,6 @@
 version: '3'
 
 services:
-
   extractor-service:
     container_name: extractor
     build:
@@ -16,6 +15,8 @@ services:
       - firefox
       - chrome
       - hub
+    networks: 
+      - spiderweb
 
   job-controller-service:
     container_name: job_controller
@@ -28,6 +29,8 @@ services:
       - 3778:3777
     depends_on:
       - extractor-service
+    networks: 
+      - spiderweb
 
   db-service:
     container_name: db_api
@@ -40,12 +43,17 @@ services:
       - 8001:80
     links:
       - mongo
+    networks: 
+      - spiderweb
+      - mongo-internal
 
   mongo:
     container_name: mongo
     image: mongo
     ports:
       - '27017:27017'
+    networks:
+      - mongo-internal
       
   app:
     container_name: react_app
@@ -58,6 +66,8 @@ services:
       - 3001:3000
     depends_on: 
       - db-service
+    networks:
+      - spiderweb
 
   firefox:
     container_name: firefox_driver
@@ -68,6 +78,8 @@ services:
       - hub
     environment:
       HUB_HOST: hub
+    networks:
+      - hub-internal
 
   chrome:
     container_name: chrome_driver
@@ -78,9 +90,22 @@ services:
       - hub
     environment:
       HUB_HOST: hub
+    networks:
+      - hub-internal
 
   hub:
     container_name: selenium_hub
     image: selenium/hub:3.14.0-gallium
     ports:
       - "4444:4444"
+    networks:
+      - spiderweb
+      - hub-internal
+
+networks: 
+  spiderweb:
+    driver: bridge
+  hub-internal:
+    driver: bridge
+  mongo-internal:
+    driver: bridge
