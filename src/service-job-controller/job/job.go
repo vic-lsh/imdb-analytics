@@ -136,7 +136,7 @@ func (h *Handler) postJob(w http.ResponseWriter, r *http.Request) {
 		}
 		jobs = append(jobs, j)
 		h.out <- &j
-		json.NewEncoder(w).Encode(&j)
+		json.NewEncoder(w).Encode(j.marshall())
 	}
 }
 
