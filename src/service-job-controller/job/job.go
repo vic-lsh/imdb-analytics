@@ -154,7 +154,10 @@ func (h *Handler) getJobs(w http.ResponseWriter, r *http.Request) {
 func (h *Handler) postJob(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 	if name, ok := r.URL.Query()["name"]; !ok {
-
+		w.WriteHeader(http.StatusBadRequest)
+		json.NewEncoder(w).Encode(&map[string]interface{}{
+			"Message": "`name` is a required query.",
+		})
 	} else {
 		for _, item := range jobs {
 			if item.Name == name[0] {
