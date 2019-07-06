@@ -52,7 +52,7 @@ func (s ExtractionJobStatus) String() string {
 }
 
 func (s ExtractionJobStatus) isValid() bool {
-	return s < NotProcessed || s > CompletedFailed
+	return s > NotProcessed || s < CompletedFailed
 }
 
 // Handler encapsulates input and output channels for TVJob
