@@ -91,17 +91,36 @@ func (h *Handler) getJob(w http.ResponseWriter, r *http.Request) {
 	params := mux.Vars(r)
 	id, err := strconv.Atoi(params["id"])
 	if err != nil {
+		w.WriteHeader(http.StatusBadRequest)
+		json.NewEncoder(w).Encode(&map[string]interface{}{
+			"Message": fmt.Sprintf("Job number must be a number."),
+		})
 		return
 	}
+
 	h.in <- id
 	var out interface{} = <-h.in
-	job, typecheckOk := out.(*ExtractionJob)
-	if !typecheckOk {
+
+	switch resp := out.(type) {
+	case *ExtractionJob:
+		json.NewEncoder(w).Encode(resp.marshall())
+	case int:
+		if resp == -1 {
+			w.WriteHeader(http.StatusNotFound)
+			json.NewEncoder(w).Encode(&map[string]interface{}{
+				"Message": fmt.Sprintf("Job %d does not exist.", id),
+			})
+		} else if resp == -2 {
+			w.WriteHeader(http.StatusInternalServerError)
+			json.NewEncoder(w).Encode(&map[string]interface{}{
+				"Message": fmt.Sprintf("An error has occured decoding your request."),
+			})
+		}
+	default:
+		w.WriteHeader(http.StatusNotFound)
 		json.NewEncoder(w).Encode(&map[string]interface{}{
 			"Message": "No job exists yet.",
 		})
-	} else {
-		json.NewEncoder(w).Encode(job.marshall())
 	}
 }
 
