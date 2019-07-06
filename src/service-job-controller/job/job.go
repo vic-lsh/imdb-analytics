@@ -70,15 +70,11 @@ type Handler struct {
 	out chan<- *ExtractionJob
 }
 
-// Jobs container
-var jobs []ExtractionJob
-
 // Routes return a router with routes associated with TVSeriesExtractionJobs
 func Routes(in chan interface{}, out chan<- *ExtractionJob) *mux.Router {
 	r := mux.NewRouter()
 	h := &Handler{in: in, out: out}
 	r.HandleFunc("/", h.homeHandler)
-	r.HandleFunc("/jobs", h.getJobs).Methods("GET")
 	r.HandleFunc("/jobs/{id}", h.getJob).Methods("GET")
 	r.HandleFunc("/jobs", h.postJob).Methods("POST")
 
@@ -135,18 +131,6 @@ func (h *Handler) getJob(w http.ResponseWriter, r *http.Request) {
 		json.NewEncoder(w).Encode(&map[string]interface{}{
 			"Message": "No job exists yet.",
 		})
-	}
-}
-
-// getJobs reponds all jobs in the system.
-func (h *Handler) getJobs(w http.ResponseWriter, r *http.Request) {
-	w.Header().Set("Content-Type", "application/json")
-	if len(jobs) == 0 {
-		json.NewEncoder(w).Encode(&map[string]interface{}{
-			"Message": "No job exists yet.",
-		})
-	} else {
-		json.NewEncoder(w).Encode(jobs)
 	}
 }
 
