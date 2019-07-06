@@ -9,7 +9,7 @@ import (
 	"sync"
 	"time"
 
-	job "./job"
+	"./job"
 )
 
 func router(in chan interface{}, out chan *job.ExtractionJob) {
@@ -63,8 +63,11 @@ func extractorExecutesJob(jobs map[int]*job.ExtractionJob, id int) {
 	body, err := ioutil.ReadAll(resp.Body)
 	if err != nil {
 		log.Fatalln(err)
+		jobs[id].Status = job.CompletedFailed
+		return
 	}
 	log.Println(string(body))
+	jobs[id].Status = job.CompletedSucceeded
 }
 
 func processJobs(jobs map[int]*job.ExtractionJob, jobsPending *[]int) {
