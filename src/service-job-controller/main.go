@@ -2,8 +2,10 @@ package main
 
 import (
 	"fmt"
+	"io/ioutil"
 	"log"
 	"net/http"
+	"net/url"
 	"sync"
 	"time"
 
@@ -42,37 +44,27 @@ func sendJob(jobs map[int]*job.ExtractionJob, in chan interface{}) {
 }
 
 func extractorExecutesJob(jobs map[int]*job.ExtractionJob, id int) {
-	// const pyScriptName = "run.py"
-	// const dir = "../extractor"
+	baseURL, err := url.Parse("http://127.0.0.1:5000/")
+	if err != nil {
+		log.Fatalln("Malformed URL: ", err.Error())
+	}
 
-	// cmd := exec.Command("python3", pyScriptName, jobs[id].Name)
-	// cmd.Dir = dir
-	// var stderr bytes.Buffer
-	// cmd.Stderr = &stderr
+	params := url.Values{}
+	params.Add("name", jobs[id].Name)
+	baseURL.RawQuery = params.Encode()
 
-	// if err := cmd.Run(); err != nil {
-	// 	jobs[id].Status = job.CompletedFailed
-	// 	fmt.Printf("Failed posting %s", jobs[id].Name)
-	// } else {
-	// 	jobs[id].Status = job.CompletedSucceeded
-	// 	fmt.Printf("POSTED %s\n", jobs[id].Name)
-	// }
+	fmt.Printf("Encoded URL is %q\n", baseURL.String())
 
-	req, err := http.NewRequest("POST", "http://127.0.0.1:5000/", nil)
+	resp, err := http.Post(baseURL.String(), "", nil)
+	if err != nil {
+		fmt.Println("Resp err")
+		log.Fatalln(err)
+	}
+	body, err := ioutil.ReadAll(resp.Body)
 	if err != nil {
 		log.Fatalln(err)
 	}
-
-	q := req.URL.Query()
-	q.Add("name", jobs[id].Name)
-	req.URL.RawQuery = q.Encode()
-	fmt.Println(req.URL.String())
-
-	resp, err := http.Post(req.URL.String(), "application/json", nil)
-	if err != nil {
-		log.Fatalln(err)
-	}
-	log.Println(resp.Body)
+	log.Println(string(body))
 }
 
 func processJobs(jobs map[int]*job.ExtractionJob, jobsPending *[]int) {
