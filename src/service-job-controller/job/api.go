@@ -100,6 +100,7 @@ func (h *Handler) postJob(w http.ResponseWriter, r *http.Request) {
 	}
 
 	h.out <- &j
+	w.WriteHeader(http.StatusAccepted)
 	json.NewEncoder(w).Encode(j.marshall())
 
 }
