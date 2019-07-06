@@ -32,14 +32,14 @@ func sendJob(jobs map[int]*job.ExtractionJob, in chan interface{}) {
 	for input := range in {
 		id, ok := input.(int)
 		if !ok {
-			in <- -2
+			in <- job.ErrorInternalError
 			continue
 		}
-		if job, found := jobs[id]; found {
-			in <- job
+		if j, found := jobs[id]; found {
+			in <- j
 			continue
 		}
-		in <- -1
+		in <- job.ErrorJobNotFound
 	}
 }
 

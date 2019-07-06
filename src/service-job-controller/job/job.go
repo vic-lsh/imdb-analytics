@@ -55,6 +55,15 @@ func (s ExtractionJobStatus) isValid() bool {
 	return s > NotProcessed || s < CompletedFailed
 }
 
+// InChanError describes the available Errors for in channel
+type InChanError int
+
+// Types of InChanError allowed
+const (
+	ErrorJobNotFound   InChanError = -1
+	ErrorInternalError InChanError = -2
+)
+
 // Handler encapsulates input and output channels for TVJob
 type Handler struct {
 	in  chan interface{}
@@ -102,20 +111,25 @@ func (h *Handler) getJob(w http.ResponseWriter, r *http.Request) {
 	var out interface{} = <-h.in
 
 	switch resp := out.(type) {
+
 	case *ExtractionJob:
 		json.NewEncoder(w).Encode(resp.marshall())
-	case int:
-		if resp == -1 {
+
+	case InChanError:
+		switch resp {
+		case ErrorJobNotFound:
 			w.WriteHeader(http.StatusNotFound)
 			json.NewEncoder(w).Encode(&map[string]interface{}{
 				"Message": fmt.Sprintf("Job %d does not exist.", id),
 			})
-		} else if resp == -2 {
+
+		case ErrorInternalError:
 			w.WriteHeader(http.StatusInternalServerError)
 			json.NewEncoder(w).Encode(&map[string]interface{}{
 				"Message": fmt.Sprintf("An error has occured decoding your request."),
 			})
 		}
+
 	default:
 		w.WriteHeader(http.StatusNotFound)
 		json.NewEncoder(w).Encode(&map[string]interface{}{
