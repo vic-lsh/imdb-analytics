@@ -137,6 +137,7 @@ func (h *Handler) getJob(w http.ResponseWriter, r *http.Request) {
 // postJob creates a new job.
 func (h *Handler) postJob(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
+	w.Header().Set("Access-Control-Allow-Origin", "*")
 	name, ok := r.URL.Query()["name"]
 	if !ok {
 		w.WriteHeader(http.StatusBadRequest)
