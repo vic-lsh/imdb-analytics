@@ -95,7 +95,7 @@ func (h *Handler) getJob(w http.ResponseWriter, r *http.Request) {
 	}
 	h.in <- id
 	var out interface{} = <-h.in
-	job, typecheckOk := out.(ExtractionJob)
+	job, typecheckOk := out.(*ExtractionJob)
 	if !typecheckOk {
 		json.NewEncoder(w).Encode(&map[string]interface{}{
 			"Message": "No job exists yet.",
