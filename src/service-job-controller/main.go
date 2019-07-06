@@ -73,7 +73,7 @@ func extractorExecutesJob(jobs map[int]*job.ExtractionJob, id int, extractorAPI 
 }
 
 func processJobs(jobs map[int]*job.ExtractionJob, jobsPending *[]int, extractorAPI string) {
-	for true {
+	for {
 		if len(*jobsPending) == 0 {
 			time.Sleep(5 * time.Second)
 			continue
