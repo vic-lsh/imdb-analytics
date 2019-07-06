@@ -147,9 +147,6 @@ class IMDb_Analyzer():
 
         self.__DELAY_SECS = 10
 
-    # def __del__(self):
-        # self.__driver.close()
-
     def multiple_queries(self, series_names: List[str],
                          ratings_collection: SeriesRatingsCollection) -> None:
         """Query _multiple_ TV series' ratings with a List of their names.
