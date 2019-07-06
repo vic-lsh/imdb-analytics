@@ -8,7 +8,7 @@ import yaml
 from mongoengine import connect
 
 from extractor import IMDb_Queries_Manager
-from extractor.config import AnalyzerConfig
+from extractor.config import ExtractorConfig
 from extractor.ratings import SeriesRatingsCollection, SeriesRatings
 from pypaca import time
 
@@ -26,7 +26,7 @@ logger = logging.getLogger(__name__)
 
 @time.timer
 def main():
-    config = AnalyzerConfig()
+    config = ExtractorConfig()
     manager = IMDb_Queries_Manager(config)
 
     if len(sys.argv) > 1:

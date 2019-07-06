@@ -4,7 +4,7 @@ import yaml
 CONFIG_FNAME = "cfg/base_cfg.yml"
 
 
-class AnalyzerConfig:
+class ExtractorConfig:
     """This class contains configurations specified in the config file.
     The default location for config file is `src/config.yml`.
     """

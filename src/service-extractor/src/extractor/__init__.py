@@ -22,7 +22,7 @@ from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.select import Select
 from selenium.webdriver.support.ui import WebDriverWait
 
-from extractor.config import AnalyzerConfig
+from extractor.config import ExtractorConfig
 from extractor.constants import IMDb_Constants as consts
 from extractor.ratings import SeriesRatings, SeriesRatingsCollection
 
@@ -45,7 +45,7 @@ class RemoteDriver():
         self.__driver.quit()
 
 
-class IMDb_Analyzer():
+class IMDb_Extractor():
     """Analyzes TV series based on data from IMDb"""
 
     class ElementStalessTimeoutException(Exception):
@@ -86,7 +86,7 @@ class IMDb_Analyzer():
                     def __str__(self):
                         return str(self.message)
                 try:
-                    series_header = self._IMDb_Analyzer__driver\
+                    series_header = self._IMDb_Extractor__driver\
                         .find_element_by_css_selector(
                             consts.SERIES_HEADER_CSL
                         )
@@ -107,7 +107,7 @@ class IMDb_Analyzer():
 
             def wrapper(self, *args, **kwargs):
                 assert (consts.EPISODES_GUIDE_IDENTIFIER
-                        in self._IMDb_Analyzer__driver.current_url), \
+                        in self._IMDb_Extractor__driver.current_url), \
                     "Driver is not currently on the Episodes Guide page"
                 return func(self, *args, **kwargs)
             return wrapper
@@ -118,9 +118,9 @@ class IMDb_Analyzer():
             """
 
             def wrapper(self, *args, **kwargs):
-                # @timeout(delay=self._IMDb_Analyzer__DELAY_SECS)
+                # @timeout(delay=self._IMDb_Extractor__DELAY_SECS)
                 def is_on_season_page():
-                    url = self._IMDb_Analyzer__driver.current_url
+                    url = self._IMDb_Extractor__driver.current_url
                     error_msg = "Driver is currently not on a Season page"
                     assert(
                         consts.EPISODE_GUIDE_SEASON_PAGE_IDENTIFIER in url
@@ -137,7 +137,7 @@ class IMDb_Analyzer():
                     quit()
             return wrapper
 
-    def __init__(self, config: AnalyzerConfig):
+    def __init__(self, config: ExtractorConfig):
         chrome_options = Options()
         if config.headless:
             chrome_options.add_argument("--headless")
@@ -306,7 +306,7 @@ def serialize(cls):
 class IMDb_Queries_Manager():
     """Fundamentally, an operational cycle involves 2 essential operations:
     querying, and data persistence. The queries manager composes the classes
-    for these 2 operations together (IMDb_Analyzer for querying, 
+    for these 2 operations together (IMDb_Extractor for querying, 
     SeriesRatingsCollection for data persistence).
 
     Composing these 2 operations allow us to make queries exactly _once_, 
@@ -314,7 +314,7 @@ class IMDb_Queries_Manager():
     are very costly. 
 
     Users of the API are therefore advised to utilize this class, rather than
-    the IMDb_Analyzer and SeriesRatingsCollection classes.
+    the IMDb_Extractor and SeriesRatingsCollection classes.
     """
 
     class _Decorators():
@@ -324,7 +324,7 @@ class IMDb_Queries_Manager():
             option has been configured to be on. 
             """
 
-    def __init__(self, config: AnalyzerConfig):
+    def __init__(self, config: ExtractorConfig):
         self.__config = config
         self.__should_serialize = config.should_serialize
         self.__pickle_name = config.serialization_filename
@@ -376,7 +376,7 @@ class IMDb_Queries_Manager():
             return True
 
         if self.__analyzer is None:
-            self.__analyzer = IMDb_Analyzer(self.__config)
+            self.__analyzer = IMDb_Extractor(self.__config)
         self.__analyzer.multiple_queries(queries, self.__ratings)
 
         jsons = list(map(lambda r: r.json, self.__ratings.collection.values()))

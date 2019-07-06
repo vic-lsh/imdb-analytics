@@ -5,7 +5,7 @@ The API endpoints through which other services may request the crawler.
 from flask import Flask
 from flask_restful import Resource, reqparse, Api
 
-from extractor.config import AnalyzerConfig
+from extractor.config import ExtractorConfig
 from extractor import IMDb_Queries_Manager
 
 
@@ -19,7 +19,7 @@ class ExtractionJob(Resource):
         self.psr.add_argument('name', type=str, required=True,
                               help="Required argument: the name of the TV show"
                               + " you want to scrape.")
-        extractor_cfg = AnalyzerConfig()
+        extractor_cfg = ExtractorConfig()
         self.mgr = IMDb_Queries_Manager(extractor_cfg)
 
     def get(self):
