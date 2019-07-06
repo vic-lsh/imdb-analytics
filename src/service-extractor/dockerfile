@@ -8,4 +8,4 @@ RUN pip3 install --no-cache-dir -r requirements.txt
 # copy src files
 COPY . .
 
-CMD ["make", "run"]
+CMD ["make", "rungw"]
