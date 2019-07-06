@@ -34,7 +34,11 @@ def main():
     else:
         manager.add_multiple_queries(config.tv_series_names)
 
-    manager.api_execute()
+    successful = manager.api_execute()
+    if not successful:
+        print("Err: an error has occured during execution.")
+    else:
+        print("Success!")
 
 
 if __name__ == "__main__":
