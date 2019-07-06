@@ -14,3 +14,4 @@ node_modules/
 api
 !api/
 bin/
+.pytest_cache
