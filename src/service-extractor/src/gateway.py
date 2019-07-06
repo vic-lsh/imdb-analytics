@@ -22,7 +22,7 @@ class ExtractionJob(Resource):
         extractor_cfg = ExtractorConfig()
         self.mgr = IMDb_Queries_Manager(extractor_cfg)
 
-    def get(self):
+    def post(self):
         args = self.psr.parse_args()
         self.mgr.add_query(args['name'])
         successful = self.mgr.api_execute()
