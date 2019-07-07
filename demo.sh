@@ -29,6 +29,8 @@ fi
 
 brew install jq
 
+
+# tv shows to query
 declare -a names=("Game+of+Thrones" 
                   "How+I+met+Your+Mother" 
                   "Black+Mirror"
@@ -40,15 +42,41 @@ declare -a names=("Game+of+Thrones"
                   "Futurama"
                   "Big+Little+Lies")
 
+
+
+# initiate queries
 declare -a id_arr=()
+declare -a name_arr=()
 
 for i in "${names[@]}"
 do
     resp=$(curl -s -X POST "http://localhost:3778/jobs?name=${i}")
     id=$(echo ${resp} | jq '.id')
     name=$(echo ${resp} | jq '.name')
-    printf 'Start processing TV show %-25b id: %-10d\n' "${name}" ${id}
     id_arr+=($id)
+    name_arr+=("$name")
+    printf 'Start processing TV show %-25b id: %-10d\n' "${name}" ${id}
 done
 
-declare -p id_arr
+
+# check if all queries are completed successfully
+len=${#id_arr[@]}
+while ((ctr < len))
+do
+    sleep 5s
+    ctr=0
+    for i in "${id_arr[@]}"
+    do
+        resp=$(curl -s -X GET "http://localhost:3778/jobs/${i}")
+        status=$(echo ${resp} | jq '.status')
+        if [ "${status}" = '"Completed successfully"' ]; then
+            ctr=`expr $ctr + 1`
+        fi
+        if [ "${status}" == '"Failed to complete"' ]; then
+            printf "An error has occured in processing %-25b\n" "${name_arr[@]}"
+            exit 1
+        fi
+    done
+done
+
+echo "All processing finished. Happy searching!"
