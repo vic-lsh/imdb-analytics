@@ -5,6 +5,8 @@
 # For this script to function properly, start up the service 
 # containers first.
 
+set -e
+
 echo "
 ===============================================================================
 
