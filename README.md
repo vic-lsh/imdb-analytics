@@ -15,6 +15,7 @@ To start up the environment, go to the root directory and run
 
 ```bash
 make run-demo   # that starts up the environment and loads sample data
+# or
 make run        # that only starts up the environment
 
 # workaround: start webapp locally
