@@ -82,5 +82,7 @@ do
 done
 
 echo "
-All processing finished. Happy searching!
+All processes finished. 
+You may now try to search for one of the processed TV shows listed above.
+Happy searching!
 "
