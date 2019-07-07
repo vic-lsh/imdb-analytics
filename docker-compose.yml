@@ -58,10 +58,10 @@ services:
   app:
     container_name: react_app
     build:
-      context: ./src/app
+      context: ./src/app-web
       dockerfile: dockerfile
     volumes:
-      - ./src/app:/usr/src/app
+      - ./src/app-web:/usr/src/app
     ports:
       - "${REACT_APP_PORT_LOCAL}:${REACT_APP_PORT}"
     depends_on: 
