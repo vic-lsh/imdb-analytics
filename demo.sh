@@ -29,7 +29,13 @@ else
     brew update
 fi
 
-brew install jq
+
+# install jq
+if brew ls --versions jq > /dev/null; then
+    continue
+else
+    brew install jq
+fi
 
 
 # tv shows to query
@@ -43,7 +49,6 @@ declare -a names=("Game+of+Thrones"
                   "Stranger+Things"
                   "Futurama"
                   "Big+Little+Lies")
-
 
 
 # initiate queries
