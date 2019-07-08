@@ -55,8 +55,6 @@ func extractorExecutesJob(jobs map[int]*job.ExtractionJob, id int, extractorAPI 
 	params.Add("name", jobs[id].Name)
 	baseURL.RawQuery = params.Encode()
 
-	fmt.Printf("Encoded URL is %q\n", baseURL.String())
-
 	resp, err := http.Post(baseURL.String(), "", nil)
 	if err != nil {
 		fmt.Println("Resp err")
