@@ -55,15 +55,15 @@ services:
     networks:
       - mongo-internal
       
-  app:
-    container_name: react_app
+  web-app:
+    container_name: web_app
     build:
       context: ./src/app-web
       dockerfile: dockerfile
     volumes:
       - ./src/app-web:/usr/src/app
     ports:
-      - "${REACT_APP_PORT_LOCAL}:${REACT_APP_PORT}"
+      - "${WEB_APP_PORT_LOCAL}:${WEB_APP_PORT}"
     depends_on: 
       - db-service
     networks:
