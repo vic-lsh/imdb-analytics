@@ -3,6 +3,7 @@ package job
 import (
 	"encoding/json"
 	"fmt"
+	"log"
 	"math/rand"
 	"net/http"
 	"strconv"
@@ -23,6 +24,8 @@ func Routes(in chan interface{}, out chan<- *ExtractionJob) *mux.Router {
 	r.HandleFunc("/", h.homeHandler)
 	r.HandleFunc("/jobs/{id}", h.getJob).Methods("GET")
 	r.HandleFunc("/jobs", h.postJob).Methods("POST")
+
+	r.Use(loggingMiddleware)
 
 	return r
 }
@@ -102,5 +105,11 @@ func (h *Handler) postJob(w http.ResponseWriter, r *http.Request) {
 	h.out <- &j
 	w.WriteHeader(http.StatusAccepted)
 	json.NewEncoder(w).Encode(j.marshall())
+}
 
+func loggingMiddleware(next http.Handler) http.Handler {
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		log.Println(r.Method, r.RequestURI)
+		next.ServeHTTP(w, r)
+	})
 }
