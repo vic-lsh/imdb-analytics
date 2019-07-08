@@ -5,6 +5,14 @@
 # For this script to function properly, start up the service 
 # containers first.
 
+arr_del () {
+    del=$1
+    arr=$2
+    # printf "deleting %d\n" $del
+    delete=($del)
+    echo ${id_arr[@]/$delete}
+}
+
 set -e
 
 echo "
@@ -73,6 +81,17 @@ do
         status=$(echo ${resp} | jq '.status')
         if [ "${status}" = '"Completed successfully"' ]; then
             ctr=`expr $ctr + 1`
+
+            del_id=($i)
+            echo ${id_arr[@]/$del_id}
+            id_arr=( "${id_arr[@]/$del_id}" )
+            echo ${#id_arr[@]}
+
+            del_name=($i)
+            echo ${name_arr[@]/$del_name}
+            name_arr=( "${name_arr[@]/$del_name}" )
+
+
         fi
         if [ "${status}" == '"Failed to complete"' ]; then
             printf "An error has occured in processing %-25b\n" "${name_arr[@]}"
