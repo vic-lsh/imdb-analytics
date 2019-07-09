@@ -13,6 +13,7 @@ import (
 	"./job"
 
 	"github.com/joho/godotenv"
+	"google.golang.org/grpc"
 )
 
 func router(in chan interface{}, out chan *job.ExtractionJob, port string) {
@@ -103,6 +104,8 @@ func main() {
 		go sendJob(jobs, in)
 		go processJobs(jobs, &jobsPending, extractorAPI)
 		router(in, out, port)
+		
+		grpcServer := grpc.NewServer()
 		wg.Done()
 	}()
 
