@@ -2,6 +2,21 @@
 
 A work in progress. More documentation on the way!
 
+## Learning goals
+
+Originally intended to be a lightweight IMDb scraper, this project has evolved into a microservices learning experience. In this project, I hope to learn more about: 
+
+- Microservices architectural design
+    - Designation of responsibilities
+    - Well-defined data flows (Istios)
+    - Abstraction of common infrastructure
+    - etc.
+- Docker containerization
+- Inter-container communication (RESTful vs. RPC)
+- Container orchestration (Kubernetes)
+- Golang and its advantages in concurrency
+- CI / CD
+
 ## Getting started
 
 Please follow the following commands to test the application. Some of the following instructions are mac/linux specific.
