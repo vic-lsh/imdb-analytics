@@ -9,3 +9,8 @@ rungw:
 
 test:
 	py.test tests
+
+proto_dir = ../../pb
+proto_fpath = $(proto_dir)/imdb.proto
+genproto:
+	python3 -m grpc_tools.protoc -I$(proto_dir) --python_out=. --grpc_python_out=. $(proto_fpath)
