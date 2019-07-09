@@ -10,7 +10,7 @@ run-debug:
 
 run-demo:
 	@echo "============ BUILD, START $(APP_NAME), AND LOAD SAMPLE DATA ============"
-	docker-compose up -d --build; chmod +x demo.sh; ./demo.sh
+	docker-compose up -d --build; chmod +x build/demo.sh; ./build/demo.sh
 
 stop:
 	@echo "======================= STOPPING $(APP_NAME) ========================"
