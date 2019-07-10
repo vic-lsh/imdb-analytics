@@ -9,4 +9,4 @@ run:
 .PHONY: genproto
 genproto:
 	@echo "============ Generating protos for $(IDENTIFIER) =============="
-	protoc -I ../../pb ../../pb/imdb.proto --go_out==plugins=grpc:genproto
+	protoc -I ../../pb --go_out=plugins=grpc:genproto ../../pb/imdb.proto
