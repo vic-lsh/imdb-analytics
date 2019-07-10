@@ -1,37 +1,106 @@
-// Copyright 2015 gRPC authors.
-//
-// Licensed under the Apache License, Version 2.0 (the "License");
-// you may not use this file except in compliance with the License.
-// You may obtain a copy of the License at
-//
-//     http://www.apache.org/licenses/LICENSE-2.0
-//
-// Unless required by applicable law or agreed to in writing, software
-// distributed under the License is distributed on an "AS IS" BASIS,
-// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-// See the License for the specific language governing permissions and
-// limitations under the License.
+syntax="proto3";
 
-syntax = "proto3";
+package imdb;
 
-option java_multiple_files = true;
-option java_package = "io.grpc.examples.helloworld";
-option java_outer_classname = "HelloWorldProto";
 
-package helloworld;
+// ---------------------- Database Service ----------------------
+service DatabaseService {
 
-// The greeting service definition.
-service Greeter {
-  // Sends a greeting
-  rpc SayHello (HelloRequest) returns (HelloReply) {}
+    // Returns a TVshow's identifying information.
+    rpc GetShow(GenericShowRequest) returns (Show) {}
+
+    // Returns whether a show has been created, and relevant information to 
+    // access that show if it has been created.
+    rpc CreateShow(CreateShowRequest) returns (CreateShowResponse) {}
+
+    // Deletes a show if it exists. Does not complain if the client attempts
+    // to delete a show that does not exist in the first place.
+    rpc DeleteShow(GenericShowRequest) returns (Empty) {}
 }
 
-// The request message containing the user's name.
-message HelloRequest {
-  string name = 1;
+message GenericShowRequest {
+    string item_id = 1;
 }
 
-// The response message containing the greetings
-message HelloReply {
-  string message = 1;
+message CreateShowRequest {
+    string item_name = 1;
+}
+
+// CreateShowResponse returns necessary information for the client to access 
+// the resource later.
+message CreateShowResponse {
+    bool created = 1;
+    string item_id = 2;
+    string time_created = 3;
+}
+
+// TVShow schema
+message Show {
+    string item_id = 1;
+    // ...     
+}
+
+message Empty {}
+
+// ---------------------- Extractor Servide ----------------------
+service ExtractorService {
+    rpc InitiateExtraction(ExtractionRequest) returns (ExtractionResponse) {}
+}
+
+message ExtractionRequest {
+    string item_name = 1;
+}
+
+message ExtractionResponse {
+    bool is_item_name_valid = 1;
+    bool successful = 2;
+}
+
+// ---------------------- Job Servide ----------------------
+
+service JobService {
+    rpc CreateJob(CreateJobRequest) returns (CreateJobResponse) {}
+    rpc GetJob(GetJobRequest) returns (Job) {}
+    rpc DeleteJob(DeleteJobRequest) returns (Empty) {}
+}
+
+message CreateJobRequest {
+
+}
+
+message CreateJobResponse {
+
+}
+
+message DeleteJobRequest {
+
+}
+
+message GetJobRequest {
+
+}
+
+message Job {
+
+}
+
+// ---------------------- Recommendation Servide ----------------------
+// To be developed...
+service RecommendationService {
+
+}
+
+// ---------------------- Rating Prediction Servide ----------------------
+// To be developed...
+service RatingPredictionService {
+    rpc PredictRating(PredictionRequest) returns (PredictionResponse) {}
+}
+
+message PredictionRequest {
+    string item_id = 1;
+}
+
+message PredictionResponse {
+    bool is_resource_valid = 1;
+    // prediction metrics...
 }
