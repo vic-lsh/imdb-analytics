@@ -1,3 +1,10 @@
+"""
+rpc.py
+------
+
+This module implements the services required by the master `.proto`.
+"""
+
 import logging
 import time
 from concurrent import futures
