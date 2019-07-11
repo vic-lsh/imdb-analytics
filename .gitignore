@@ -16,3 +16,5 @@ api
 bin/
 .pytest_cache
 tags
+src/service-extractor/.env
+.venv
