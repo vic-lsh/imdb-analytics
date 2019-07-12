@@ -1,13 +1,9 @@
-import functools
-import json
 import logging
 import os
 from pathlib import Path
 import pickle
 from pprint import pprint
 import requests
-import time
-from collections import OrderedDict
 from datetime import datetime
 from typing import List
 
@@ -16,7 +12,7 @@ from dotenv import load_dotenv
 from selenium import webdriver
 from selenium.common.exceptions import (NoSuchElementException,
                                         StaleElementReferenceException,
-                                        TimeoutException, WebDriverException)
+                                        TimeoutException)
 from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.common.by import By
 from selenium.webdriver.common.desired_capabilities import DesiredCapabilities
@@ -43,8 +39,9 @@ class RemoteDriver():
         pass
 
     def __enter__(self):
-        self.__driver = webdriver.Remote(command_executor=SELENIUM_API,
-                                         desired_capabilities=DesiredCapabilities.CHROME)
+        self.__driver = webdriver.Remote(
+            command_executor=SELENIUM_API,
+            desired_capabilities=DesiredCapabilities.CHROME)
         return self.__driver
 
     def __exit__(self, exception_type, exception_value, traceback):
@@ -56,33 +53,25 @@ class RemoteDriver():
 class IMDb_Extractor():
     """Analyzes TV series based on data from IMDb"""
 
-    class ElementStalessTimeoutException(Exception):
-        """Exception raised when element remains stale (accessing it raises 
-        StaleElementReferenceException) for `timeout` seconds.
-        """
-        pass
-
-    class URLRedirectionTimeoutException(Exception):
-        pass
-
     class _Decorators():
 
         def execute_in_series_homepage(func):
-            """Decorator that enforces the wrapped function to be run only if 
+            """Decorator that enforces the wrapped function to be run only if
             the driver is on the TV series' home page.
 
-            Raises: 
+            Raises:
                 NoSuchElementException:
                     if the driver is not on the series' home page.
                 NoSeriesNameAsFirstArgException:
                     if the wrapped function does not provide `series_name` as
-                    its first argument, without which the decorator cannot check.
+                    its first argument. The decorator cannot check without this
+                    argument.
             """
 
             def wrapper(self, *args, **kwargs):
                 class NoSeriesNameAsFirstArgException(Exception):
-                    """To use the `catch_no_such_element_exception` decorator, 
-                    the wrapped function must provide `series_name` as its 
+                    """To use the `catch_no_such_element_exception` decorator,
+                    the wrapped function must provide `series_name` as its
                     first argument.
                     """
 
@@ -167,8 +156,8 @@ class IMDb_Extractor():
                     ratings = self.query(tv_series)
                     ratings_collection.add(ratings)
             else:
-                logger.info("Data already exists; Noting to query in {}".format(
-                    str(series_names)))
+                logger.info(("Data already exists; Noting to query in {}"
+                             .format(str(series_names))))
 
     def query(self, series_name: str) -> SeriesRatings:
         """Query a TV series's ratings with its name.
@@ -207,7 +196,7 @@ class IMDb_Extractor():
                     continue
                 finally:
                     if (datetime.now() - start_time).seconds > TIMEOUT_SECS:
-                        raise ElementStalessTimeoutException
+                        raise TimeoutException
                         break
             season_num = index + 1
             season_ratings = self._query_ratings_in_season(season_num)
@@ -218,11 +207,10 @@ class IMDb_Extractor():
     def _query_ratings_in_season(self, season_num: int) -> List[float]:
         ratings = []
         try:
-            rating_divs = WebDriverWait(self.__driver, self.__DELAY_SECS).until(
-                EC.presence_of_all_elements_located(
-                    (By.CSS_SELECTOR, consts.EPISODE_RATINGS_CSL)
-                )
-            )
+            rating_divs = (WebDriverWait(self.__driver, self.__DELAY_SECS)
+                           .until(EC.presence_of_all_elements_located(
+                               (By.CSS_SELECTOR, consts.EPISODE_RATINGS_CSL)
+                           )))
             episodes_num = len(rating_divs)
             for rating in rating_divs:
                 ratings.append(float(rating.text))
@@ -276,7 +264,8 @@ class IMDb_Extractor():
             consts.SEARCH_RESULT_FIRST_URL_XPATH
         )
         assert name.lower() in first_result.text.lower(), \
-            "{} not found in {}".format(name.lower(), first_result.text.lower())
+            "{} not found in {}".format(
+                name.lower(), first_result.text.lower())
         first_result.click()
 
     def _load_url(self, url: str):
@@ -297,16 +286,17 @@ def serialize(cls):
     class WrapperClass(cls):
         def __init__(self, *args, **kwargs):
             super(WrapperClass, self).__init__(*args, **kwargs)
-            if self._IMDb_Queries_Manager__should_serialize \
-                    and os.path.isfile(self._IMDb_Queries_Manager__pickle_name):
-                with open(self._IMDb_Queries_Manager__pickle_name, 'rb') as pkl:
-                    self._IMDb_Queries_Manager__ratings = pickle.load(pkl)
+            if (self._IMDb_Queries_Manager__should_serialize and
+                    os.path.isfile(self._IMDb_Queries_Manager__pickle_name)):
+                with open(self._IMDb_Queries_Manager__pickle_name, 'rb') as pk:
+                    self._IMDb_Queries_Manager__ratings = pickle.load(pk)
                     print("Deserialized!")
 
         def __del__(self):
             if self._IMDb_Queries_Manager__should_serialize:
-                with open(self._IMDb_Queries_Manager__pickle_name, 'w+b') as pkl:
-                    pickle.dump(self._IMDb_Queries_Manager__ratings, pkl)
+                with open(self._IMDb_Queries_Manager__pickle_name, 'w+b') \
+                        as pk:
+                    pickle.dump(self._IMDb_Queries_Manager__ratings, pk)
                     print("Serialized!")
     return WrapperClass
 
@@ -315,12 +305,12 @@ def serialize(cls):
 class IMDb_Queries_Manager():
     """Fundamentally, an operational cycle involves 2 essential operations:
     querying, and data persistence. The queries manager composes the classes
-    for these 2 operations together (IMDb_Extractor for querying, 
+    for these 2 operations together (IMDb_Extractor for querying,
     SeriesRatingsCollection for data persistence).
 
-    Composing these 2 operations allow us to make queries exactly _once_, 
+    Composing these 2 operations allow us to make queries exactly _once_,
     thereby avoiding multiple deserialization-serialization processes, which
-    are very costly. 
+    are very costly.
 
     Users of the API are therefore advised to utilize this class, rather than
     the IMDb_Extractor and SeriesRatingsCollection classes.
@@ -328,9 +318,9 @@ class IMDb_Queries_Manager():
 
     class _Decorators():
         def serialize_ratings_if_configured(func):
-            """Perform deserialization setup and serialization teardown for 
-            methods modifying the ratings collection, if the serialization 
-            option has been configured to be on. 
+            """Perform deserialization setup and serialization teardown for
+            methods modifying the ratings collection, if the serialization
+            option has been configured to be on.
             """
 
     def __init__(self, config: ExtractorConfig):
@@ -342,7 +332,7 @@ class IMDb_Queries_Manager():
         self.__queries = set()
 
     def add_query(self, query: str) -> None:
-        """Queue up queries to be executed. Queries are added onto the waiting 
+        """Queue up queries to be executed. Queries are added onto the waiting
         list, but _not executed_. Please call the `execute()` for execution.
         Add_query is indempotent; repeatedly adding the same query will not
         raise a warning or error.
@@ -350,8 +340,8 @@ class IMDb_Queries_Manager():
         self.__queries.add(query)
 
     def add_multiple_queries(self, queries: List[str]) -> None:
-        """Queue up multiple queries to be executed. Queries are added onto 
-        the waiting list, but _not executed_. Please call the `execute()` 
+        """Queue up multiple queries to be executed. Queries are added onto
+        the waiting list, but _not executed_. Please call the `execute()`
         for execution.
 
         Adding multiple queries is indempotent; if a certain query alreaady

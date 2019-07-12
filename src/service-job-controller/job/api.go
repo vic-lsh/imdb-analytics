@@ -1,15 +1,35 @@
 package job
 
 import (
+	"context"
 	"encoding/json"
 	"fmt"
 	"log"
 	"math/rand"
 	"net/http"
 	"strconv"
+	"sync"
 
+	pb "../genproto"
 	"github.com/gorilla/mux"
 )
+
+type jobService struct {
+	jobs map[int]*pb.Job
+	mu   sync.Mutex
+}
+
+func (js *jobService) CreateJob(ctx context.Context, req *pb.CreateJobRequest) (*pb.CreateJobResponse, error) {
+	return &pb.CreateJobResponse{Successful: true}, nil
+}
+
+func (js *jobService) GetJob(ctx context.Context, req *pb.GetJobRequest) (*pb.Job, error) {
+	return &pb.Job{}, nil
+}
+
+func (js *jobService) DeleteJob(ctx context.Context, req *pb.DeleteJobRequest) (*pb.Empty, error) {
+	return &pb.Empty{}, nil
+}
 
 // Handler encapsulates input and output channels for TVJob
 type Handler struct {

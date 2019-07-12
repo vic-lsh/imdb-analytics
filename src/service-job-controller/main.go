@@ -1,6 +1,7 @@
 package main
 
 import (
+	"context"
 	"fmt"
 	"io/ioutil"
 	"log"
@@ -10,11 +11,14 @@ import (
 	"sync"
 	"time"
 
+	pb "./genproto"
 	"./job"
 
 	"github.com/joho/godotenv"
 	"google.golang.org/grpc"
 )
+
+// var serverAddr = flag.String("server_addr", "localhost:8989", "The server address in the format of host:port")
 
 func router(in chan interface{}, out chan *job.ExtractionJob, port string) {
 	r := job.Routes(in, out)
@@ -84,6 +88,20 @@ func processJobs(jobs map[int]*job.ExtractionJob, jobsPending *[]int, extractorA
 }
 
 func main() {
+	conn, err := grpc.Dial(":8989", grpc.WithInsecure())
+	if err != nil {
+		log.Fatalf("%s\n", err)
+	}
+	defer conn.Close()
+
+	client := pb.NewExtractorServiceClient(conn)
+	show, err := client.InitiateExtraction(context.Background(), &pb.ExtractionRequest{ItemName: "Chernobyl"})
+	if err != nil {
+		log.Fatalln("Error in getting show", err)
+	}
+	log.Println(show)
+	os.Exit(0)
+
 	var wg sync.WaitGroup
 	wg.Add(1)
 
@@ -104,8 +122,6 @@ func main() {
 		go sendJob(jobs, in)
 		go processJobs(jobs, &jobsPending, extractorAPI)
 		router(in, out, port)
-		
-		grpcServer := grpc.NewServer()
 		wg.Done()
 	}()
 
