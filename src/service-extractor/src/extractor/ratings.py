@@ -26,6 +26,7 @@ class SeriesRatings():
 
     @property
     def series_name(self):
+        """Returns the name of the series"""
         return self.__SERIES_NAME
 
     @property
@@ -80,6 +81,12 @@ class SeriesRatings():
 
     def add_season_ratings(self, season_num: int,
                            season_ratings: List[float]) -> None:
+        """Add the ratings of a season to the TV series.
+        
+        Ratings in a season are defined by:
+        - which season (season number)
+        - episode ratings in that season
+        """
         if season_num in self.__episode_ratings and \
                 self.__episode_ratings[season_num] is not None:
             logger.warning(("Ratings for season {} has been set. Modification "
@@ -168,6 +175,11 @@ class SeriesRatingsCollection():
         return self.__ratings_collection
 
     def add(self, ratings: SeriesRatings) -> None:
+        """Add a `SeriesRatings` object to the `SeriesRatingsCollection`.
+
+        Logs a warning if the TV series being added is already in the 
+        collection.
+        """
         name = ratings.series_name
         if name in self.__ratings_collection:
             logger.warning(("Ratings for show {} exists but is being modified. "
@@ -176,6 +188,7 @@ class SeriesRatingsCollection():
         self.__ratings_collection[name] = ratings
 
     def add_multiple(self, ratings_list: List[SeriesRatings]) -> None:
+        """Add multiple SeriesRatings to the collection."""
         for ratings in ratings_list:
             self.add(ratings)
 
