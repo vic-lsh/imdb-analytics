@@ -26,7 +26,6 @@ class ExtractorConfig:
 
     def __init__(self, fname=CONFIG_FNAME):
         try:
-            assert os.path.isfile(fname)
             with open(os.path.abspath(fname), 'r') as cfgfile:
                 cfg = yaml.safe_load(cfgfile)
         except Exception as exc:
