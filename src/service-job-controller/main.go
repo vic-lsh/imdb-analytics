@@ -69,8 +69,23 @@ func processJobs(jobs map[int]*job.ExtractionJob, jobsPending *[]int, ec pb.Extr
 	}
 }
 
+func mustHaveEnv(key string) (val string) {
+	val, exists := os.LookupEnv(key)
+	if !exists {
+		log.Fatalf("`%s` should be assigned by an environment variable. Exiting...\n", key)
+	}
+	return val
+}
+
 func main() {
-	conn, err := grpc.Dial("extractor-service:8989", grpc.WithInsecure())
+	if err := godotenv.Load("dev.env"); err != nil {
+		log.Fatal("Error loading .env file")
+	}
+
+	port := mustHaveEnv("PORT")
+	extractorTarget := mustHaveEnv("EXTRACTOR_API")	
+
+	conn, err := grpc.Dial(extractorTarget, grpc.WithInsecure())
 	if err != nil {
 		log.Fatalf("%s\n", err)
 	}
@@ -79,11 +94,6 @@ func main() {
 
 	var wg sync.WaitGroup
 	wg.Add(1)
-
-	if err := godotenv.Load("dev.env"); err != nil {
-		log.Fatal("Error loading .env file")
-	}
-	port := os.Getenv("PORT")
 
 	jobs := make(map[int]*job.ExtractionJob)
 	var jobsPending []int
