@@ -35,6 +35,12 @@ SELENIUM_API = os.getenv("SELENIUM_API")
 
 
 class RemoteDriver():
+    """A context manager for Selenium webdriver(s) being run remotely.
+
+    Defaults to Chrome. Currently it does not provide the option to specify
+    which browser to use.
+    """
+
     def __init__(self):
         pass
 
@@ -74,7 +80,6 @@ class IMDb_Extractor():
                     the wrapped function must provide `series_name` as its
                     first argument.
                     """
-
                     def __init__(self, message=None, payload=None):
                         self.message = "Please provide `series name`"\
                             + " as your first argument."
@@ -141,7 +146,6 @@ class IMDb_Extractor():
         self.__driver = None
         self.__PAGE_LOAD_TIMEOUT = 30
         self.__PAGE_LOAD_TIMEOUT_RETRY = 3
-
         self.__DELAY_SECS = 10
 
     def multiple_queries(self, series_names: List[str],
@@ -177,6 +181,15 @@ class IMDb_Extractor():
     @_Decorators.catch_no_such_element_exception
     @_Decorators.execute_in_series_episode_guide
     def _query_episode_ratings(self, series_ratings: SeriesRatings) -> None:
+        """
+        Internal method that queries each season found in the season dropdown.
+        Accumulates each season's episode ratings in the `SeriesRatings` arg.
+
+        Note
+        ----
+        - Defaults to retrying for `RETRY_SECS`, defined when initializing
+        the extractor.
+        """
         season_dropdown = Select(self.__driver.find_element_by_css_selector(
             consts.SEASONS_DROPDOWN_CSL
         ))
