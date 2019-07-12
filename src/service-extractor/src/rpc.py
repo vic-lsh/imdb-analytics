@@ -6,23 +6,23 @@ This module implements the services required by the master `.proto`.
 """
 
 import logging
+from logging.config import fileConfig
 import time
 from concurrent import futures
 
 import grpc
 
+from common.utils import get_logger_cfg_fpath
 from extractor import IMDb_Queries_Manager
 from extractor.config import ExtractorConfig
 import imdb_pb2
 import imdb_pb2_grpc
 
+try:
+    fileConfig(get_logger_cfg_fpath())
+except FileNotFoundError as e:
+    print(e)
 logger = logging.getLogger(__name__)
-handler = logging.StreamHandler()
-formatter = logging.Formatter(
-    '%(asctime)s %(name)-12s %(levelname)-8s %(message)s')
-handler.setFormatter(formatter)
-logger.addHandler(handler)
-logger.setLevel(logging.DEBUG)
 
 
 class ExtractionService(imdb_pb2_grpc.ExtractorServiceServicer):
