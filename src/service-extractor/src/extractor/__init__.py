@@ -57,7 +57,22 @@ class RemoteDriver():
 
 
 class IMDb_Extractor():
-    """Analyzes TV series based on data from IMDb"""
+    """Analyzes TV series based on data from IMDb.
+
+    Args
+    ----
+    `config`: ExtractorConfig, required.
+
+    `timeout_secs`: int, optional, default=30.
+        Number of seconds permitted for a site to load. 
+
+    `timeout_retry`: int, optional, default=3.
+        Number of retries if a timeout is encountered during page load.
+
+    `deretry_secs`: int, optional, default=10.
+        Number of seconds permitted for retrying an operation (e.g.
+        attempting to click a dropdown.)
+    """
 
     class _Decorators():
 
@@ -140,14 +155,12 @@ class IMDb_Extractor():
                     quit()
             return wrapper
 
-    def __init__(self, config: ExtractorConfig):
-        chrome_options = Options()
-        if config.headless:
-            chrome_options.add_argument("--headless")
+    def __init__(self, config: ExtractorConfig, timeout_secs: int = 30,
+                 timeout_retry: int = 3, retry_secs: int = 10):
         self.__driver = None
-        self.__PAGE_LOAD_TIMEOUT = 30
-        self.__PAGE_LOAD_TIMEOUT_RETRY = 3
-        self.__RETRY_SECS = 10
+        self.__PAGE_LOAD_TIMEOUT = timeout_secs
+        self.__PAGE_LOAD_TIMEOUT_RETRY = timeout_retry
+        self.__RETRY_SECS = retry_secs
 
     def multiple_queries(self, series_names: List[str],
                          ratings_collection: SeriesRatingsCollection) -> None:
