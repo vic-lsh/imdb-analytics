@@ -13,7 +13,8 @@ import grpc
 
 from extractor import IMDb_Queries_Manager
 from extractor.config import ExtractorConfig
-from proto import imdb_pb2, imdb_pb2_grpc
+import imdb_pb2
+import imdb_pb2_grpc
 
 logger = logging.getLogger(__name__)
 handler = logging.StreamHandler()

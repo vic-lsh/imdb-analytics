@@ -37,7 +37,7 @@ class SeriesRatings():
 
     def add_overall_rating(self, rating: float) -> None:
         """Add overall rating of a TV series"""
-        if self.__OVERALL_RATING != None:
+        if self.__OVERALL_RATING is not None:
             logger.warning("Overall rating is being modified.",
                            "Once set, overall rating should not be modified.")
         self.__OVERALL_RATING = rating
@@ -46,7 +46,7 @@ class SeriesRatings():
         """Set the number of seasons for a TV series.
         The method rejects modifications of season count, once it has been set.
         """
-        if self.__SEASONS_COUNT != None:
+        if self.__SEASONS_COUNT is not None:
             logger.error("Season count is a constant ",
                          "and cannot be modified once it has been set.")
         else:
@@ -55,10 +55,10 @@ class SeriesRatings():
     def add_season_ratings(self, season_num: int,
                            season_ratings: List[float]) -> None:
         if season_num in self.__episode_ratings and \
-                self.__episode_ratings[season_num] != None:
-            logger.warning("Ratings for season {} has been set. Modification of "
-                           + "season warnings usually indicates "
-                           + "a bug.".format(season_num))
+                self.__episode_ratings[season_num] is not None:
+            logger.warning(("Ratings for season {} has been set. Modification "
+                            "of season warnings usually indicates "
+                            "a bug.").format(season_num))
         self.__episode_ratings[season_num] = season_ratings
         if len(season_ratings) > self.__max_episode_num:
             self.__max_episode_num = len(season_ratings)
@@ -90,8 +90,8 @@ class SeriesRatings():
 
     def _to_json(self):
         json_obj = {
-            'name': self.__SERIES_NAME, 
-            'series_rating': self.__OVERALL_RATING, 
+            'name': self.__SERIES_NAME,
+            'series_rating': self.__OVERALL_RATING,
             'episode_ratings': []
         }
         for season_num, season_ratings in self.__episode_ratings.items():
@@ -101,7 +101,7 @@ class SeriesRatings():
             obj['ratings'] = []
             for ep_rating in season_ratings:
                 obj['ratings'].append({
-                    'episode_number': ep_ctr, 
+                    'episode_number': ep_ctr,
                     'rating': ep_rating
                 })
                 ep_ctr += 1

@@ -1,13 +1,13 @@
 class IMDb_Constants():
     """Constants that are used to select IMDB page elements.
 
-    Each constant is suffixed by the identifier type, useful in informing which 
+    Each constant is suffixed by the identifier type, useful in informing which
     selenium driver API to call. Possible identifier types are as follows:
         URL:    url
         CSL:    CSS selector
         CSP:    CSS path
         XPATH:  xpath
-        IDENTIFIER(S): words used to assert if an element is selected correctly.
+        IDENTIFIER(S): words used to assert if an element is selected correctly
     """
 
     HOMEPAGE_URL = "https://www.imdb.com/"
