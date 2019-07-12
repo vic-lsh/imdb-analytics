@@ -52,7 +52,7 @@ message ExtractionRequest {
 }
 
 message ExtractionResponse {
-    bool is_item_name_valid = 1;
+    string item_name = 1;
     bool successful = 2;
 }
 

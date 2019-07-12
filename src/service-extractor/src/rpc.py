@@ -30,15 +30,13 @@ class ExtractionService(imdb_pb2_grpc.ExtractorServiceServicer):
         self.mgr = IMDb_Queries_Manager(ExtractorConfig())
 
     def InitiateExtraction(self, request, context):
-        # TODO: implement `is_item_name_valid`
-        # currently this attribute defaults to True
         logger.info("Requesting to extract `{}`".format(request.item_name))
         self.mgr.add_query(request.item_name)
         successful = self.mgr.api_execute()
         logger.info("Request `{}` finished; success status: {}"
                     .format(request.item_name, successful))
         return imdb_pb2.ExtractionResponse(
-            is_item_name_valid=True, successful=successful)
+            item_name=request.item_name, successful=successful)
 
 
 def serve():

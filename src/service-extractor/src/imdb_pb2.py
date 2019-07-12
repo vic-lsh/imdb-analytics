@@ -20,7 +20,7 @@ DESCRIPTOR = _descriptor.FileDescriptor(
   package='imdb',
   syntax='proto3',
   serialized_options=None,
-  serialized_pb=_b('\n\nimdb.proto\x12\x04imdb\"%\n\x12GenericShowRequest\x12\x0f\n\x07item_id\x18\x01 \x01(\t\"&\n\x11\x43reateShowRequest\x12\x11\n\titem_name\x18\x01 \x01(\t\"L\n\x12\x43reateShowResponse\x12\x0f\n\x07\x63reated\x18\x01 \x01(\x08\x12\x0f\n\x07item_id\x18\x02 \x01(\t\x12\x14\n\x0ctime_created\x18\x03 \x01(\t\"\x17\n\x04Show\x12\x0f\n\x07item_id\x18\x01 \x01(\t\"\x07\n\x05\x45mpty\"&\n\x11\x45xtractionRequest\x12\x11\n\titem_name\x18\x01 \x01(\t\"D\n\x12\x45xtractionResponse\x12\x1a\n\x12is_item_name_valid\x18\x01 \x01(\x08\x12\x12\n\nsuccessful\x18\x02 \x01(\x08\"\'\n\x10\x43reateJobRequest\x12\x13\n\x0btarget_name\x18\x01 \x01(\t\"\'\n\x11\x43reateJobResponse\x12\x12\n\nsuccessful\x18\x01 \x01(\x08\"&\n\x10\x44\x65leteJobRequest\x12\x12\n\nsuccessful\x18\x01 \x01(\x08\"$\n\rGetJobRequest\x12\x13\n\x0btarget_name\x18\x01 \x01(\t\"&\n\x03Job\x12\n\n\x02id\x18\x01 \x01(\x03\x12\x13\n\x0btarget_name\x18\x02 \x01(\t\"$\n\x11PredictionRequest\x12\x0f\n\x07item_id\x18\x01 \x01(\t\"/\n\x12PredictionResponse\x12\x19\n\x11is_resource_valid\x18\x01 \x01(\x08\x32\xbe\x01\n\x0f\x44\x61tabaseService\x12\x31\n\x07GetShow\x12\x18.imdb.GenericShowRequest\x1a\n.imdb.Show\"\x00\x12\x41\n\nCreateShow\x12\x17.imdb.CreateShowRequest\x1a\x18.imdb.CreateShowResponse\"\x00\x12\x35\n\nDeleteShow\x12\x18.imdb.GenericShowRequest\x1a\x0b.imdb.Empty\"\x00\x32]\n\x10\x45xtractorService\x12I\n\x12InitiateExtraction\x12\x17.imdb.ExtractionRequest\x1a\x18.imdb.ExtractionResponse\"\x00\x32\xac\x01\n\nJobService\x12>\n\tCreateJob\x12\x16.imdb.CreateJobRequest\x1a\x17.imdb.CreateJobResponse\"\x00\x12*\n\x06GetJob\x12\x13.imdb.GetJobRequest\x1a\t.imdb.Job\"\x00\x12\x32\n\tDeleteJob\x12\x16.imdb.DeleteJobRequest\x1a\x0b.imdb.Empty\"\x00\x32\x17\n\x15RecommendationService2_\n\x17RatingPredictionService\x12\x44\n\rPredictRating\x12\x17.imdb.PredictionRequest\x1a\x18.imdb.PredictionResponse\"\x00\x62\x06proto3')
+  serialized_pb=_b('\n\nimdb.proto\x12\x04imdb\"%\n\x12GenericShowRequest\x12\x0f\n\x07item_id\x18\x01 \x01(\t\"&\n\x11\x43reateShowRequest\x12\x11\n\titem_name\x18\x01 \x01(\t\"L\n\x12\x43reateShowResponse\x12\x0f\n\x07\x63reated\x18\x01 \x01(\x08\x12\x0f\n\x07item_id\x18\x02 \x01(\t\x12\x14\n\x0ctime_created\x18\x03 \x01(\t\"\x17\n\x04Show\x12\x0f\n\x07item_id\x18\x01 \x01(\t\"\x07\n\x05\x45mpty\"&\n\x11\x45xtractionRequest\x12\x11\n\titem_name\x18\x01 \x01(\t\";\n\x12\x45xtractionResponse\x12\x11\n\titem_name\x18\x01 \x01(\t\x12\x12\n\nsuccessful\x18\x02 \x01(\x08\"\'\n\x10\x43reateJobRequest\x12\x13\n\x0btarget_name\x18\x01 \x01(\t\"\'\n\x11\x43reateJobResponse\x12\x12\n\nsuccessful\x18\x01 \x01(\x08\"&\n\x10\x44\x65leteJobRequest\x12\x12\n\nsuccessful\x18\x01 \x01(\x08\"$\n\rGetJobRequest\x12\x13\n\x0btarget_name\x18\x01 \x01(\t\"&\n\x03Job\x12\n\n\x02id\x18\x01 \x01(\x03\x12\x13\n\x0btarget_name\x18\x02 \x01(\t\"$\n\x11PredictionRequest\x12\x0f\n\x07item_id\x18\x01 \x01(\t\"/\n\x12PredictionResponse\x12\x19\n\x11is_resource_valid\x18\x01 \x01(\x08\x32\xbe\x01\n\x0f\x44\x61tabaseService\x12\x31\n\x07GetShow\x12\x18.imdb.GenericShowRequest\x1a\n.imdb.Show\"\x00\x12\x41\n\nCreateShow\x12\x17.imdb.CreateShowRequest\x1a\x18.imdb.CreateShowResponse\"\x00\x12\x35\n\nDeleteShow\x12\x18.imdb.GenericShowRequest\x1a\x0b.imdb.Empty\"\x00\x32]\n\x10\x45xtractorService\x12I\n\x12InitiateExtraction\x12\x17.imdb.ExtractionRequest\x1a\x18.imdb.ExtractionResponse\"\x00\x32\xac\x01\n\nJobService\x12>\n\tCreateJob\x12\x16.imdb.CreateJobRequest\x1a\x17.imdb.CreateJobResponse\"\x00\x12*\n\x06GetJob\x12\x13.imdb.GetJobRequest\x1a\t.imdb.Job\"\x00\x12\x32\n\tDeleteJob\x12\x16.imdb.DeleteJobRequest\x1a\x0b.imdb.Empty\"\x00\x32\x17\n\x15RecommendationService2_\n\x17RatingPredictionService\x12\x44\n\rPredictRating\x12\x17.imdb.PredictionRequest\x1a\x18.imdb.PredictionResponse\"\x00\x62\x06proto3')
 )
 
 
@@ -227,9 +227,9 @@ _EXTRACTIONRESPONSE = _descriptor.Descriptor(
   containing_type=None,
   fields=[
     _descriptor.FieldDescriptor(
-      name='is_item_name_valid', full_name='imdb.ExtractionResponse.is_item_name_valid', index=0,
-      number=1, type=8, cpp_type=7, label=1,
-      has_default_value=False, default_value=False,
+      name='item_name', full_name='imdb.ExtractionResponse.item_name', index=0,
+      number=1, type=9, cpp_type=9, label=1,
+      has_default_value=False, default_value=_b("").decode('utf-8'),
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       serialized_options=None, file=DESCRIPTOR),
@@ -253,7 +253,7 @@ _EXTRACTIONRESPONSE = _descriptor.Descriptor(
   oneofs=[
   ],
   serialized_start=251,
-  serialized_end=319,
+  serialized_end=310,
 )
 
 
@@ -283,8 +283,8 @@ _CREATEJOBREQUEST = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=321,
-  serialized_end=360,
+  serialized_start=312,
+  serialized_end=351,
 )
 
 
@@ -314,8 +314,8 @@ _CREATEJOBRESPONSE = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=362,
-  serialized_end=401,
+  serialized_start=353,
+  serialized_end=392,
 )
 
 
@@ -345,8 +345,8 @@ _DELETEJOBREQUEST = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=403,
-  serialized_end=441,
+  serialized_start=394,
+  serialized_end=432,
 )
 
 
@@ -376,8 +376,8 @@ _GETJOBREQUEST = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=443,
-  serialized_end=479,
+  serialized_start=434,
+  serialized_end=470,
 )
 
 
@@ -414,8 +414,8 @@ _JOB = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=481,
-  serialized_end=519,
+  serialized_start=472,
+  serialized_end=510,
 )
 
 
@@ -445,8 +445,8 @@ _PREDICTIONREQUEST = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=521,
-  serialized_end=557,
+  serialized_start=512,
+  serialized_end=548,
 )
 
 
@@ -476,8 +476,8 @@ _PREDICTIONRESPONSE = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=559,
-  serialized_end=606,
+  serialized_start=550,
+  serialized_end=597,
 )
 
 DESCRIPTOR.message_types_by_name['GenericShowRequest'] = _GENERICSHOWREQUEST
@@ -602,8 +602,8 @@ _DATABASESERVICE = _descriptor.ServiceDescriptor(
   file=DESCRIPTOR,
   index=0,
   serialized_options=None,
-  serialized_start=609,
-  serialized_end=799,
+  serialized_start=600,
+  serialized_end=790,
   methods=[
   _descriptor.MethodDescriptor(
     name='GetShow',
@@ -644,8 +644,8 @@ _EXTRACTORSERVICE = _descriptor.ServiceDescriptor(
   file=DESCRIPTOR,
   index=1,
   serialized_options=None,
-  serialized_start=801,
-  serialized_end=894,
+  serialized_start=792,
+  serialized_end=885,
   methods=[
   _descriptor.MethodDescriptor(
     name='InitiateExtraction',
@@ -668,8 +668,8 @@ _JOBSERVICE = _descriptor.ServiceDescriptor(
   file=DESCRIPTOR,
   index=2,
   serialized_options=None,
-  serialized_start=897,
-  serialized_end=1069,
+  serialized_start=888,
+  serialized_end=1060,
   methods=[
   _descriptor.MethodDescriptor(
     name='CreateJob',
@@ -710,8 +710,8 @@ _RECOMMENDATIONSERVICE = _descriptor.ServiceDescriptor(
   file=DESCRIPTOR,
   index=3,
   serialized_options=None,
-  serialized_start=1071,
-  serialized_end=1094,
+  serialized_start=1062,
+  serialized_end=1085,
   methods=[
 ])
 _sym_db.RegisterServiceDescriptor(_RECOMMENDATIONSERVICE)
@@ -725,8 +725,8 @@ _RATINGPREDICTIONSERVICE = _descriptor.ServiceDescriptor(
   file=DESCRIPTOR,
   index=4,
   serialized_options=None,
-  serialized_start=1096,
-  serialized_end=1191,
+  serialized_start=1087,
+  serialized_end=1182,
   methods=[
   _descriptor.MethodDescriptor(
     name='PredictRating',
