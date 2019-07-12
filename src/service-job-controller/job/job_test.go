@@ -6,7 +6,8 @@ import (
 )
 
 func fmtJobStatusErrMsg(input ExtractionJobStatus, expected string, output string) string {
-	return fmt.Sprintf("ExtractionJobStatusOutput test failed: \tinputted: %d, \texpected: %s, \treceived: %s\n", input, expected, output)
+	return fmt.Sprintf("ExtractionJobStatusOutput test failed: \tinputted: %d, \texpected: %s, \treceived: %s\n",
+		input, expected, output)
 }
 
 func TestExtractionJobStatusString(t *testing.T) {
