@@ -16,7 +16,11 @@ import (
 	"google.golang.org/grpc"
 )
 
-// var serverAddr = flag.String("server_addr", "localhost:8989", "The server address in the format of host:port")
+var (
+	envFpath           = "dev.env"
+	portEnvKey         = "PORT"
+	extractorAPIEnvKey = "EXTRACTOR_API"
+)
 
 func router(in chan interface{}, out chan *job.ExtractionJob, port string) {
 	r := job.Routes(in, out)
@@ -78,14 +82,14 @@ func mustHaveEnv(key string) (val string) {
 }
 
 func main() {
-	if err := godotenv.Load("dev.env"); err != nil {
-		log.Fatal("Error loading .env file")
+	if err := godotenv.Load(envFpath); err != nil {
+		log.Fatalln("Error loading .env file")
 	}
 
-	port := mustHaveEnv("PORT")
-	extractorTarget := mustHaveEnv("EXTRACTOR_API")	
+	port := mustHaveEnv(portEnvKey)
+	extractorAPI := mustHaveEnv(extractorAPIEnvKey)
 
-	conn, err := grpc.Dial(extractorTarget, grpc.WithInsecure())
+	conn, err := grpc.Dial(extractorAPI, grpc.WithInsecure())
 	if err != nil {
 		log.Fatalf("%s\n", err)
 	}
