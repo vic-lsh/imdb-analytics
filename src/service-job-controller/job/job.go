@@ -38,22 +38,17 @@ const (
 
 // Returns the string representation of a ExtractionJobStatus
 func (s ExtractionJobStatus) String() string {
-	statuses := [...]string{
-		"Not processed",
-		"Processing",
-		"Completed successfully",
-		"Failed to complete",
+	statuses := map[ExtractionJobStatus]string{
+		NotProcessed:       "Not processed",
+		Processing:         "Processing",
+		CompletedSucceeded: "Completed successfully",
+		CompletedFailed:    "Failed to complete",
 	}
 
-	if !s.isValid() {
-		return fmt.Sprintf("Type Unknown %d", s)
+	if str, ok := statuses[s]; ok {
+		return str
 	}
-
-	return statuses[s]
-}
-
-func (s ExtractionJobStatus) isValid() bool {
-	return s > NotProcessed || s < CompletedFailed
+	return fmt.Sprintf("Type Unknown %d", s)
 }
 
 func (ej *ExtractionJob) marshall() extractionJobMarshalled {
