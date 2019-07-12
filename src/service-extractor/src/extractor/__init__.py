@@ -80,6 +80,7 @@ class IMDb_Extractor():
                     the wrapped function must provide `series_name` as its
                     first argument.
                     """
+
                     def __init__(self, message=None, payload=None):
                         self.message = "Please provide `series name`"\
                             + " as your first argument."
@@ -146,7 +147,7 @@ class IMDb_Extractor():
         self.__driver = None
         self.__PAGE_LOAD_TIMEOUT = 30
         self.__PAGE_LOAD_TIMEOUT_RETRY = 3
-        self.__DELAY_SECS = 10
+        self.__RETRY_SECS = 10
 
     def multiple_queries(self, series_names: List[str],
                          ratings_collection: SeriesRatingsCollection) -> None:
@@ -195,7 +196,6 @@ class IMDb_Extractor():
         ))
         seasons = season_dropdown.options
         for index in range(0, len(seasons)):
-            TIMEOUT_SECS = 10
             start_time = datetime.now()
             while True:
                 try:
@@ -208,7 +208,8 @@ class IMDb_Extractor():
                 except StaleElementReferenceException:
                     continue
                 finally:
-                    if (datetime.now() - start_time).seconds > TIMEOUT_SECS:
+                    if ((datetime.now() - start_time).seconds
+                            > self.__RETRY_SECS):
                         raise TimeoutException
                         break
             season_num = index + 1
@@ -220,7 +221,7 @@ class IMDb_Extractor():
     def _query_ratings_in_season(self, season_num: int) -> List[float]:
         ratings = []
         try:
-            rating_divs = (WebDriverWait(self.__driver, self.__DELAY_SECS)
+            rating_divs = (WebDriverWait(self.__driver, self.__RETRY_SECS)
                            .until(EC.presence_of_all_elements_located(
                                (By.CSS_SELECTOR, consts.EPISODE_RATINGS_CSL)
                            )))
