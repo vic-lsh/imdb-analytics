@@ -10,6 +10,9 @@ build:
 	@echo "=============== Build $(IDENTIFIER) ================="
 	go build -o bin/exec .
 
+test:
+	go test ./...
+
 .PHONY: genproto
 genproto:
 	@echo "============ Generating protos for $(IDENTIFIER) =============="
