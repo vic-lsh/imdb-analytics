@@ -9,6 +9,15 @@ class SeriesRatings():
 
     def __init__(self, series_name: str,
                  overall_rating: float = None, seasons_count: int = None):
+        """Initializes SeriesRatings.
+
+        Params
+        ------
+        - `series_name`: str, required
+        - `overall_rating`: float, optional, can be set via 
+            `set_overall_rating`
+        - `seasons_count`: int, optional, can be set via `set_seasons_count`
+        """
         self.__SERIES_NAME = series_name
         self.__OVERALL_RATING = overall_rating
         self.__SEASONS_COUNT = seasons_count
@@ -20,23 +29,40 @@ class SeriesRatings():
         return self.__SERIES_NAME
 
     @property
-    def seasons_count(self):
+    def seasons_count(self) -> int:
+        """Returns the number of seasons this TV show has"""
         return self.__SEASONS_COUNT
 
     @property
     def overall_rating(self):
+        """Returns the TV show's overall rating. 
+
+        Each TV show has one unique overall rating only. The overall rating
+        need not be the arithmetic mean of the show's episode ratings.
+        """
         return self.__OVERALL_RATING
 
     @property
     def rating_values(self):
+        """Returns episode ratings for the client to read and manipulate.
+
+        `episode_ratings` is a dict of lists:
+        {
+            `season_number`: [
+                ep_1_rating, ep_2_rating, ...    
+            ]
+        }
+        """
+        # TODO: it is probably a good idea to make `SeriesRatings` iterable,
+        # rather than to directly return the dict of lists object.
         return self.__episode_ratings
 
     @property
     def json(self):
         return self._to_json()
 
-    def add_overall_rating(self, rating: float) -> None:
-        """Add overall rating of a TV series"""
+    def set_overall_rating(self, rating: float) -> None:
+        """Set the overall rating of a TV series."""
         if self.__OVERALL_RATING is not None:
             logger.warning("Overall rating is being modified.",
                            "Once set, overall rating should not be modified.")
@@ -88,7 +114,29 @@ class SeriesRatings():
     def __repr__(self):
         return self.__str__
 
-    def _to_json(self):
+    def _to_json(self) -> dict:
+        """The internal implementation of ratings serialization.
+
+        Serializes to the `SeriesRatings` class to a agreed-upon format that is
+        accepted by other services. For instance, the database service does
+        not know about `SeriesRatings`'s implementation; it only accepts a
+        JSON of this format.
+
+        Format description
+        ------------------
+        (update this section when updating the method)
+        ```
+        {
+            "name": [series_name], 
+            "series_rating": [the show's overall rating], 
+            "episode_ratings": [
+                { "episode_number": 1, "rating": 8.8 }
+                { "episode_number": 2, "rating": 9.3 }
+                ...
+            ]
+        }
+        ```
+        """
         json_obj = {
             'name': self.__SERIES_NAME,
             'series_rating': self.__OVERALL_RATING,
@@ -122,9 +170,9 @@ class SeriesRatingsCollection():
     def add(self, ratings: SeriesRatings) -> None:
         name = ratings.series_name
         if name in self.__ratings_collection:
-            logger.warning("Ratings for show {} exists but is being modified. "
-                           + "This is usually unintentional and indicates "
-                           + "a bug.".format(name))
+            logger.warning(("Ratings for show {} exists but is being modified. "
+                            "This is usually unintentional and indicates "
+                            "a bug.").format(name))
         self.__ratings_collection[name] = ratings
 
     def add_multiple(self, ratings_list: List[SeriesRatings]) -> None:
