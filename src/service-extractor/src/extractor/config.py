@@ -39,13 +39,13 @@ class ExtractorConfig:
 
     @property
     def should_serialize(self) -> bool:
-        """Returns if serialization is on or off, default to on if not 
+        """Returns if serialization is on or off, default to on if not
         specified in config."""
         return self.__serialization
 
     @property
     def serialization_filename(self) -> str:
-        """Returns the filename used for serialization, default to None if 
+        """Returns the filename used for serialization, default to None if
         serialization is off."""
         if not self.__serialization:
             return None
