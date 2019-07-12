@@ -25,7 +25,7 @@ var (
 func router(in chan interface{}, out chan *job.ExtractionJob, port string) {
 	r := job.Routes(in, out)
 
-	fmt.Printf("Router running on port %s\n", port)
+	log.Printf("Router running on port %s\n", port)
 	log.Fatal(http.ListenAndServe(fmt.Sprintf("0.0.0.0:%s", port), r))
 }
 
@@ -33,7 +33,7 @@ func receiveJobs(jobs map[int]*job.ExtractionJob, jobsPending *[]int, out chan *
 	for job := range out {
 		jobs[job.ID] = job
 		*jobsPending = append(*jobsPending, job.ID)
-		fmt.Println(*job)
+		log.Println(*job)
 	}
 }
 
