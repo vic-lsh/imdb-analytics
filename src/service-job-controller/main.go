@@ -82,13 +82,14 @@ func mustHaveEnv(key string) (val string) {
 }
 
 func main() {
+	// Load environment vars
 	if err := godotenv.Load(envFpath); err != nil {
 		log.Fatalln("Error loading .env file")
 	}
-
 	port := mustHaveEnv(portEnvKey)
 	extractorAPI := mustHaveEnv(extractorAPIEnvKey)
 
+	// Establish ExtractorAPI connection
 	conn, err := grpc.Dial(extractorAPI, grpc.WithInsecure())
 	if err != nil {
 		log.Fatalf("%s\n", err)
@@ -96,6 +97,7 @@ func main() {
 	defer conn.Close()
 	extractorClient := pb.NewExtractorServiceClient(conn)
 
+	// Initiate JobController API
 	var wg sync.WaitGroup
 	wg.Add(1)
 
