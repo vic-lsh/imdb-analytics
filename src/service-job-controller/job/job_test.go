@@ -10,17 +10,24 @@ func fmtJobStatusErrMsg(input ExtractionJobStatus, expected string, output strin
 }
 
 func TestExtractionJobStatusString(t *testing.T) {
-	var np ExtractionJobStatus = 1
-	npExpectedOut := "Processing"
+	validCases := map[ExtractionJobStatus]string{
+		0: "Not processed",
+		1: "Processing",
+		2: "Completed successfully",
+		3: "Failed to complete",
+	}
+	for in, expectedOut := range validCases {
+		if out := in.String(); out != expectedOut {
+			t.Error(fmtJobStatusErrMsg(in, expectedOut, out))
+		}
 
-	var invalidJS ExtractionJobStatus = 100
-	invalidJSExpectedOut := fmt.Sprintf("Type Unknown %d", invalidJS)
-
-	if npOut := np.String(); npOut != npExpectedOut {
-		t.Error(fmtJobStatusErrMsg(np, npExpectedOut, npOut))
 	}
 
-	if invalidJSOut := invalidJS.String(); invalidJSOut != invalidJSExpectedOut {
-		t.Error(fmtJobStatusErrMsg(invalidJS, invalidJSExpectedOut, invalidJSOut))
+	invalidCases := [...]ExtractionJobStatus{-10000, -1, 4, 9, 100}
+	for _, in := range invalidCases {
+		expectedOut := fmt.Sprintf("Type Unknown %d", in)
+		if out := in.String(); out != expectedOut {
+			t.Error(fmtJobStatusErrMsg(in, expectedOut, out))
+		}
 	}
 }
