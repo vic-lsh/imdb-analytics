@@ -1,7 +1,22 @@
+import logging
+from logging.config import fileConfig
 import os
 import yaml
 
+from common.utils import get_logger_cfg_fpath
+
 CONFIG_FNAME = "cfg/base_cfg.yml"
+
+try:
+    fileConfig(get_logger_cfg_fpath())
+except FileNotFoundError as e:
+    print(e)
+logger = logging.getLogger(__name__)
+
+
+class ExtractorConfigFileNotFoundError(FileNotFoundError):
+    """Raised when extractor config file is not found."""
+    pass
 
 
 class ExtractorConfig:
@@ -14,9 +29,9 @@ class ExtractorConfig:
             assert os.path.isfile(fname)
             with open(os.path.abspath(fname), 'r') as cfgfile:
                 cfg = yaml.safe_load(cfgfile)
-        except AssertionError:
-            print("Error: \tNo config file. Exiting...")
-            exit(1)
+        except Exception as exc:
+            logger.error("No config file,", exc)
+            raise ExtractorConfigFileNotFoundError
 
         self.__tv_series_names = []
         self.__headless = True
