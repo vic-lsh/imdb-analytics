@@ -2,8 +2,6 @@ import logging
 from typing import List
 
 logger = logging.getLogger(__name__)
-
-
 class SeriesRatings():
     """Data structure that contains rating-related info on a TV series"""
 
@@ -137,8 +135,13 @@ class SeriesRatings():
             "name": [series_name], 
             "series_rating": [the show's overall rating], 
             "episode_ratings": [
-                { "episode_number": 1, "rating": 8.8 }
-                { "episode_number": 2, "rating": 9.3 }
+                {
+                    "season": 1,
+                    "ratings": [
+                        { "episode_number": 1, "rating": 8.8 }
+                        { "episode_number": 2, "rating": 9.3 }
+                    ]
+                },
                 ...
             ]
         }
