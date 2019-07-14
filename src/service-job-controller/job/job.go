@@ -36,13 +36,21 @@ const (
 	CompletedFailed    ExtractionJobStatus = 3
 )
 
+// Messages for ExtractionJobStatus allowed
+const (
+	NotProcessedMsg       = "Not processed"
+	ProcessingMsg         = "Processing"
+	CompletedSucceededMsg = "Completed successfully"
+	CompletedFailedMsg    = "Failed to complete"
+)
+
 // Returns the string representation of a ExtractionJobStatus
 func (s ExtractionJobStatus) String() string {
 	statuses := map[ExtractionJobStatus]string{
-		NotProcessed:       "Not processed",
-		Processing:         "Processing",
-		CompletedSucceeded: "Completed successfully",
-		CompletedFailed:    "Failed to complete",
+		NotProcessed:       NotProcessedMsg,
+		Processing:         ProcessingMsg,
+		CompletedSucceeded: CompletedSucceededMsg,
+		CompletedFailed:    CompletedFailedMsg,
 	}
 
 	if str, ok := statuses[s]; ok {

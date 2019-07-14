@@ -12,10 +12,10 @@ func fmtJobStatusErrMsg(input ExtractionJobStatus, expected string, output strin
 
 func TestJobStatusString(t *testing.T) {
 	validCases := map[ExtractionJobStatus]string{
-		0: "Not processed",
-		1: "Processing",
-		2: "Completed successfully",
-		3: "Failed to complete",
+		0: NotProcessedMsg,
+		1: ProcessingMsg,
+		2: CompletedSucceededMsg,
+		3: CompletedFailedMsg,
 	}
 	for in, expectedOut := range validCases {
 		if out := in.String(); out != expectedOut {
@@ -35,15 +35,15 @@ func TestJobStatusString(t *testing.T) {
 
 func TestJobStatusMarshall(t *testing.T) {
 	validCases := map[ExtractionJob]extractionJobMarshalled{
-		{ID: 123999811, Name: "GOT", Status: NotProcessed}:       {ID: 123999811, Name: "GOT", Status: "Not processed"},
-		{ID: 123999811, Name: "GOT", Status: Processing}:         {ID: 123999811, Name: "GOT", Status: "Processing"},
-		{ID: 123999811, Name: "GOT", Status: CompletedSucceeded}: {ID: 123999811, Name: "GOT", Status: "Completed successfully"},
-		{ID: 123999811, Name: "GOT", Status: CompletedFailed}:    {ID: 123999811, Name: "GOT", Status: "Failed to complete"},
+		{ID: 123999811, Name: "GOT", Status: NotProcessed}:       {ID: 123999811, Name: "GOT", Status: NotProcessedMsg},
+		{ID: 123999811, Name: "GOT", Status: Processing}:         {ID: 123999811, Name: "GOT", Status: ProcessingMsg},
+		{ID: 123999811, Name: "GOT", Status: CompletedSucceeded}: {ID: 123999811, Name: "GOT", Status: CompletedSucceededMsg},
+		{ID: 123999811, Name: "GOT", Status: CompletedFailed}:    {ID: 123999811, Name: "GOT", Status: CompletedFailedMsg},
 	}
 
 	for in, expectedOut := range validCases {
 		if out := in.marshall(); out != expectedOut {
-			t.Errorf("ExtractionJobStatus marshalling test failed: \tinputted: %+v, \texpected: %+v, got: %+v",
+			t.Errorf("ExtractionJobStatus marshalling test failed: \n\tinputted: %+v, \n\texpected: %+v, \n\tgot: %+v\n",
 				in, expectedOut, out)
 		}
 	}
