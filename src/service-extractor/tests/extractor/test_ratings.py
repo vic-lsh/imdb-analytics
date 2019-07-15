@@ -84,3 +84,28 @@ def test_rating_set_season_count():
     assert s_init_wo_scount.seasons_count == 3
     s_init_wo_scount.set_season_count(6)
     assert s_init_wo_scount.seasons_count == 3
+
+
+def test_ratings_collection_add_item():
+    c = SeriesRatingsCollection()
+    with pytest.raises(ratings.CollectionItemTypeError):
+        c.add("Test")
+
+    # test `add`
+    s1 = SeriesRatings(series_name="GOT")
+    c.add(s1)
+    assert s1.series_name in c
+
+    # test `add_multiple`
+    series_name_list = ["GOT", "Chernobyl", "Friends", "Breaking Bad"]
+    items_to_add = [SeriesRatings(series_name=sn) for sn in series_name_list]
+    c.add_multiple(items_to_add)
+    for name in series_name_list:
+        assert name in c
+
+    c.add_multiple([])
+
+    with pytest.raises(ratings.CollectionItemTypeError):
+        c.add_multiple("Test")
+    with pytest.raises(ratings.CollectionItemTypeError):
+        c.add_multiple(13)
