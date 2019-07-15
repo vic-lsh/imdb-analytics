@@ -70,3 +70,17 @@ def test_rating_init_typechecks():
     with pytest.raises(ratings.SeasonsCountValueError):
         s = SeriesRatings(series_name="GOT",
                           overall_rating=9.0, seasons_count=-5)
+
+
+def test_rating_set_season_count():
+    """Tests that `season_count`, once set, cannot be modified"""
+    
+    s_init_w_scount = SeriesRatings(series_name="GOT", seasons_count=8)
+    s_init_w_scount.set_season_count(10)
+    assert s_init_w_scount.seasons_count == 8
+
+    s_init_wo_scount = SeriesRatings(series_name="GOT")
+    s_init_wo_scount.set_season_count(3)
+    assert s_init_wo_scount.seasons_count == 3
+    s_init_wo_scount.set_season_count(6)
+    assert s_init_wo_scount.seasons_count == 3
