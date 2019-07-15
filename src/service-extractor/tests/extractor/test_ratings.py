@@ -74,7 +74,7 @@ def test_rating_init_typechecks():
 
 def test_rating_set_season_count():
     """Tests that `season_count`, once set, cannot be modified"""
-    
+
     s_init_w_scount = SeriesRatings(series_name="GOT", seasons_count=8)
     s_init_w_scount.set_season_count(10)
     assert s_init_w_scount.seasons_count == 8
@@ -84,6 +84,18 @@ def test_rating_set_season_count():
     assert s_init_wo_scount.seasons_count == 3
     s_init_wo_scount.set_season_count(6)
     assert s_init_wo_scount.seasons_count == 3
+
+
+def test_ratings_collection_contains():
+    """Tests that for SeriesRatingsCollection objects, the syntax 
+    `{xx} in {collection}` works
+    """
+    c = SeriesRatingsCollection()
+    assert callable(getattr(c, '__contains__'))
+
+    s1 = SeriesRatings(series_name="GOT")
+    c.add(s1)
+    assert s1.series_name in c
 
 
 def test_ratings_collection_add_item():
