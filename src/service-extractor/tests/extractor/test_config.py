@@ -1,6 +1,6 @@
 import pytest
 
-from tests.context import common, extractor
+from tests.context import extractor
 from extractor.config import ExtractorConfig, ExtractorConfigFileNotFoundError
 
 
