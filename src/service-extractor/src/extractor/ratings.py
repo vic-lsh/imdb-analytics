@@ -243,18 +243,39 @@ class SeriesRatingsCollection():
     def collection(self):
         return self.__ratings_collection
 
-    def add(self, ratings: SeriesRatings) -> None:
+    def _validate_item_added(add_func):
+        def add_func_wrapper(self, *args, **kwargs):
+            if 'item' in kwargs:
+                item = kwargs['item']
+            elif 'item_to_add' in kwargs:
+                item = kwargs['item_to_add']
+            elif len(args) > 0:
+                item = args[0]
+            else:
+                err_msg = ("Trying to perform validation for item to be "
+                           "added, but no argument can be found in the "
+                           "item-adding func.")
+                raise AddValidatorUsageError(err_msg)
+            try:
+                assert isinstance(item, SeriesRatings)
+            except:
+                raise CollectionItemTypeError()
+            return add_func(*args, **kwargs)
+        return add_func_wrapper
+
+    @_validate_item_added
+    def add(self, item_to_add: SeriesRatings) -> None:
         """Add a `SeriesRatings` object to the `SeriesRatingsCollection`.
 
         Logs a warning if the TV series being added is already in the 
         collection.
         """
-        name = ratings.series_name
+        name = item_to_add.series_name
         if name in self.__ratings_collection:
             logger.warning(("Ratings for show {} exists but is being modified. "
                             "This is usually unintentional and indicates "
                             "a bug.").format(name))
-        self.__ratings_collection[name] = ratings
+        self.__ratings_collection[name] = item_to_add
 
     def add_multiple(self, ratings_list: List[SeriesRatings]) -> None:
         """Add multiple SeriesRatings to the collection."""
@@ -273,6 +294,21 @@ class SeriesRatingsCollection():
         for _, ratings in self.__ratings_collection.items():
             reprs.append(ratings.__str__())
         return "\n".join(reprs)
+
+
+class AddValidatorUsageError(Exception):
+    """Raised when the internal decorator `_validate_item_added` is not used 
+    as intended, for instance when the decorator is used on a function with
+    no arguments (thus no `item_to_add` to validate)
+    """
+    pass
+
+
+class CollectionItemTypeError(TypeError):
+    """Raised when the item being added to SeriesRatingCollection is not a
+    SeriesRatings object
+    """
+    pass
 
 
 class SeriesNameTypeError(TypeError):
