@@ -126,7 +126,7 @@ class SeriesRatings():
         return "\n".join(reprs)
 
     def __repr__(self):
-        return self.__str__
+        return f"SeriesRatings object, series=`{self.series_name}``"
 
     def _validate_args(self, series_name: str,
                        overall_rating: float = None, seasons_count: int = None):
