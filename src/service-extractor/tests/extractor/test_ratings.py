@@ -99,6 +99,8 @@ def test_ratings_collection_contains():
 
 
 def test_ratings_collection_add_item():
+    """Tests adding items to SeriesRatingsCollection
+    """
     c = SeriesRatingsCollection()
     with pytest.raises(ratings.CollectionItemTypeError):
         c.add("Test")
