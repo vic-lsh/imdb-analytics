@@ -8,5 +8,6 @@ def test_invalid_fpath():
     """Should not be able to initialize `ExtractorConfig` if the config fpath 
     is wrong. Test if `ExtractorConfigFileNotFoundError` is raised.
     """
+    invalid_fpath = "conf.yml"
     with pytest.raises(ExtractorConfigFileNotFoundError):
-        ExtractorConfig("conf.yml")
+        ExtractorConfig(invalid_fpath)
