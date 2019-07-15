@@ -260,7 +260,7 @@ class SeriesRatingsCollection():
                 assert isinstance(item, SeriesRatings)
             except:
                 raise CollectionItemTypeError()
-            return add_func(*args, **kwargs)
+            return add_func(self, *args, **kwargs)
         return add_func_wrapper
 
     @_validate_item_added
