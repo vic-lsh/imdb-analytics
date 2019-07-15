@@ -20,7 +20,7 @@ class SeriesRatings():
             `set_overall_rating`
         - `seasons_count`: int, optional, can be set via `set_seasons_count`
         """
-        self.validate_args(series_name, overall_rating, seasons_count)
+        self._validate_args(series_name, overall_rating, seasons_count)
         self.__SERIES_NAME = series_name
         self.__OVERALL_RATING = overall_rating
         self.__SEASONS_COUNT = seasons_count
@@ -64,63 +64,6 @@ class SeriesRatings():
     @property
     def json(self):
         return self._to_json()
-
-    def validate_args(self, series_name: str,
-                      overall_rating: float = None, seasons_count: int = None):
-        """Performs argument validation for SeriesRatings. Ensures that 
-        arguments passed in are of the types listed in `__init__`'s signature.
-
-        In addition, ensures that:
-
-        - 0 < len(series_name) <= 100 (`series_name` cannot be an empty string)
-        - 0 <= overall_rating <= 10 
-        = seasons_count > 0
-
-        Raises
-        ------
-        `SeriesNameTypeError`
-            raised when `series_name` is not of string type
-
-        `OverallRatingTypeError`
-            raised when `overall_rating` is specified and not of float type
-
-        `SeasonsCountTypeError`
-            raised when `season_count` is specified and not of int type
-
-        `SeriesNameValueError`
-            raised when `series_name` is empty or too long
-
-        `OverallRatingValueError`
-            raised when `overall_rating` is not between 0-10
-            
-        `SeasonsCountValueError`
-            raised when `seasons_count` is non-positive
-        """
-
-        # validate arg types
-        if not isinstance(series_name, str):
-            raise SeriesNameTypeError("Series name must be a string.")
-        if overall_rating is not None and not isinstance(overall_rating, float):
-            raise OverallRatingTypeError(
-                ("Rating value (`overall_rating`) must be a float. "
-                 "If your rating is a round number (e.g. `9`), "
-                 "use `9.0` rather than `9`."))
-        if seasons_count is not None and not isinstance(seasons_count, int):
-            raise SeasonsCountTypeError("Seasons count must be an int.")
-
-        # validate arg values
-        if not series_name:
-            raise SeriesNameValueError(
-                "Series name must not be an empty string.")
-        if len(series_name) > SERIES_NAME_MAXLEN:
-            raise SeriesNameValueError(("Series name cannot be longer than "
-                                        f"{SERIES_NAME_MAXLEN} characters."))
-        if overall_rating is not None and not (0 <= overall_rating <= 10):
-            raise OverallRatingValueError(
-                "Overall rating must be a float between 0 and 10.")
-        if seasons_count is not None and not (seasons_count > 0):
-            raise SeasonsCountValueError(
-                "Seasons count must be an positive integer.")
 
     def set_overall_rating(self, rating: float) -> None:
         """Set the overall rating of a TV series."""
@@ -180,6 +123,63 @@ class SeriesRatings():
 
     def __repr__(self):
         return self.__str__
+
+    def _validate_args(self, series_name: str,
+                       overall_rating: float = None, seasons_count: int = None):
+        """Performs argument validation for SeriesRatings. Ensures that 
+        arguments passed in are of the types listed in `__init__`'s signature.
+
+        In addition, ensures that:
+
+        - 0 < len(series_name) <= 100 (`series_name` cannot be an empty string)
+        - 0 <= overall_rating <= 10 
+        = seasons_count > 0
+
+        Raises
+        ------
+        `SeriesNameTypeError`
+            raised when `series_name` is not of string type
+
+        `OverallRatingTypeError`
+            raised when `overall_rating` is specified and not of float type
+
+        `SeasonsCountTypeError`
+            raised when `season_count` is specified and not of int type
+
+        `SeriesNameValueError`
+            raised when `series_name` is empty or too long
+
+        `OverallRatingValueError`
+            raised when `overall_rating` is not between 0-10
+
+        `SeasonsCountValueError`
+            raised when `seasons_count` is non-positive
+        """
+
+        # validate arg types
+        if not isinstance(series_name, str):
+            raise SeriesNameTypeError("Series name must be a string.")
+        if overall_rating is not None and not isinstance(overall_rating, float):
+            raise OverallRatingTypeError(
+                ("Rating value (`overall_rating`) must be a float. "
+                 "If your rating is a round number (e.g. `9`), "
+                 "use `9.0` rather than `9`."))
+        if seasons_count is not None and not isinstance(seasons_count, int):
+            raise SeasonsCountTypeError("Seasons count must be an int.")
+
+        # validate arg values
+        if not series_name:
+            raise SeriesNameValueError(
+                "Series name must not be an empty string.")
+        if len(series_name) > SERIES_NAME_MAXLEN:
+            raise SeriesNameValueError(("Series name cannot be longer than "
+                                        f"{SERIES_NAME_MAXLEN} characters."))
+        if overall_rating is not None and not (0 <= overall_rating <= 10):
+            raise OverallRatingValueError(
+                "Overall rating must be a float between 0 and 10.")
+        if seasons_count is not None and not (seasons_count > 0):
+            raise SeasonsCountValueError(
+                "Seasons count must be an positive integer.")
 
     def _to_json(self) -> dict:
         """The internal implementation of ratings serialization.
