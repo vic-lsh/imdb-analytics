@@ -67,6 +67,36 @@ class SeriesRatings():
 
     def validate_args(self, series_name: str,
                       overall_rating: float = None, seasons_count: int = None):
+        """Performs argument validation for SeriesRatings. Ensures that 
+        arguments passed in are of the types listed in `__init__`'s signature.
+
+        In addition, ensures that:
+
+        - 0 < len(series_name) <= 100 (`series_name` cannot be an empty string)
+        - 0 <= overall_rating <= 10 
+        = seasons_count > 0
+
+        Raises
+        ------
+        `SeriesNameTypeError`
+            raised when `series_name` is not of string type
+
+        `OverallRatingTypeError`
+            raised when `overall_rating` is specified and not of float type
+
+        `SeasonsCountTypeError`
+            raised when `season_count` is specified and not of int type
+
+        `SeriesNameValueError`
+            raised when `series_name` is empty or too long
+
+        `OverallRatingValueError`
+            raised when `overall_rating` is not between 0-10
+            
+        `SeasonsCountValueError`
+            raised when `seasons_count` is non-positive
+        """
+
         # validate arg types
         if not isinstance(series_name, str):
             raise SeriesNameTypeError("Series name must be a string.")
