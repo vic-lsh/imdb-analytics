@@ -16,7 +16,7 @@ class SeriesRatings():
         Params
         ------
         - `series_name`: str, required
-        - `overall_rating`: float, optional, can be set via 
+        - `overall_rating`: float, optional, can be set via
             `set_overall_rating`
         - `seasons_count`: int, optional, can be set via `set_seasons_count`.
             `season_count` cannot be modified once it has been set, whether
@@ -41,7 +41,7 @@ class SeriesRatings():
 
     @property
     def overall_rating(self):
-        """Returns the TV show's overall rating. 
+        """Returns the TV show's overall rating.
 
         Each TV show has one unique overall rating only. The overall rating
         need not be the arithmetic mean of the show's episode ratings.
@@ -55,7 +55,7 @@ class SeriesRatings():
         `episode_ratings` is a dict of lists:
         {
             `season_number`: [
-                ep_1_rating, ep_2_rating, ...    
+                ep_1_rating, ep_2_rating, ...
             ]
         }
         """
@@ -75,7 +75,7 @@ class SeriesRatings():
         self.__OVERALL_RATING = rating
 
     def set_season_count(self, seasons_count: int) -> None:
-        """Sets the number of seasons for the TV series. If season count has 
+        """Sets the number of seasons for the TV series. If season count has
         been set (is not `None`), this method does _not_ override the existing
         season count with the value passed in. Once set, season count cannot
         and should not be modified.
@@ -130,13 +130,13 @@ class SeriesRatings():
 
     def _validate_args(self, series_name: str,
                        overall_rating: float = None, seasons_count: int = None):
-        """Performs argument validation for SeriesRatings. Ensures that 
+        """Performs argument validation for SeriesRatings. Ensures that
         arguments passed in are of the types listed in `__init__`'s signature.
 
         In addition, ensures that:
 
         - 0 < len(series_name) <= 100 (`series_name` cannot be an empty string)
-        - 0 <= overall_rating <= 10 
+        - 0 <= overall_rating <= 10
         = seasons_count > 0
 
         Raises
@@ -198,8 +198,8 @@ class SeriesRatings():
         (update this section when updating the method)
         ```
         {
-            "name": [series_name], 
-            "series_rating": [the show's overall rating], 
+            "name": [series_name],
+            "series_rating": [the show's overall rating],
             "episode_ratings": [
                 {
                     "season": 1,
@@ -243,7 +243,7 @@ class SeriesRatingsCollection():
     def collection(self):
         return self.__ratings_collection
 
-    def _validate_item_added(add_func):
+    def _validate_single_item_added(add_func):
         def add_func_wrapper(self, *args, **kwargs):
             if 'item' in kwargs:
                 item = kwargs['item']
@@ -263,11 +263,11 @@ class SeriesRatingsCollection():
             return add_func(self, *args, **kwargs)
         return add_func_wrapper
 
-    @_validate_item_added
+    @_validate_single_item_added
     def add(self, item_to_add: SeriesRatings) -> None:
         """Add a `SeriesRatings` object to the `SeriesRatingsCollection`.
 
-        Logs a warning if the TV series being added is already in the 
+        Logs a warning if the TV series being added is already in the
         collection.
         """
         name = item_to_add.series_name
@@ -277,6 +277,27 @@ class SeriesRatingsCollection():
                             "a bug.").format(name))
         self.__ratings_collection[name] = item_to_add
 
+    def _validate_add_multiple_item(multiple_add_func):
+        def multiple_add_wrapper(self, *args, **kwargs):
+            if 'ratings_list' in kwargs:
+                items = kwargs['ratings_list']
+            elif len(args) > 0:
+                items = args[0]
+            else:
+                err_msg = ("Trying to perform validation for item to be "
+                           "added, but no argument can be found in the "
+                           "item-adding func.")
+                raise AddValidatorUsageError(err_msg)
+
+            if (type(items) is list and
+                    all(isinstance(s, SeriesRatings) for s in items)):
+                return multiple_add_func(self, *args, **kwargs)
+            else:
+                raise CollectionItemTypeError()
+
+        return multiple_add_wrapper
+
+    @_validate_add_multiple_item
     def add_multiple(self, ratings_list: List[SeriesRatings]) -> None:
         """Add multiple SeriesRatings to the collection."""
         for ratings in ratings_list:
@@ -297,9 +318,9 @@ class SeriesRatingsCollection():
 
 
 class AddValidatorUsageError(Exception):
-    """Raised when the internal decorator `_validate_item_added` is not used 
-    as intended, for instance when the decorator is used on a function with
-    no arguments (thus no `item_to_add` to validate)
+    """Raised when the internal add_item decorators is not used as intended, 
+    for instance when the decorator is used on a function with no arguments 
+    (thus no `item_to_add` to validate)
     """
     pass
 
