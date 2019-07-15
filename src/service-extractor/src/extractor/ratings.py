@@ -18,7 +18,9 @@ class SeriesRatings():
         - `series_name`: str, required
         - `overall_rating`: float, optional, can be set via 
             `set_overall_rating`
-        - `seasons_count`: int, optional, can be set via `set_seasons_count`
+        - `seasons_count`: int, optional, can be set via `set_seasons_count`.
+            `season_count` cannot be modified once it has been set, whether
+            set during initialization or via `set_seasons_count`.
         """
         self._validate_args(series_name, overall_rating, seasons_count)
         self.__SERIES_NAME = series_name
@@ -73,8 +75,10 @@ class SeriesRatings():
         self.__OVERALL_RATING = rating
 
     def set_season_count(self, seasons_count: int) -> None:
-        """Set the number of seasons for a TV series.
-        The method rejects modifications of season count, once it has been set.
+        """Sets the number of seasons for the TV series. If season count has 
+        been set (is not `None`), this method does _not_ override the existing
+        season count with the value passed in. Once set, season count cannot
+        and should not be modified.
         """
         if self.__SEASONS_COUNT is not None:
             logger.error("Season count is a constant ",
