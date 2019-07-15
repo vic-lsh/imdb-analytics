@@ -71,9 +71,10 @@ class SeriesRatings():
         if not isinstance(series_name, str):
             raise SeriesNameTypeError("Series name must be a string.")
         if overall_rating is not None and not isinstance(overall_rating, float):
-            raise OverallRatingTypeError(("Rating value (`overall_rating`) must be a float. "
-                                          "If your rating is a round number (e.g. `9`), "
-                                          "use `9.0` rather than `9`."))
+            raise OverallRatingTypeError(
+                ("Rating value (`overall_rating`) must be a float. "
+                 "If your rating is a round number (e.g. `9`), "
+                 "use `9.0` rather than `9`."))
         if seasons_count is not None and not isinstance(seasons_count, int):
             raise SeasonsCountTypeError("Seasons count must be an int.")
 
@@ -256,6 +257,7 @@ class OverallRatingTypeError(TypeError):
 class SeasonsCountTypeError(TypeError):
     """TypeError raised when seasons count is not a int"""
     pass
+
 
 class SeriesNameValueError(ValueError):
     """ValueError for series name"""
