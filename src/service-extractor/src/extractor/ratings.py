@@ -310,11 +310,16 @@ class SeriesRatingsCollection():
     def __len__(self):
         return len(self.__ratings_collection)
 
-    def __repr__(self):
-        reprs = []
+    def __str__(self):
+        strs = []
         for _, ratings in self.__ratings_collection.items():
-            reprs.append(ratings.__str__())
-        return "\n".join(reprs)
+            strs.append(ratings.__str__())
+        return "\n".join(strs)
+
+    def __repr__(self):
+        show_names = list(map(lambda tup: tup[1].series_name,
+                              self.__ratings_collection.items()))
+        return f"SeriesRatingsCollection object, containing shows {show_names}"
 
 
 class AddValidatorUsageError(Exception):
