@@ -2,6 +2,10 @@ import logging
 from typing import List
 
 logger = logging.getLogger(__name__)
+
+SERIES_NAME_MAXLEN = 100
+
+
 class SeriesRatings():
     """Data structure that contains rating-related info on a TV series"""
 
@@ -16,6 +20,7 @@ class SeriesRatings():
             `set_overall_rating`
         - `seasons_count`: int, optional, can be set via `set_seasons_count`
         """
+        self.validate_args(series_name, overall_rating, seasons_count)
         self.__SERIES_NAME = series_name
         self.__OVERALL_RATING = overall_rating
         self.__SEASONS_COUNT = seasons_count
@@ -60,6 +65,32 @@ class SeriesRatings():
     def json(self):
         return self._to_json()
 
+    def validate_args(self, series_name: str,
+                      overall_rating: float = None, seasons_count: int = None):
+        # validate arg types
+        if not isinstance(series_name, str):
+            raise SeriesNameTypeError("Series name must be a string.")
+        if overall_rating is not None and not isinstance(overall_rating, float):
+            raise OverallRatingTypeError(("Rating value (`overall_rating`) must be a float. "
+                                          "If your rating is a round number (e.g. `9`), "
+                                          "use `9.0` rather than `9`."))
+        if seasons_count is not None and not isinstance(seasons_count, int):
+            raise SeasonsCountTypeError("Seasons count must be an int.")
+
+        # validate arg values
+        if not series_name:
+            raise SeriesNameValueError(
+                "Series name must not be an empty string.")
+        if len(series_name) > SERIES_NAME_MAXLEN:
+            raise SeriesNameValueError(("Series name cannot be longer than "
+                                        f"{SERIES_NAME_MAXLEN} characters."))
+        if overall_rating is not None and not (0 <= overall_rating <= 10):
+            raise OverallRatingValueError(
+                "Overall rating must be a float between 0 and 10.")
+        if seasons_count is not None and not (seasons_count > 0):
+            raise SeasonsCountValueError(
+                "Seasons count must be an positive integer.")
+
     def set_overall_rating(self, rating: float) -> None:
         """Set the overall rating of a TV series."""
         if self.__OVERALL_RATING is not None:
@@ -80,7 +111,7 @@ class SeriesRatings():
     def add_season_ratings(self, season_num: int,
                            season_ratings: List[float]) -> None:
         """Add the ratings of a season to the TV series.
-        
+
         Ratings in a season are defined by:
         - which season (season number)
         - episode ratings in that season
@@ -207,3 +238,35 @@ class SeriesRatingsCollection():
         for _, ratings in self.__ratings_collection.items():
             reprs.append(ratings.__str__())
         return "\n".join(reprs)
+
+
+class SeriesNameTypeError(TypeError):
+    """TypeError raised when SeriesName is not a string"""
+    DEFAULT_MSG = "Series name must not be an empty string."
+
+    def __init__(self, message=DEFAULT_MSG):
+        super().__init__(message)
+
+
+class OverallRatingTypeError(TypeError):
+    """TypeError raised when OverallRating is not a float"""
+    pass
+
+
+class SeasonsCountTypeError(TypeError):
+    """TypeError raised when seasons count is not a int"""
+    pass
+
+class SeriesNameValueError(ValueError):
+    """ValueError for series name"""
+    pass
+
+
+class OverallRatingValueError(ValueError):
+    """ValueError for overall rating"""
+    pass
+
+
+class SeasonsCountValueError(ValueError):
+    """ValueError for seasons count"""
+    pass
