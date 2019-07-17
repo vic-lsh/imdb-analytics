@@ -16,7 +16,7 @@ Extracting information from IMDb is as simple as:
 
 ```python
 mgr = IMDb_Queries_Manager(ExtractorConfig())
-mgr.add_query("Game of Thrones")    # add a single query
+mgr.add_query("Game of Thrones")                                        # add a single query
 mgr.add_multiple_queries(["Friends", "Chernobyl", "Breaking Bad"])      # or, multiple queries
 success = mgr.execute()
 ```
