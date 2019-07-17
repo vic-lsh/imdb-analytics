@@ -6,21 +6,19 @@ import sys
 import yaml
 
 from mongoengine import connect
+from pypaca import time
 
+from common.utils import get_logger_cfg_fpath
 from extractor import IMDb_Queries_Manager
 from extractor.config import ExtractorConfig
 from extractor.ratings import SeriesRatingsCollection, SeriesRatings
-from pypaca import time
 
 LOGGER_CONFIG_FPATH = 'config_logger.yml'
 
-if os.path.isfile(LOGGER_CONFIG_FPATH):
-    with open(os.path.abspath('config_logger.yml'), 'r') as f:
-        cfg = yaml.safe_load(f.read())
-    logging.config.dictConfig(cfg)
-else:
-    print("Warning: logging config file not found.")
-
+try:
+    logging.config.fileConfig(get_logger_cfg_fpath())
+except FileNotFoundError as e:
+    print(e)
 logger = logging.getLogger(__name__)
 
 
@@ -34,7 +32,7 @@ def main():
     else:
         manager.add_multiple_queries(config.tv_series_names)
 
-    successful = manager.api_execute()
+    successful = manager.execute()
     if not successful:
         print("Err: an error has occured during execution.")
     else:

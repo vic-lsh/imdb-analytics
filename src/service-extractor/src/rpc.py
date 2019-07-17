@@ -47,7 +47,7 @@ class ExtractionService(imdb_pb2_grpc.ExtractorServiceServicer):
     def InitiateExtraction(self, request, context):
         logger.info("Requesting to extract `{}`".format(request.item_name))
         self.mgr.add_query(request.item_name)
-        successful = self.mgr.api_execute()
+        successful = self.mgr.execute()
         logger.info("Request `{}` finished; success status: {}"
                     .format(request.item_name, successful))
         return imdb_pb2.ExtractionResponse(
@@ -81,3 +81,4 @@ if __name__ == '__main__':
         serve()
     except ServeError:
         sys.exit(1)
+        

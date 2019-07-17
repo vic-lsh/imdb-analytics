@@ -1,4 +1,5 @@
 import logging
+import logging.config
 import os
 from pathlib import Path
 import pickle
@@ -21,10 +22,16 @@ from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.select import Select
 from selenium.webdriver.support.ui import WebDriverWait
 
+from common.utils import get_logger_cfg_fpath
 from extractor.config import ExtractorConfig
 from extractor.constants import IMDb_Constants as consts
 from extractor.ratings import SeriesRatings, SeriesRatingsCollection
 
+
+try:
+    logging.config.fileConfig(get_logger_cfg_fpath())
+except FileNotFoundError as e:
+    print(e)
 logger = logging.getLogger(__name__)
 
 
@@ -389,13 +396,26 @@ class IMDb_Queries_Manager():
                                          ratings_collection=self.__ratings)
         self._clear_pending_queries()
 
-    def api_execute(self) -> None:
+    def execute(self, to_db=True) -> None:
+        """Executes pending queries.
+
+        Params
+        ------
+        to_db : bool, default=True
+            if True, 1) only performs query if the query has not been 
+            persisted in the database, and 2) saves the outputs (if 
+            successfully extracted) to the database. 
+        """
+
         queries = []
 
-        for q in self.__queries:
-            r = requests.get(url=DB_API, params={'name': q})
-            if r.status_code != 200:
-                queries.append(q)
+        if to_db:
+            for q in self.__queries:
+                r = requests.get(url=DB_API, params={'name': q})
+                if r.status_code != 200:
+                    queries.append(q)
+        else:
+            queries = self.__queries
 
         if len(queries) == 0:
             return True
@@ -408,11 +428,13 @@ class IMDb_Queries_Manager():
         pprint(jsons)
 
         success = True
-        for json_obj in jsons:
-            r = requests.post(url=DB_API, json=json_obj)
-            print("POST STATUS: ", r.status_code)
-            if r.status_code != 200:
-                success = False
+
+        if to_db:
+            for json_obj in jsons:
+                r = requests.post(url=DB_API, json=json_obj)
+                print("POST STATUS: ", r.status_code)
+                if r.status_code != 200:
+                    success = False
 
         self._clear_pending_queries()
         return success
