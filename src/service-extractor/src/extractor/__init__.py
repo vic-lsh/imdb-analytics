@@ -350,13 +350,6 @@ class IMDb_Queries_Manager():
     the IMDb_Extractor and SeriesRatingsCollection classes.
     """
 
-    class _Decorators():
-        def serialize_ratings_if_configured(func):
-            """Perform deserialization setup and serialization teardown for
-            methods modifying the ratings collection, if the serialization
-            option has been configured to be on.
-            """
-
     def __init__(self, config: ExtractorConfig):
         self.__config = config
         self.__should_serialize = config.should_serialize
@@ -365,32 +358,7 @@ class IMDb_Queries_Manager():
         self.__ratings = SeriesRatingsCollection()
         self.__queries = set()
 
-    def add_query(self, query: str) -> None:
-        """Queue up queries to be executed. Queries are added onto the waiting
-        list, but _not executed_. Please call the `execute()` for execution.
-        Add_query is indempotent; repeatedly adding the same query will not
-        raise a warning or error.
-        """
-        self.__queries.add(query)
-
-    def add_multiple_queries(self, queries: List[str]) -> None:
-        """Queue up multiple queries to be executed. Queries are added onto
-        the waiting list, but _not executed_. Please call the `execute()`
-        for execution.
-
-        Adding multiple queries is indempotent; if a certain query alreaady
-        exists in the pending list, it would not be added twice.
-        """
-        self.__queries = self.__queries.union(set(queries))
-
-    @property
-    def pending_queries(self) -> List[str]:
-        return list(self.__queries)
-
-    def _clear_pending_queries(self) -> None:
-        self.__queries.clear()
-
-    def execute(self, to_db=True) -> None:
+    def execute(self, to_db=True) -> bool:
         """Executes pending queries.
 
         Params
@@ -432,3 +400,29 @@ class IMDb_Queries_Manager():
 
         self._clear_pending_queries()
         return success
+
+
+    def add_query(self, query: str) -> None:
+        """Queue up queries to be executed. Queries are added onto the waiting
+        list, but _not executed_. Please call the `execute()` for execution.
+        Add_query is indempotent; repeatedly adding the same query will not
+        raise a warning or error.
+        """
+        self.__queries.add(query)
+
+    def add_multiple_queries(self, queries: List[str]) -> None:
+        """Queue up multiple queries to be executed. Queries are added onto
+        the waiting list, but _not executed_. Please call the `execute()`
+        for execution.
+
+        Adding multiple queries is indempotent; if a certain query alreaady
+        exists in the pending list, it would not be added twice.
+        """
+        self.__queries = self.__queries.union(set(queries))
+
+    @property
+    def pending_queries(self) -> List[str]:
+        return list(self.__queries)
+
+    def _clear_pending_queries(self) -> None:
+        self.__queries.clear()
