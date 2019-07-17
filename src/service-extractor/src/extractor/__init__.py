@@ -401,22 +401,27 @@ class IMDb_Queries_Manager():
         self._clear_pending_queries()
         return success
 
-
     def add_query(self, query: str) -> None:
-        """Queue up queries to be executed. Queries are added onto the waiting
-        list, but _not executed_. Please call the `execute()` for execution.
-        Add_query is indempotent; repeatedly adding the same query will not
-        raise a warning or error.
+        """Queue up queries to be executed. 
+        
+        Note
+        ----
+        - Queries are added onto the waiting list, but _not executed_. 
+            For execution, call `execute()`.
+        - Adding multiple queries is indempotent: if a certain query alreaady
+            exists in the pending list, it would not be added twice.
         """
         self.__queries.add(query)
 
     def add_multiple_queries(self, queries: List[str]) -> None:
-        """Queue up multiple queries to be executed. Queries are added onto
-        the waiting list, but _not executed_. Please call the `execute()`
-        for execution.
+        """Queue up multiple queries to be executed.
 
-        Adding multiple queries is indempotent; if a certain query alreaady
-        exists in the pending list, it would not be added twice.
+        Note (*same for `add_query`)
+        ----------------------------
+        - Queries are added onto the waiting list, but _not executed_. 
+            For execution, call `execute()`.
+        - Adding multiple queries is indempotent: if a certain query alreaady
+            exists in the pending list, it would not be added twice.
         """
         self.__queries = self.__queries.union(set(queries))
 
