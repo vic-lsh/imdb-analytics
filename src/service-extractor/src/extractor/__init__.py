@@ -390,12 +390,6 @@ class IMDb_Queries_Manager():
     def _clear_pending_queries(self) -> None:
         self.__queries.clear()
 
-    def local_execute(self) -> None:
-        """Execute all pending queries."""
-        self.__analyzer.multiple_queries(series_names=self.__queries.keys(),
-                                         ratings_collection=self.__ratings)
-        self._clear_pending_queries()
-
     def execute(self, to_db=True) -> None:
         """Executes pending queries.
 
