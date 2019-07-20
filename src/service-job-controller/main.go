@@ -54,7 +54,7 @@ func sendJob(jobs map[int]*job.ExtractionJob, in chan interface{}) {
 func extractorExecutesJob(jobs map[int]*job.ExtractionJob, id int, ec pb.ExtractorServiceClient) {
 	show, err := ec.InitiateExtraction(context.Background(), &pb.ExtractionRequest{ItemName: jobs[id].Name})
 	if err != nil {
-		log.Fatalln("Error in getting show", err)
+		log.Println("Error in getting show", err)
 	}
 	log.Println(show)
 	jobs[id].Status = job.CompletedSucceeded
