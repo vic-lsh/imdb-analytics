@@ -20,6 +20,14 @@ export default class Dashboard extends Component<DashboardProps, DashboardState>
     }
   }
 
+  /**
+   * Query submission handler.
+   * 
+   * Called when there is a submission event (ENTER, submission btn clicked, 
+   * etc.) in the `QueryPanel`. `QueryPanel` calls this function to trigger 
+   * an update to teh `query` state in this component, thus propagating a 
+   * change to the `seriesName` in the `ResultPanel`.
+   */
   handleQuerySubmission = (querySetInPanel: string) => {
     this.setState({ query: querySetInPanel })
   }

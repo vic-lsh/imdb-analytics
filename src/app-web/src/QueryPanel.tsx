@@ -25,6 +25,14 @@ export default class QueryPanel extends Component<QueryPanelProps, QueryPanelSta
     this.setState({ query: event.target.value });
   }
 
+  /**
+   * Query submission handler. 
+   * 
+   * Resets local `query` state; calls parent query state setter to update the 
+   * shared `query` state.
+   * 
+   * @param event: submission related event
+   */
   handleSubmit(event: React.FormEvent | React.MouseEvent) {
     if (this.state.query !== "") {
       this.props.setQueryInParent(this.state.query);
