@@ -65,7 +65,7 @@ class TVSeries(Resource):
             r = requests.post(settings.JOB_SERVICE_API, params={
                 'name': series_name
             })
-            if r.status_code == 200:
+            if r.status_code == 202:
                 print('job scheduling successful')
                 return True
             else:
