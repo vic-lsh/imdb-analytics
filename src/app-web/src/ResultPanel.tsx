@@ -4,6 +4,7 @@ import styled from 'styled-components';
 import { Line } from 'react-chartjs-2';
 import { StyledH1 } from './Dashboard';
 import { PlotColors } from './styles';
+import { DB_SERVICE_BASE_URL } from './api';
 
 type ResultPanelProps = {
   seriesName: string | undefined
@@ -37,9 +38,9 @@ export default class ResultPanel extends Component<ResultPanelProps, ResultPanel
   }
 
   fetchTvStatistics = async (seriesName: string) => {
-    const BASE_URL = 'http://localhost:8001';
     try {
-      const response = await Axios.get(`${BASE_URL}/tv-series`, {
+      console.log(DB_SERVICE_BASE_URL)
+      const response = await Axios.get(`${DB_SERVICE_BASE_URL}/tv-series`, {
         params: { name: seriesName }
       })
       console.log(response);
