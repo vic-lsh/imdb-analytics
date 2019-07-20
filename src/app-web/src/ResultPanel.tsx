@@ -4,7 +4,7 @@ import styled from 'styled-components';
 import { Line } from 'react-chartjs-2';
 import { StyledH1 } from './Dashboard';
 import { PlotColors } from './styles';
-import { DB_SERVICE_BASE_URL } from './api';
+import { DB_SERVICE_BASE_URL, JOB_SERVICE_BASE_URL } from './api';
 
 type ResultPanelProps = {
   seriesName: string | undefined
@@ -39,7 +39,6 @@ export default class ResultPanel extends Component<ResultPanelProps, ResultPanel
 
   fetchTvStatistics = async (seriesName: string) => {
     try {
-      console.log(DB_SERVICE_BASE_URL)
       const response = await Axios.get(`${DB_SERVICE_BASE_URL}/tv-series`, {
         params: { name: seriesName }
       })
@@ -58,6 +57,14 @@ export default class ResultPanel extends Component<ResultPanelProps, ResultPanel
         this.setState({
           responseStatus: err.response.status
         })
+        try {
+          const jobResp = await Axios.post(`${JOB_SERVICE_BASE_URL}/jobs`, {
+            params: { name: seriesName }
+          })
+          console.log(`Job for ${seriesName} scheduled. Response from job service: ${jobResp}`)
+        } catch (err) {
+          console.log(`Could not schedule a job for '${seriesName}'. ${err}`)
+        }
       }
     }
   }
