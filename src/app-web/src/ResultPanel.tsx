@@ -57,14 +57,6 @@ export default class ResultPanel extends Component<ResultPanelProps, ResultPanel
         this.setState({
           responseStatus: err.response.status
         })
-        try {
-          const jobResp = await Axios.post(`${JOB_SERVICE_BASE_URL}/jobs`, {
-            params: { name: seriesName }
-          })
-          console.log(`Job for ${seriesName} scheduled. Response from job service: ${jobResp}`)
-        } catch (err) {
-          console.log(`Could not schedule a job for '${seriesName}'. ${err}`)
-        }
       }
     }
   }

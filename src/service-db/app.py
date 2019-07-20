@@ -1,10 +1,12 @@
 import json
+
 import mongoengine
-
-from flask import Flask, request, jsonify
+import requests
+from flask import Flask, jsonify, request
 from flask_cors import CORS, cross_origin
-from flask_restful import Resource, Api, reqparse
+from flask_restful import Api, Resource, reqparse
 
+import settings
 from db import Database
 
 app = Flask(__name__)
@@ -28,6 +30,7 @@ class TVSeries(Resource):
             resp = db.find(identifier)
 
         if resp is None:
+            successful = self._schedule_extraction_job(identifier)
             return {'message': 'TVSeries not found'}, 404
         else:
             return jsonify(json.loads(resp.to_json()))
@@ -51,6 +54,24 @@ class TVSeries(Resource):
             return {'message': 'TVSeries not found'}, 404
         else:
             return {'message': 'Deleted'}, 204
+
+    def _schedule_extraction_job(self, series_name: str, retry: int = 3) -> bool:
+        """Extraction job scheduler
+
+        Schedules an extraction job if the series cannot be found in the 
+        database.
+        """
+        while retry >= 0:
+            r = requests.post(settings.JOB_SERVICE_API, params={
+                'name': series_name
+            })
+            if r.status_code == 200:
+                print('job scheduling successful')
+                return True
+            else:
+                retry -= 1
+        print('job scheduling not successful')
+        return False
 
 
 api.add_resource(TVSeries, '/tv-series')
