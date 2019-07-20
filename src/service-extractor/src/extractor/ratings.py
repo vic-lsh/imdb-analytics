@@ -1,6 +1,13 @@
 import logging
+import logging.config
 from typing import List
 
+from common.utils import get_logger_cfg_fpath
+
+try:
+    logging.config.fileConfig(get_logger_cfg_fpath())
+except FileNotFoundError as e:
+    print(e)
 logger = logging.getLogger(__name__)
 
 SERIES_NAME_MAXLEN = 100
