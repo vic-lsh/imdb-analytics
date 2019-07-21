@@ -1,4 +1,6 @@
 import json
+import logging
+import logging.config
 
 import mongoengine
 import requests
@@ -6,8 +8,15 @@ from flask import Flask, jsonify, request
 from flask_cors import CORS, cross_origin
 from flask_restful import Api, Resource, reqparse
 
+import utils
 import settings
 from db import Database
+
+try:
+    logging.config.fileConfig(utils.get_logger_cfg_fpath())
+except FileNotFoundError as e:
+    print(e)
+logger = logging.getLogger(__name__)
 
 app = Flask(__name__)
 
@@ -25,14 +34,18 @@ class TVSeries(Resource):
     def get(self):
         args = self._parser.parse_args()
         identifier = args['name']
+        logger.info(f"Initiating GET `{identifier}`")
 
         with Database() as db:
             resp = db.find(identifier)
 
         if resp is None:
-            successful = self._schedule_extraction_job(identifier)
+            logger.error(f"`{identifier}` could not be found in the database.")
+            # successful = self._schedule_extraction_job(identifier)
             return {'message': 'TVSeries not found'}, 404
         else:
+            logger.info((f"{identifier} found in database; "
+                         "Returning the series' data."))
             return jsonify(json.loads(resp.to_json()))
 
     def post(self):
@@ -61,16 +74,19 @@ class TVSeries(Resource):
         Schedules an extraction job if the series cannot be found in the 
         database.
         """
+        logger.info(("Attempting to schedule a extraction job "
+                     f"for `{series_name}`"))
         while retry >= 0:
             r = requests.post(settings.JOB_SERVICE_API, params={
                 'name': series_name
             })
             if r.status_code == 202:
-                print('job scheduling successful')
+                logger.info(f'Job scheduling for {series_name} successful')
                 return True
             else:
                 retry -= 1
-        print('job scheduling not successful')
+        logger.error((f'Job scheduling for {series_name} not successful, '
+                      f'remaining tries: {retry}'))
         return False
 
 
