@@ -34,9 +34,9 @@ def main():
 
     successful = manager.execute()
     if not successful:
-        print("Err: an error has occured during execution.")
+        logger.error("Err: an error has occured during execution.")
     else:
-        print("Success!")
+        logger.info("Success!")
 
 
 if __name__ == "__main__":
