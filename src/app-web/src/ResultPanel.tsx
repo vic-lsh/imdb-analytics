@@ -277,7 +277,7 @@ const RatingsNotFound: React.FC<{ seriesName: string }> = (props) => {
     <div>
       <StyledH1>Sorry, we're unable to find '{seriesNameCapitalized}'</StyledH1>
       <StyledHelperMsg>
-        This is most likely because our background worker has not processed this series yet =(
+        This is most likely because our background worker has not processed this series yet.
         Please try again sometime soon =)
       </StyledHelperMsg>
     </div>
