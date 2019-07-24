@@ -99,9 +99,9 @@ export default class ResultPanel extends Component<ResultPanelProps, ResultPanel
     const displayedContent = this.props.seriesName === undefined ?
       <Placeholder /> : this.renderRatings();
     return (
-      <div className="">
+      <StyledRatingsPanelDiv>
         {displayedContent}
-      </div>
+      </StyledRatingsPanelDiv>
     )
   }
 }
@@ -313,6 +313,11 @@ const Placeholder: React.FC = () => {
 const ErrorHeader: React.FC = () => {
   return (<StyledH1>An error has occured...oops :(</StyledH1>)
 }
+
+const StyledRatingsPanelDiv = styled.div`
+  padding-left: 2rem;
+  padding-right: 2rem;
+`;
 
 const StyledEpNumSpan = styled.span`
   font-weight: bold;

@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import styled from 'styled-components';
-import { StyledH1DarkBg } from './Dashboard';
+import { StyledH1 } from './Dashboard';
 
 type QueryPanelProps = {
   setQueryInParent: (value: string) => void;
@@ -45,7 +45,7 @@ export default class QueryPanel extends Component<QueryPanelProps, QueryPanelSta
     return (
       <StyledQueryForm onSubmit={this.handleSubmit}>
         <label>
-          <StyledH1DarkBg>TV Series</StyledH1DarkBg>
+          <StyledH1>TV Series</StyledH1>
           <StyledSearchFieldInput type="text" name="tv-series"
             value={this.state.query} onChange={this.handleChange}
           />
@@ -65,8 +65,8 @@ const StyledSearchFieldInput = styled.input`
   box-sizing: border-box;
   border: 0;
   font-size: 1.2rem;
-  color: white;
-  background: rgb(63, 63, 63);
+  // color: white;
+  // background: rgb(63, 63, 63);
   border-radius: 0.3rem;
 
   :focus {
@@ -92,8 +92,8 @@ const StyledSubmitBtn = styled.button`
   }
 
   :disabled {
-    color: #b5b5b5;
-    background-color: #0f056e;
+    color: #424242;
+    background-color: #9f9f9f;
   }
 `;
 

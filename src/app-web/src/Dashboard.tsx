@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import './Dashboard.css';
 import styled from 'styled-components';
 
 import ResultPanel from './ResultPanel';
@@ -34,22 +33,37 @@ export default class Dashboard extends Component<DashboardProps, DashboardState>
 
   render() {
     return (
-      <div className="dashboard">
-        <div className="home-component query-panel">
+      <StyledDashboardDiv className="dashboard">
+        <StyledQueryPanelComponentDiv className="home-component query-panel">
           <QueryPanel setQueryInParent={this.handleQuerySubmission} />
-        </div>
-        <div className="home-component result-panel">
+        </StyledQueryPanelComponentDiv>
+        <StyledHomeComponentDiv className="home-component result-panel">
           <ResultPanel seriesName={this.state.query} />
-        </div>
-      </div>
+        </StyledHomeComponentDiv>
+      </StyledDashboardDiv>
     )
   }
 }
 
+const StyledDashboardDiv = styled.div`
+  text-align: left;
+  height: 100vh;
+  display: grid;
+  grid-template-columns: 30% 70%;
+`;
+
+const StyledHomeComponentDiv = styled.div`
+  padding-top: 5rem;
+`;
+
+const StyledQueryPanelComponentDiv = styled(StyledHomeComponentDiv)`
+  background: #d1d1d1;
+`;
+
 export const StyledH1 = styled.h1`
   margin: 0;
   font-size: 2.3rem;
-`
+`;
 
 export const StyledH1DarkBg = styled(StyledH1)`
   color: white;
