@@ -4,7 +4,7 @@ import styled from 'styled-components';
 import { Line } from 'react-chartjs-2';
 import { StyledH1 } from './Dashboard';
 import { PlotColors } from './styles';
-import { DB_SERVICE_BASE_URL, JOB_SERVICE_BASE_URL } from './api';
+import { DB_SERVICE_BASE_URL } from './api';
 
 type ResultPanelProps = {
   seriesName: string | undefined
