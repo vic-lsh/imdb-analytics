@@ -38,6 +38,10 @@ export default class ResultPanel extends Component<ResultPanelProps, ResultPanel
   }
 
   fetchTvStatistics = async (seriesName: string) => {
+    this.setState({
+      tvSeries: undefined,
+      responseStatus: undefined
+    })
     try {
       const response = await Axios.get(`${DB_SERVICE_BASE_URL}/tv-series`, {
         params: { name: seriesName }
