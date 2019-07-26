@@ -20,12 +20,9 @@ class Database():
         self.__db.close()
 
     def find(self, series_name: str) -> TVSeries:
-        print("querying")
         if self.if_tv_series_exists(series_name):
-            print("done")
             return TVSeries.objects.with_id(self._get_id(series_name))
         else:
-            print("done")
             return None
 
     def delete(self, series_name: str):
