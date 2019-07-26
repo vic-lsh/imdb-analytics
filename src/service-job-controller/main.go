@@ -31,6 +31,8 @@ func router(in chan interface{}, out chan *job.ExtractionJob, port string) {
 func receiveJobs(jobs map[int]*job.ExtractionJob, jobsPending *[]int, out chan *job.ExtractionJob) {
 	for job := range out {
 		jobs[job.ID] = job
+		log.Println("All jobs pending (len ", len(*jobsPending), "): ", jobsPending)
+		log.Printf("Total jobs count: %d\n", len(jobs))
 		*jobsPending = append(*jobsPending, job.ID)
 		log.Println(*job)
 	}
