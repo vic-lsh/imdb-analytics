@@ -5,7 +5,7 @@ from flask import Flask
 from flask_cors import CORS, cross_origin
 from flask_restful import Api
 
-import utils
+from common import utils
 from db import Database
 from resources.tvseries import TVSeries
 

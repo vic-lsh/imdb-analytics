@@ -1,3 +1,4 @@
+import json
 import logging
 import logging.config
 import threading
@@ -6,8 +7,7 @@ import requests
 from flask import jsonify, request
 from flask_restful import Resource, reqparse
 
-import settings
-import utils
+from common import settings, utils
 from db import Database
 
 
@@ -46,7 +46,7 @@ class TVSeries(Resource):
         if resp is None:
             logger.error(f"`{identifier}` could not be found in the database.")
             self._start_bg_extracton_thread(series_name=identifier)
-            return {'message': 'TVSeries not found'}, 404
+            return {"message": f"TVSeries '{identifier}' not found"}, 404
         else:
             logger.info((f"{identifier} found in database; "
                          "Returning the series' data."))
@@ -68,9 +68,9 @@ class TVSeries(Resource):
             status = db.delete(identifier)
 
         if status == False:
-            return {'message': 'TVSeries not found'}, 404
+            return {"message": f"TVSeries '{identifier}' not found"}, 404
         else:
-            return {'message': 'Deleted'}, 204
+            return {"message": f"Deleted '{identifier}'"}, 204
 
     def _start_bg_extracton_thread(self, series_name: str):
         """Schedule an extraction job in the background, if the series cannot 
