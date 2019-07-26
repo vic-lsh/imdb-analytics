@@ -121,7 +121,7 @@ func (h *Handler) postJob(w http.ResponseWriter, r *http.Request) {
 		Name:   name[0],
 		Status: NotProcessed,
 	}
-
+	log.Println("Sending job ", j, " to out chan")
 	h.out <- &j
 	w.WriteHeader(http.StatusAccepted)
 	json.NewEncoder(w).Encode(j.marshall())
