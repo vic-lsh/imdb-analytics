@@ -1,6 +1,9 @@
 import json
 import logging
 import logging.config
+import threading
+import time
+from collections import deque
 
 import mongoengine
 import requests
@@ -8,8 +11,8 @@ from flask import Flask, jsonify, request
 from flask_cors import CORS, cross_origin
 from flask_restful import Api, Resource, reqparse
 
-import utils
 import settings
+import utils
 from db import Database
 
 try:
@@ -24,6 +27,18 @@ app.config['CORS_HEADERS'] = 'Content-Type'
 
 api = Api(app)
 CORS(app)
+
+
+def schedule_extraction_job(series_name: str):
+    logger.info(("Attempting to schedule a extraction job "
+                 f"for `{series_name}`"))
+    r = requests.post(settings.JOB_SERVICE_API, params={
+        'name': series_name
+    })
+    if r.status_code == 202:
+        logger.info(f"Job scheduling for '{series_name}' successful")
+    else:
+        logger.error(f"Job scheduling for '{series_name}' not successful.")
 
 
 class TVSeries(Resource):
@@ -41,7 +56,7 @@ class TVSeries(Resource):
 
         if resp is None:
             logger.error(f"`{identifier}` could not be found in the database.")
-            # successful = self._schedule_extraction_job(identifier)
+            self._start_bg_extracton_thread(series_name=identifier)
             return {'message': 'TVSeries not found'}, 404
         else:
             logger.info((f"{identifier} found in database; "
@@ -68,26 +83,19 @@ class TVSeries(Resource):
         else:
             return {'message': 'Deleted'}, 204
 
-    def _schedule_extraction_job(self, series_name: str, retry: int = 3) -> bool:
-        """Extraction job scheduler
-
-        Schedules an extraction job if the series cannot be found in the 
-        database.
+    def _start_bg_extracton_thread(self, series_name: str):
+        """Schedule an extraction job in the background, if the series cannot 
+        be found in the database.
         """
-        logger.info(("Attempting to schedule a extraction job "
-                     f"for `{series_name}`"))
-        while retry >= 0:
-            r = requests.post(settings.JOB_SERVICE_API, params={
-                'name': series_name
-            })
-            if r.status_code == 202:
-                logger.info(f'Job scheduling for {series_name} successful')
-                return True
-            else:
-                retry -= 1
-        logger.error((f'Job scheduling for {series_name} not successful, '
-                      f'remaining tries: {retry}'))
-        return False
+        t = threading.Thread(target=schedule_extraction_job,
+                                args=(series_name,), daemon=True)
+        t.start()
+        if t.ident is None:
+            logger.error(("Unable to start a background thread for ",
+                            "extraction."))
+        else:
+            logger.info(("Start a background thread for extraction "
+                        f"job scheduling, TID={t.ident}"))
 
 
 api.add_resource(TVSeries, '/tv-series')
