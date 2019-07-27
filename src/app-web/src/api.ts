@@ -6,7 +6,7 @@ const env = process.env.NODE_ENV
  */
 export const DB_SERVICE_BASE_URL = (() => {
   return (env === 'development' || env === 'test') ?
-    'http://localhost:8001' :
+    'http://localhost:9001' :
     'https://imdb-analytics.azurewebsites.net/'
 })()
 
