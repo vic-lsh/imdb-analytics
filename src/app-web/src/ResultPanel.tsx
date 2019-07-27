@@ -362,6 +362,7 @@ const StyledEpisodeRatingDiv = styled.div`
 // StyledSeasonRatingDiv is the div for each season
 const StyledSeasonRatingDiv = styled.div`
   margin: 0.8rem;
+  max-width: 250px;
   border: 1px solid #828282;
   border-radius: 0.2rem;
   transition: 0.6s;
