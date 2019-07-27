@@ -14,7 +14,6 @@ const App: React.FC = () => {
 }
 
 const StyledAppDiv = styled.div`
-  overflow: hidden;
   height: 100%;
   width: 100%;
 `;
