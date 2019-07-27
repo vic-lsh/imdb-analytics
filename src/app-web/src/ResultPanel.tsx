@@ -139,7 +139,7 @@ const SeasonRating: React.FC<{ seasonRating: SeasonRatingsObj }> = (props) => {
   return (
     <StyledSeasonRatingDiv>
       <StyledSeasonRatingHeaderH2>Season {props.seasonRating['_id']}</StyledSeasonRatingHeaderH2>
-      <EpisodeRatingsList ratingsInSeason={props.seasonRating.ratings} />
+      {/* <EpisodeRatingsList ratingsInSeason={props.seasonRating.ratings} /> */}
     </StyledSeasonRatingDiv>
   );
 }
@@ -337,10 +337,13 @@ const StyledEpisodeRatingDiv = styled.div`
 // StyledSeasonRatingDiv is the div for each season
 const StyledSeasonRatingDiv = styled.div`
   margin: 0.8rem;
-  border: 1px solid #454545;
+  border: 1px solid #828282;
   border-radius: 0.2rem;
+  transition: 0.2s;
   :hover {
-    border-color: black;
+    border-color: #424242;
+    transition: 0.2s;
+    box-shadow: 0px 4px 6px #e3e3e3;
   }
 `;
 
