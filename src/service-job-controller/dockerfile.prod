@@ -1,0 +1,12 @@
+FROM golang:latest 
+
+WORKDIR /usr/src/app
+
+COPY . . 
+
+ENV GOBIN=/usr/local/bin/ 
+
+RUN go get -d -v ./...
+RUN go install -v ./...
+
+CMD ["make", "run"]
