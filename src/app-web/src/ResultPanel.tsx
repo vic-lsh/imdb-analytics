@@ -138,18 +138,18 @@ const SeasonRatingsList: React.FC<{ seasonRatings: SeasonRatingsObj[] }> = (prop
 const SeasonRating: React.FC<{ seasonRating: SeasonRatingsObj }> = (props) => {
   return (
     <StyledSeasonRatingDiv>
-      <h2>Season {props.seasonRating['_id']}</h2>
+      <StyledSeasonRatingHeaderH2>Season {props.seasonRating['_id']}</StyledSeasonRatingHeaderH2>
       <EpisodeRatingsList ratingsInSeason={props.seasonRating.ratings} />
     </StyledSeasonRatingDiv>
   );
 }
 
 const EpisodeRatingsList: React.FC<{ ratingsInSeason: EpisodeRatingObj[] }> = (props) => {
-  return (<React.Fragment>{
+  return (<StyledSeasonRatingsListDiv>{
     props.ratingsInSeason.map((epRating) => {
       return <EpisodeRating episodeRating={epRating} key={epRating['_id']} />
     })
-  }</React.Fragment>)
+  }</StyledSeasonRatingsListDiv>)
 }
 
 const EpisodeRating: React.FC<{ episodeRating: EpisodeRatingObj }> = (props) => {
@@ -330,22 +330,35 @@ const StyledEpNumSpan = styled.span`
 const StyledEpRatingSpan = styled.span``;
 
 const StyledEpisodeRatingDiv = styled.div`
-  padding: 0 0.3rem 0;
   display: grid;
   grid-template-columns: 40% 60%;
 `;
 
+// StyledSeasonRatingDiv is the div for each season
 const StyledSeasonRatingDiv = styled.div`
-  padding: 0 1rem 1rem 1rem;
+  margin: 0.8rem;
+  border: 1px solid #454545;
+  border-radius: 0.2rem;
+  :hover {
+    border-color: black;
+  }
+`;
+
+const StyledSeasonRatingHeaderH2 = styled.h2`
+  margin: 0.6rem 0.7rem;
+`;
+
+const StyledSeasonRatingsListDiv = styled.div`
+  margin: 0.6rem 0.6rem 0.6rem 1rem;
 `;
 
 const StyledRatingsGridDiv = styled.div`
   display: grid; 
-  grid-template-columns: repeat(auto-fit, minmax(150px, 2fr));
+  grid-template-columns: repeat(auto-fit, minmax(170px, 2fr));
 `;
 
 const StyledRatingsPlotDiv = styled.div`
-  padding: 2rem 2rem 0 0;
+  padding: 2rem 0 0 0;
 `;
 
 const StyledHelperMsg = styled.p`
