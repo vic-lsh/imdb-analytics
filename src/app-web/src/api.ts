@@ -7,9 +7,8 @@ const env = process.env.NODE_ENV
 export const DB_SERVICE_BASE_URL = (() => {
   return (env === 'development' || env === 'test') ?
     'http://localhost:8001' :
-    'https://db-service'
+    'https://imdb-analytics.azurewebsites.net/'
 })()
-
 
 /** 
  * Job Service URL. 
