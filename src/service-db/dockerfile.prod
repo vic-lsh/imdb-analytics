@@ -9,6 +9,6 @@ RUN pip install --no-cache-dir -r requirements.txt
 COPY . .
 
 # make shell script executable
-RUN chmod +x ./run-dev.sh
+RUN chmod +x ./run-prod.sh
 
-CMD ./run-dev.sh
+CMD ./run-prod.sh
