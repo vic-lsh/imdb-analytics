@@ -1,6 +1,7 @@
 import React, { Component, useState } from 'react';
 import Axios from 'axios';
 import styled from 'styled-components';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { Line } from 'react-chartjs-2';
 import { StyledH1 } from './Dashboard';
 import { PlotColors } from './styles';
@@ -143,7 +144,10 @@ const SeasonRating: React.FC<{ seasonRating: SeasonRatingsObj }> = (props) => {
       <StyledSeasonRatingDiv isRatingsDisplayed={isRatingsDisplayed}>
         <button className="rating-season-btn"
           onClick={() => setRatingsDisplayStatus(isRatingsDisplayed ? false : true)}>
-          Season {props.seasonRating['_id']}
+          <StyledSeasonHeaderGridDiv>
+            <span>Season {props.seasonRating['_id']}</span>
+            <StyledDropdownSignDiv isRatingsDisplayed={isRatingsDisplayed}>&lt;</StyledDropdownSignDiv>
+          </StyledSeasonHeaderGridDiv>
         </button>
         <EpisodeRatingsList ratingsInSeason={props.seasonRating.ratings} isDisplayed={isRatingsDisplayed} />
       </StyledSeasonRatingDiv>
@@ -353,17 +357,33 @@ const StyledSeasonRatingDiv = styled.div`
   margin: 0.8rem;
   border: 1px solid #828282;
   border-radius: 0.2rem;
-  transition: 0.2s;
+  transition: 0.6s;
   :hover {
     border-color: #424242;
-    transition: 0.2s;
+    transition: 0.6s;
     box-shadow: 0px 4px 6px #e3e3e3;
-    ${(props: { isRatingsDisplayed: boolean }) => !(props.isRatingsDisplayed) && `transform: scaleY(1.05);`}
+    ${(props: { isRatingsDisplayed: boolean }) => !(props.isRatingsDisplayed) && `transform: scaleY(1.01);`}
   }
 `;
 
+const StyledSeasonHeaderGridDiv = styled.div`
+  display: grid;
+  grid-template-columns: 17fr 3fr;
+`;
+
+const StyledDropdownSignDiv = styled.div`
+  font-size: 1rem;
+  font-weight: lighter;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  transition: 0.3s;
+  ${(props: { isRatingsDisplayed: boolean }) => (props.isRatingsDisplayed) && `transform: rotate(-90deg);`}
+`
+
 const StyledSeasonRatingsListDiv = styled.div`
-  margin: 0.6rem 0.6rem 0.6rem 1rem;
+  border-top: 1px solid #828282;
+  padding: 0.6rem 0.6rem 0.6rem 1rem;
   transition: 0.2s;
 `;
 
