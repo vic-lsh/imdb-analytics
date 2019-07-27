@@ -1,6 +1,7 @@
 import React, { Component, useState } from 'react';
 import Axios from 'axios';
 import styled from 'styled-components';
+import Loader from 'react-loader-spinner';
 import { Line } from 'react-chartjs-2';
 import { StyledH1 } from './Dashboard';
 import { PlotColors } from './styles';
@@ -140,7 +141,8 @@ const SeasonRatingsList: React.FC<{
           initialRatingDisplayState={props.initialRatingDisplayState}
           key={seasonRating['_id']}
         />
-    )})
+      )
+    })
   }</React.Fragment>)
 }
 
@@ -314,7 +316,12 @@ const RatingsNotFound: React.FC<{ seriesName: string }> = (props) => {
 }
 
 const RatingsLoading: React.FC = () => {
-  return (<StyledH1>Loading...</StyledH1>)
+  return (<React.Fragment>
+    <StyledH1>Loading...</StyledH1>
+    <div style={{ marginTop: '20vh', marginLeft: '30vw' }}>
+      <Loader type="Oval" color="#303030" height="80" width="80" />
+    </div>
+  </React.Fragment>)
 }
 
 const RatingsFetchingNetworkError: React.FC = () => {
@@ -397,7 +404,7 @@ const StyledSeasonRatingsListDiv = styled.div`
 
 const StyledRatingsGridDiv = styled.div`
   display: grid; 
-  grid-template-columns: repeat(auto-fit, minmax(170px, 2fr));
+  grid-template-columns: repeat(auto-fit, minmax(180px, 2fr));
 `;
 
 const StyledRatingsPlotDiv = styled.div`
