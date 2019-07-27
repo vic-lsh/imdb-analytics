@@ -1,0 +1,105 @@
+version: '3.7'
+
+services:
+  extractor-service:
+    container_name: extractor
+    build:
+      context: ./src/service-extractor
+      dockerfile: dockerfile.prod
+    ports:
+      - "${EXTRACTOR_PORT_LOCAL}:${EXTRACTOR_PORT}"
+    depends_on:
+      - db-service
+      - firefox
+      - chrome
+      - hub
+    networks: 
+      - spiderweb
+
+  job-controller-service:
+    container_name: job_controller
+    build:
+      context: ./src/service-job-controller
+      dockerfile: dockerfile.prod
+    ports:
+      - "${JOB_CONTROLLER_PORT_LOCAL}:${JOB_CONTROLLER_PORT}"
+    depends_on:
+      - extractor-service
+    networks: 
+      - spiderweb
+
+  db-service:
+    container_name: db_api
+    build:
+      context: ./src/service-db
+      dockerfile: dockerfile.prod
+    ports:
+      - "${DB_API_PORT_LOCAL}:${DB_API_PORT}"
+    links:
+      - mongo
+    networks: 
+      - spiderweb
+      - mongo-internal
+
+  mongo:
+    container_name: mongo
+    image: mongo
+    ports:
+      - "${MONGO_PORT}:${MONGO_PORT}"
+    networks:
+      - mongo-internal
+      
+  web-app:
+    container_name: web_app
+    build:
+      context: ./src/app-web
+      dockerfile: dockerfile.prod
+    volumes:
+      - ./src/app-web:/usr/src/app
+    ports:
+      - "80:${WEB_APP_PORT}"
+    depends_on: 
+      - db-service
+    networks:
+      - spiderweb
+
+  firefox:
+    container_name: firefox_driver
+    image: selenium/node-firefox:3.14.0-gallium
+    volumes:
+      - /dev/shm:/dev/shm
+    depends_on:
+      - hub
+    environment:
+      HUB_HOST: hub
+    networks:
+      - hub-internal
+
+  chrome:
+    container_name: chrome_driver
+    image: selenium/node-chrome:3.14.0-gallium
+    volumes:
+      - /dev/shm:/dev/shm
+    depends_on:
+      - hub
+    environment:
+      HUB_HOST: hub
+    networks:
+      - hub-internal
+
+  hub:
+    container_name: selenium_hub
+    image: selenium/hub:3.14.0-gallium
+    ports:
+      - "${SELENIUM_HUB_PORT}:${SELENIUM_HUB_PORT}"
+    networks:
+      - spiderweb
+      - hub-internal
+
+networks: 
+  spiderweb:
+    driver: bridge
+  hub-internal:
+    driver: bridge
+  mongo-internal:
+    driver: bridge

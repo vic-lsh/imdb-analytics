@@ -5,7 +5,7 @@ services:
     container_name: extractor
     build:
       context: ./src/service-extractor
-      dockerfile: dockerfile
+      dockerfile: dockerfile.dev
     volumes:
       - ./src/service-extractor:/usr/src/app
     ports:
@@ -22,7 +22,7 @@ services:
     container_name: job_controller
     build:
       context: ./src/service-job-controller
-      dockerfile: dockerfile
+      dockerfile: dockerfile.dev
     volumes:
       - ./src/service-job-controller/:/usr/src/app
     ports:
@@ -36,7 +36,7 @@ services:
     container_name: db_api
     build:
       context: ./src/service-db
-      dockerfile: dockerfile
+      dockerfile: dockerfile.dev
     volumes: 
       - ./src/service-db:/usr/src/app
     ports:
@@ -59,7 +59,7 @@ services:
     container_name: web_app
     build:
       context: ./src/app-web
-      dockerfile: dockerfile
+      dockerfile: dockerfile.dev
     volumes:
       - ./src/app-web:/usr/src/app
     ports:
