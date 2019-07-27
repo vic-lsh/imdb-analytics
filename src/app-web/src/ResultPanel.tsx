@@ -1,7 +1,6 @@
 import React, { Component, useState } from 'react';
 import Axios from 'axios';
 import styled from 'styled-components';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { Line } from 'react-chartjs-2';
 import { StyledH1 } from './Dashboard';
 import { PlotColors } from './styles';
@@ -123,22 +122,30 @@ const RatingsDetail: React.FC<{ tvSeries: any }> = (props) => {
       <StyledH1>{props.tvSeries['name']}</StyledH1>
       <RatingsPlot tvSeries={props.tvSeries} plotColor={pickRandomColor(PlotColors)} />
       <StyledRatingsGridDiv>
-        <SeasonRatingsList seasonRatings={props.tvSeries.ratings} />
+        <SeasonRatingsList seasonRatings={props.tvSeries.ratings} initialRatingDisplayState={props.tvSeries.ratings.length < 4} />
       </StyledRatingsGridDiv>
     </div>
   )
 }
 
-const SeasonRatingsList: React.FC<{ seasonRatings: SeasonRatingsObj[] }> = (props) => {
+const SeasonRatingsList: React.FC<{
+  seasonRatings: SeasonRatingsObj[],
+  initialRatingDisplayState: boolean
+}> = (props) => {
   return (<React.Fragment>{
     props.seasonRatings.map((seasonRating) => {
-      return <SeasonRating seasonRating={seasonRating} key={seasonRating['_id']} />
-    })
+      return (
+        <SeasonRating
+          seasonRating={seasonRating}
+          initialRatingDisplayState={props.initialRatingDisplayState}
+          key={seasonRating['_id']}
+        />
+    )})
   }</React.Fragment>)
 }
 
-const SeasonRating: React.FC<{ seasonRating: SeasonRatingsObj }> = (props) => {
-  const [isRatingsDisplayed, setRatingsDisplayStatus] = useState(false);
+const SeasonRating: React.FC<{ seasonRating: SeasonRatingsObj, initialRatingDisplayState: boolean }> = (props) => {
+  const [isRatingsDisplayed, setRatingsDisplayStatus] = useState(props.initialRatingDisplayState);
   return (
     <div className="wrapper">
       <StyledSeasonRatingDiv isRatingsDisplayed={isRatingsDisplayed}>
