@@ -7,7 +7,7 @@ services:
       context: ./src/service-extractor
       dockerfile: dockerfile.prod
     ports:
-      - "${EXTRACTOR_PORT_LOCAL}:${EXTRACTOR_PORT}"
+      - "8989:8989"
     depends_on:
       - db-service
       - firefox
@@ -22,7 +22,7 @@ services:
       context: ./src/service-job-controller
       dockerfile: dockerfile.prod
     ports:
-      - "${JOB_CONTROLLER_PORT_LOCAL}:${JOB_CONTROLLER_PORT}"
+      - "3777:3777"
     depends_on:
       - extractor-service
     networks: 
@@ -32,9 +32,9 @@ services:
     container_name: db_api
     build:
       context: ./src/service-db
-      dockerfile: dockerfile.prod
+      dockerfile: dockerfile.dev
     ports:
-      - "${DB_API_PORT_LOCAL}:${DB_API_PORT}"
+      - "9000:9000"
     links:
       - mongo
     networks: 
@@ -45,7 +45,7 @@ services:
     container_name: mongo
     image: mongo
     ports:
-      - "${MONGO_PORT}:${MONGO_PORT}"
+      - "27017:27017"
     networks:
       - mongo-internal
       
@@ -54,10 +54,8 @@ services:
     build:
       context: ./src/app-web
       dockerfile: dockerfile.prod
-    volumes:
-      - ./src/app-web:/usr/src/app
     ports:
-      - "80:${WEB_APP_PORT}"
+      - "80:80"
     depends_on: 
       - db-service
     networks:
@@ -91,7 +89,7 @@ services:
     container_name: selenium_hub
     image: selenium/hub:3.14.0-gallium
     ports:
-      - "${SELENIUM_HUB_PORT}:${SELENIUM_HUB_PORT}"
+      - "4444:4444"
     networks:
       - spiderweb
       - hub-internal
