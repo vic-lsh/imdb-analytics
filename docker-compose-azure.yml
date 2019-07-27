@@ -1,0 +1,70 @@
+version: '3.7'
+
+services:
+  extractor-service:
+    image: vicleelsh/imdbapp-extractor-service
+    ports:
+      - "8989:8989"
+    networks: 
+      - spiderweb
+
+  job-controller-service:
+    image: vicleelsh/imdbapp-job-service
+    ports:
+      - "3777:3777"
+    networks: 
+      - spiderweb
+
+  db-service:
+    image: vicleelsh/imdbapp-db-service
+    ports:
+      - "9000:9000"
+    links:
+      - mongo
+    networks: 
+      - spiderweb
+      - mongo-internal
+
+  mongo:
+    image: mongo
+    ports:
+      - "27017:27017"
+    networks:
+      - mongo-internal
+      
+  web-app:
+    image: vicleelsh/imdbapp-web
+    ports:
+      - "80:80"
+    networks:
+      - spiderweb
+
+  firefox:
+    image: selenium/node-firefox:3.14.0-gallium
+    environment:
+      HUB_HOST: hub
+    networks:
+      - hub-internal
+
+  chrome:
+    image: selenium/node-chrome:3.14.0-gallium
+    environment:
+      HUB_HOST: hub
+    networks:
+      - hub-internal
+
+  hub:
+    image: selenium/hub:3.14.0-gallium
+    ports:
+      - "4444:4444"
+    networks:
+      - spiderweb
+      - hub-internal
+
+networks: 
+  spiderweb:
+    driver: bridge
+  hub-internal:
+    driver: bridge
+  mongo-internal:
+    driver: bridge
