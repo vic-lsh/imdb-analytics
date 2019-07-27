@@ -1,10 +1,11 @@
-import React, { Component } from 'react';
+import React, { Component, useState } from 'react';
 import Axios from 'axios';
 import styled from 'styled-components';
 import { Line } from 'react-chartjs-2';
 import { StyledH1 } from './Dashboard';
 import { PlotColors } from './styles';
 import { DB_SERVICE_BASE_URL } from './api';
+import './ResultPanel.css';
 
 type ResultPanelProps = {
   seriesName: string | undefined
@@ -136,20 +137,33 @@ const SeasonRatingsList: React.FC<{ seasonRatings: SeasonRatingsObj[] }> = (prop
 }
 
 const SeasonRating: React.FC<{ seasonRating: SeasonRatingsObj }> = (props) => {
+  const [isRatingsDisplayed, setRatingsDisplayStatus] = useState(false);
   return (
-    <StyledSeasonRatingDiv>
-      <StyledSeasonRatingHeaderH2>Season {props.seasonRating['_id']}</StyledSeasonRatingHeaderH2>
-      {/* <EpisodeRatingsList ratingsInSeason={props.seasonRating.ratings} /> */}
-    </StyledSeasonRatingDiv>
+    <div>
+      <StyledSeasonRatingDiv>
+        <button className="rating-season-btn"
+          onClick={() => setRatingsDisplayStatus(isRatingsDisplayed ? false : true)}>
+          Season {props.seasonRating['_id']}
+        </button>
+        <EpisodeRatingsList ratingsInSeason={props.seasonRating.ratings} isDisplayed={isRatingsDisplayed} />
+      </StyledSeasonRatingDiv>
+    </div>
   );
 }
 
-const EpisodeRatingsList: React.FC<{ ratingsInSeason: EpisodeRatingObj[] }> = (props) => {
-  return (<StyledSeasonRatingsListDiv>{
-    props.ratingsInSeason.map((epRating) => {
-      return <EpisodeRating episodeRating={epRating} key={epRating['_id']} />
-    })
-  }</StyledSeasonRatingsListDiv>)
+const EpisodeRatingsList: React.FC<{
+  ratingsInSeason: EpisodeRatingObj[],
+  isDisplayed: boolean,
+}> = (props) => {
+  if (props.isDisplayed) {
+    return (<StyledSeasonRatingsListDiv>{
+      props.ratingsInSeason.map((epRating) => {
+        return <EpisodeRating episodeRating={epRating} key={epRating['_id']} />
+      })
+    }</StyledSeasonRatingsListDiv>)
+  } else {
+    return (<React.Fragment></React.Fragment>)
+  }
 }
 
 const EpisodeRating: React.FC<{ episodeRating: EpisodeRatingObj }> = (props) => {
@@ -345,10 +359,6 @@ const StyledSeasonRatingDiv = styled.div`
     transition: 0.2s;
     box-shadow: 0px 4px 6px #e3e3e3;
   }
-`;
-
-const StyledSeasonRatingHeaderH2 = styled.h2`
-  margin: 0.6rem 0.7rem;
 `;
 
 const StyledSeasonRatingsListDiv = styled.div`

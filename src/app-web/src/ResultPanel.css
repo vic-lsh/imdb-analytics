@@ -1,0 +1,9 @@
+.rating-season-btn {
+    border: 0;
+    background: none;
+    font-weight: bold;
+    font-size: 1.65rem;
+    padding: 0.6rem 0.7rem;
+    width: 100%;
+    text-align: left;
+}
