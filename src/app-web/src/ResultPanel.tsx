@@ -308,8 +308,8 @@ const RatingsNotFound: React.FC<{ seriesName: string }> = (props) => {
     <div>
       <StyledH1>Sorry, we're unable to find '{seriesNameCapitalized}'</StyledH1>
       <StyledHelperMsg>
-        This is most likely because our background worker has not processed this series yet.
-        Please try again sometime soon =)
+        This is most likely because our background worker has not gotten to the series yet.
+        We have prioritized processing '{seriesNameCapitalized}' for you. Please check back in a few minutes!
       </StyledHelperMsg>
     </div>
   )
@@ -412,6 +412,6 @@ const StyledRatingsPlotDiv = styled.div`
 `;
 
 const StyledHelperMsg = styled.p`
-  padding: 0 1rem;
   font-size: 1.4rem;
+  line-height: 2rem;
 `;
