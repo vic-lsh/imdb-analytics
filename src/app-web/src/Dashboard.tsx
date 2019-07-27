@@ -37,9 +37,9 @@ export default class Dashboard extends Component<DashboardProps, DashboardState>
         <StyledQueryPanelComponentDiv className="home-component query-panel">
           <QueryPanel setQueryInParent={this.handleQuerySubmission} />
         </StyledQueryPanelComponentDiv>
-        <StyledHomeComponentDiv className="home-component result-panel">
+        <StyledResultPanelComponentDiv className="home-component result-panel">
           <ResultPanel seriesName={this.state.query} />
-        </StyledHomeComponentDiv>
+        </StyledResultPanelComponentDiv>
       </StyledDashboardDiv>
     )
   }
@@ -48,8 +48,6 @@ export default class Dashboard extends Component<DashboardProps, DashboardState>
 const StyledDashboardDiv = styled.div`
   text-align: left;
   height: 100vh;
-  display: grid;
-  grid-template-columns: 30% 70%;
 `;
 
 const StyledHomeComponentDiv = styled.div`
@@ -58,6 +56,15 @@ const StyledHomeComponentDiv = styled.div`
 
 const StyledQueryPanelComponentDiv = styled(StyledHomeComponentDiv)`
   background: #d1d1d1;
+  width: 30vw;
+  height: 100vh;
+  position: fixed;
+`;
+
+const StyledResultPanelComponentDiv = styled(StyledHomeComponentDiv)`
+  width: 70vw;
+  height: 100vh;
+  float: right;
 `;
 
 export const StyledH1 = styled.h1`
