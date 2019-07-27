@@ -139,8 +139,8 @@ const SeasonRatingsList: React.FC<{ seasonRatings: SeasonRatingsObj[] }> = (prop
 const SeasonRating: React.FC<{ seasonRating: SeasonRatingsObj }> = (props) => {
   const [isRatingsDisplayed, setRatingsDisplayStatus] = useState(false);
   return (
-    <div>
-      <StyledSeasonRatingDiv>
+    <div className="wrapper">
+      <StyledSeasonRatingDiv isRatingsDisplayed={isRatingsDisplayed}>
         <button className="rating-season-btn"
           onClick={() => setRatingsDisplayStatus(isRatingsDisplayed ? false : true)}>
           Season {props.seasonRating['_id']}
@@ -358,11 +358,13 @@ const StyledSeasonRatingDiv = styled.div`
     border-color: #424242;
     transition: 0.2s;
     box-shadow: 0px 4px 6px #e3e3e3;
+    ${(props: { isRatingsDisplayed: boolean }) => !(props.isRatingsDisplayed) && `transform: scaleY(1.05);`}
   }
 `;
 
 const StyledSeasonRatingsListDiv = styled.div`
   margin: 0.6rem 0.6rem 0.6rem 1rem;
+  transition: 0.2s;
 `;
 
 const StyledRatingsGridDiv = styled.div`
