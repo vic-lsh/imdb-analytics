@@ -293,7 +293,9 @@ class IMDb_Extractor():
             consts.SEARCH_RESULT_FIRST_FULL_BOX_CSL
         )
         assert any(
-            ID in first_result_box.text for ID in consts.TV_SERIES_IDENTIFIERS)
+            ID in first_result_box.text for ID in consts.TV_SERIES_IDENTIFIERS), \
+                f"'{name}' does not exist on IMDb as a TV Series. " \
+                "The Extractor currently only supports extracting TV Series. "
         first_result = self.__driver.find_element_by_xpath(
             consts.SEARCH_RESULT_FIRST_URL_XPATH
         )
