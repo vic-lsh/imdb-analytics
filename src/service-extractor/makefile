@@ -4,8 +4,9 @@ init:
 run:
 	python3 src/run.py
 
-rungw:
-	python3 src/gateway.py
+docker-deploy:
+	docker build -f dockerfile.prod -t vicleelsh/imdbapp-extractor-service .; \
+	docker push vicleelsh/imdbapp-extractor-service
 
 test:
 	py.test tests

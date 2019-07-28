@@ -10,6 +10,10 @@ build:
 	@echo "=============== Build $(IDENTIFIER) ================="
 	go build -o bin/exec .
 
+docker-deploy:
+	docker build -f dockerfile.prod -t vicleelsh/imdbapp-job-service .;	\
+	docker push vicleelsh/imdbapp-job-service
+
 test:
 	go test ./...
 
