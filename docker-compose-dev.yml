@@ -4,10 +4,10 @@ services:
   extractor-service:
     container_name: extractor
     build:
-      context: ./src/service-extractor
+      context: ./src/extractor-service
       dockerfile: dockerfile.dev
     volumes:
-      - ./src/service-extractor:/usr/src/app
+      - ./src/extractor-service:/usr/src/app
     ports:
       - "${EXTRACTOR_PORT_LOCAL}:${EXTRACTOR_PORT}"
     depends_on:
@@ -21,10 +21,10 @@ services:
   job-controller-service:
     container_name: job_controller
     build:
-      context: ./src/service-job-controller
+      context: ./src/job-service
       dockerfile: dockerfile.dev
     volumes:
-      - ./src/service-job-controller/:/usr/src/app
+      - ./src/job-service:/usr/src/app
     ports:
       - "${JOB_CONTROLLER_PORT_LOCAL}:${JOB_CONTROLLER_PORT}"
     depends_on:
@@ -35,10 +35,10 @@ services:
   db-service:
     container_name: db_api
     build:
-      context: ./src/service-db
+      context: ./src/db-service
       dockerfile: dockerfile.dev
     volumes: 
-      - ./src/service-db:/usr/src/app
+      - ./src/db-service:/usr/src/app
     ports:
       - "${DB_API_PORT_LOCAL}:${DB_API_PORT}"
     links:
@@ -58,10 +58,10 @@ services:
   web-app:
     container_name: web_app
     build:
-      context: ./src/app-web
+      context: ./src/web-app
       dockerfile: dockerfile.dev
     volumes:
-      - ./src/app-web:/usr/src/app
+      - ./src/web-app:/usr/src/app
     ports:
       - "${WEB_APP_PORT_LOCAL}:${WEB_APP_PORT}"
     depends_on: 

@@ -1,0 +1,11 @@
+matrix:
+  include:
+    - language: python
+      python: 3.7.3
+      before_install:
+        - cd src/service-extractor
+        - pip3 install virtualenv
+        - virtualenv nev
+        - 
+      script:
+        - py.test tests
