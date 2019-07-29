@@ -22,7 +22,7 @@ Deployment) best practices.
 I visit IMDb almost on a daily basis. I use it to find new movies, look up
 critic reviews for TV episodes, and check out fun trivias for TV shows that I
 watch. While I love the service for how comprehensive and relevant it is, I
-thought the site's UI could use some improvement. Hence this projec, an attempt
+thought the site's UI could use some improvement. Hence this project, an attempt
 to provide a better interface for dealing with IMDb's data.
 
 ## Architecture
@@ -35,10 +35,10 @@ each other using RPC or RESTful API.
 | Service | Written In         | API | Description                                                                       |
 | ------- | ------------------ | --- | --------------------------------------------------------------------------------- |
 | [Web App](./src/web-app) | Typescript (React) | N/A | The front-end of the application. Users use it to interact with various services. |
-| [DB Service](./src/db-service) | Python | REST | Provides an interface for interacting with MongoDb, where IMDb data is stored |
-| [Extractor Service](./src/extractor-service) | Python | RPC | Extracts queried information from IMDb |
+| [DB Service](./src/db-service) | Python | REST | Provides an interface for interacting with MongoDb, where IMDb data is stored. |
+| [Extractor Service](./src/extractor-service) | Python | RPC | Extracts queried information from IMDb. |
 | [Job Service](./src/job-service) | Go | RPC | Schedules data extraction jobs, controlls extraction frequency, etc. |
-| Recommendation Service | Python | TBD | _To be implemented_. Recommends IMDb entries based on search history (stored locally) |
+| Recommendation Service | Python | TBD | _To be implemented_. Recommends IMDb entries based on search history (stored locally). |
 | Prediction Service | Python | TBD | _To be implemented_. Predicts whether an unreleased movie / TV season would succeed commercially and/or critically. 
 | User Service | TBD | TBD | _Proposed, not confirmed_. Allows users to log in using SSO (Google, Facebook, etc.), or to create an account.|
 | Favorites Service | TBD | TBD | _Proposed, not confirmed._ Gives users the ability to save items into lists (like pinterest. |
@@ -83,9 +83,10 @@ make run        # starts up the environment, without loading sample data
 You should be able to access the web app at port 3001 (http://localhost:3001)
 now.
 
-Each service runs in a separate container. If you're interested in making
-REST-ful calls to a service (provided REST-ful APIs are available), use the
-following command to see the mappings between containers' and the host's ports:
+In a local environment, each service runs in a dedicated container. If you're 
+interested in making REST-ful calls to a service (provided REST-ful APIs are 
+available), use the following command to see the mappings between containers' 
+and the host's ports:
 
 ```
 docker container ls
