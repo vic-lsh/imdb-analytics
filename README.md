@@ -34,14 +34,14 @@ each other using RPC or RESTful API.
 
 | Service | Written In         | API | Description                                                                       |
 | ------- | ------------------ | --- | --------------------------------------------------------------------------------- |
-| [Web App](./src/web-app) | Typescript (React) | N/A | The front-end of the application. Users use it to interact with various services. |
-| [DB Service](./src/db-service) | Python | REST | Provides an interface for interacting with MongoDb, where IMDb data is stored. |
-| [Extractor Service](./src/extractor-service) | Python | RPC | Extracts queried information from IMDb. |
-| [Job Service](./src/job-service) | Go | RPC | Schedules data extraction jobs, controlls extraction frequency, etc. |
-| Recommendation Service | Python | TBD | _To be implemented_. Recommends IMDb entries based on search history (stored locally). |
-| Prediction Service | Python | TBD | _To be implemented_. Predicts whether an unreleased movie / TV season would succeed commercially and/or critically. 
-| User Service | TBD | TBD | _Proposed, not confirmed_. Allows users to log in using SSO (Google, Facebook, etc.), or to create an account.|
-| Favorites Service | TBD | TBD | _Proposed, not confirmed._ Gives users the ability to save items into lists (like pinterest. |
+| [Web app](./src/web-app) | Typescript (React) | N/A | The front-end of the application. Users use it to interact with various services. |
+| [Database service](./src/db-service) | Python | REST | Provides an interface for interacting with MongoDb, where IMDb data is stored. |
+| [Extractor service](./src/extractor-service) | Python | RPC | Extracts queried information from IMDb. |
+| [Job service](./src/job-service) | Go | RPC | Schedules data extraction jobs, controlls extraction frequency, etc. |
+| Recommendation service | Python | TBD | _To be implemented_. Recommends IMDb entries based on search history (stored locally). |
+| Prediction service | Python | TBD | _To be implemented_. Predicts whether an unreleased movie / TV season would succeed commercially and/or critically. 
+| User service | TBD | TBD | _Proposed, not confirmed_. Allows users to log in using SSO (Google, Facebook, etc.), or to create an account.|
+| Favorites service | TBD | TBD | _Proposed, not confirmed._ Gives users the ability to save items into lists (like pinterest. |
 
 ## Learning goals
 
@@ -84,10 +84,13 @@ You should be able to access the web app at port 3001 (http://localhost:3001)
 now.
 
 In a local environment, each service runs in a dedicated container. If you're 
-interested in making REST-ful calls to a service (provided REST-ful APIs are 
+interested in testing REST-ful calls to a service (provided REST-ful APIs are 
 available), use the following command to see the mappings between containers' 
 and the host's ports:
 
 ```
 docker container ls
 ```
+
+Use [docker](https://docs.docker.com/engine/reference/commandline/cli/) and 
+[docker-compose](https://docs.docker.com/compose/)'s documentation to learn more commands to play with the containers.
