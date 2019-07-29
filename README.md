@@ -8,8 +8,7 @@ based on your search history, and more.
 
 I use this project to explore Microservices architecture, the inner-workings of
 a recommendation engine, predictions through data mining, how a resilient
-internet scraper is built, and CI/CD (Continuous Integration / Continuous
-Deployment) best practices.
+internet scraper is built, and CI/CD best practices.
 
 ## Screenshots
 
@@ -93,4 +92,5 @@ docker container ls
 ```
 
 Use [docker](https://docs.docker.com/engine/reference/commandline/cli/) and 
-[docker-compose](https://docs.docker.com/compose/)'s documentation to learn more commands to play with the containers.
+[docker-compose](https://docs.docker.com/compose/)'s documentation to learn 
+more commands to play with the containers.
