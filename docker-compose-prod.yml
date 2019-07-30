@@ -16,8 +16,8 @@ services:
     networks: 
       - spiderweb
 
-  job-controller-service:
-    container_name: job_controller
+  job-service:
+    container_name: job_service
     build:
       context: ./src/service-job-controller
       dockerfile: dockerfile.prod
