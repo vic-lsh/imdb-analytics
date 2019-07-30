@@ -81,6 +81,10 @@ func main() {
 	wg.Add(1)
 	go func() {
 		go jobSvr.ProcessJobs()
+		go jobSvr.ProcessJobs()
+		go jobSvr.ProcessJobs()
+		go jobSvr.ProcessJobs()
+		go jobSvr.ProcessJobs()
 		server.Serve(lis)
 		wg.Done()
 	}()
