@@ -69,8 +69,13 @@ func (s *JobServer) GetJobStatus(ctx context.Context, req *pb.GetJobRequest) (*p
 
 // DeleteJob deletes a job if found; it returns true if a job is found and deleted, otherwise false
 func (s *JobServer) DeleteJob(ctx context.Context, req *pb.DeleteJobRequest) (*pb.DeleteJobResponse, error) {
-	_, ok := s.JobsMap[req.Id]
-	if ok {
+	_, foundInJobsMap := s.JobsMap[req.Id]
+	if foundInJobsMap {
+		// Implementation detail: JobsMap and JobsNameToIDMap are guaranteed to be up-to-date; PendingJobs is not. 
+		// Iterating through PendingJobs to find the Job to remove can become very expensive, even assuming we sort 
+		// the PendingJobs list (at the expense of memory usage). 
+		// Instead, it is much more performant to perform a quick legal check when popping from the Pendings list, since 
+		// looking up in the JobsMap is O(1). Only legal JobId can be allowed to further execution (See `popJob()`).
 		s.Mu.Lock()
 		defer s.Mu.Unlock()
 
@@ -82,7 +87,7 @@ func (s *JobServer) DeleteJob(ctx context.Context, req *pb.DeleteJobRequest) (*p
 			delete(s.JobsNameToIDMap, k)
 		}
 	}
-	return &pb.DeleteJobResponse{Successful: ok}, nil
+	return &pb.DeleteJobResponse{Successful: foundInJobsMap}, nil
 }
 
 func targetNameToMapKey(targetName string) string {
