@@ -60,29 +60,52 @@ message ExtractionResponse {
 
 service JobService {
     rpc CreateJob(CreateJobRequest) returns (CreateJobResponse) {}
+    // Returns the job if found; raises NotFound error if not found
     rpc GetJob(GetJobRequest) returns (Job) {}
-    rpc DeleteJob(DeleteJobRequest) returns (Empty) {}
+    // Returns the job status if found; raises NotFound error if not found
+    rpc GetJobStatus(GetJobRequest) returns (JobStatusQueryResponse) {}
+    // Returns True if deleted; False if JobNotFound or error during evaluation
+    rpc DeleteJob(DeleteJobRequest) returns (DeleteJobResponse) {}
 }
 
+// Prioritizes Job if set to high_priority
 message CreateJobRequest {
     string target_name = 1;
+    bool is_high_priority = 2;
 }
 
 message CreateJobResponse {
     bool successful = 1;
+    Job job = 2;
 }
 
 message DeleteJobRequest {
+    int64 id = 1;
+}
+
+message DeleteJobResponse {
     bool successful = 1;
 }
 
 message GetJobRequest {
-    string target_name = 1;
+    int64 id = 1;
+}
+
+message JobStatusQueryResponse {
+    Job.Status status = 1;
+    string status_msg = 2;
 }
 
 message Job {
     int64 id = 1;
     string target_name = 2;
+    enum Status {
+        NOT_PROCESSED = 0;
+        PROCESSING = 1;
+        COMPLETED_SUCCESS = 2;
+        COMPLETED_FAILURE = 3;
+    }
+    Status status = 3;
 }
 
 // ---------------------- Recommendation Servide ----------------------
