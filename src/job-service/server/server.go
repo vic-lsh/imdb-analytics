@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"log"
 	"math/rand"
+	"strings"
 	"sync"
 	"time"
 
@@ -16,24 +17,38 @@ import (
 
 // JobServer handles job-related API calls
 type JobServer struct {
-	JobsMap     map[int64]*pb.Job
-	PendingJobs []int64
-	Mu          *sync.Mutex
-	Ec          pb.ExtractorServiceClient
+	JobsMap         map[int64]*pb.Job
+	JobsNameToIDMap map[string]int64
+	PendingJobs     []int64
+	Mu              *sync.Mutex
+	Ec              pb.ExtractorServiceClient
 }
 
 // CreateJob stores a new Job instance in JobServer, and enqueues the new job to the pendings list
 func (s *JobServer) CreateJob(ctx context.Context, req *pb.CreateJobRequest) (*pb.CreateJobResponse, error) {
+	reqName := fmt.Sprint(strings.ToLower(req.TargetName))
+
+	if existingJID, ok := s.JobsNameToIDMap[reqName]; ok {
+		jobFound := s.JobsMap[existingJID]
+		log.Printf("Found Job '%d' with matching target name '%s': {%+v}\n", existingJID, jobFound.TargetName, jobFound)
+		return &pb.CreateJobResponse{Successful: false, Job: jobFound}, nil
+	}
+
 	jid := rand.Int63()
 	jobCreated := &pb.Job{Id: jid, TargetName: req.TargetName, Status: pb.Job_NOT_PROCESSED}
+
 	s.JobsMap[jid] = jobCreated
+	s.JobsNameToIDMap[reqName] = jid
 	s.PendingJobs = append(s.PendingJobs, jid)
+
+	log.Printf("Job '%d' created: {%+v}\n", jid, jobCreated)
 	return &pb.CreateJobResponse{Successful: true, Job: jobCreated}, nil
 }
 
 // GetJob returns a Job instance if found, or an NotFound error if not found
 func (s *JobServer) GetJob(ctx context.Context, req *pb.GetJobRequest) (*pb.Job, error) {
 	if job, ok := s.JobsMap[req.Id]; ok {
+		log.Printf("Job '%d' found, returning job {%+v}\n", job.Id, job)
 		return job, nil
 	}
 	return nil, status.Errorf(codes.NotFound, fmt.Sprintf("Job with ID '%d' not found.", req.Id))
@@ -59,16 +74,17 @@ func (s *JobServer) DeleteJob(ctx context.Context, req *pb.DeleteJobRequest) (*p
 	return &pb.DeleteJobResponse{Successful: ok}, nil
 }
 
-// processJobs pops Jobs from the waiting queue, calls ExtractorService to perform job,
+// ProcessJobs pops Jobs from the waiting queue, calls ExtractorService to perform job,
 // and updates the jobs' status based on whether the extraction ended successfully
-func (s *JobServer) processJobs() {
+func (s *JobServer) ProcessJobs() {
 	for {
-		if len(s.PendingJobs) < 0 {
+		if len(s.PendingJobs) <= 0 {
 			time.Sleep(10 * time.Second)
 			continue
 		}
 		if jid, ok := s.popJob(); ok {
 			job := s.JobsMap[jid]
+			log.Printf("Going to process job '%d': {%+v}\n", jid, job)
 			_, err := s.Ec.InitiateExtraction(context.Background(),
 				&pb.ExtractionRequest{ItemName: job.TargetName})
 			if err != nil {
@@ -83,6 +99,7 @@ func (s *JobServer) processJobs() {
 }
 
 func (s *JobServer) popJob() (int64, bool) {
+	log.Printf("len of pending jobs: %d", len(s.PendingJobs))
 	if len(s.PendingJobs) > 0 {
 		s.Mu.Lock()
 		defer s.Mu.Unlock()

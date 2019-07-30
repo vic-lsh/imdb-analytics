@@ -37,22 +37,26 @@ func makeExtractorClient(API string) (pb.ExtractorServiceClient, *grpc.ClientCon
 	return extractorClient, conn, nil
 }
 
-func makeJobServiceServer(port string, ec pb.ExtractorServiceClient) (*grpc.Server, net.Listener, error) {
+func makeJobServiceServer(port string, ec pb.ExtractorServiceClient) (*grpc.Server, net.Listener, *server.JobServer, error) {
 	lis, err := net.Listen("tcp", fmt.Sprintf(":%s", port))
 	if err != nil {
-		return nil, nil, err
+		return nil, nil, nil, err
 	}
 	fmt.Printf("Initiating JobService server, listening at port %s\n", port)
 
-	grpcServer := grpc.NewServer()
-	pb.RegisterJobServiceServer(grpcServer, &server.JobServer{
-		JobsMap:     make(map[int64]*pb.Job),
-		PendingJobs: make([]int64, 10),
-		Mu:          &sync.Mutex{},
-		Ec:          ec,
-	})
+	var pendingJobs []int64
+	jobSvr := &server.JobServer{
+		JobsMap:         make(map[int64]*pb.Job),
+		JobsNameToIDMap: make(map[string]int64),
+		PendingJobs:     pendingJobs,
+		Mu:              &sync.Mutex{},
+		Ec:              ec,
+	}
 
-	return grpcServer, lis, nil
+	grpcServer := grpc.NewServer()
+	pb.RegisterJobServiceServer(grpcServer, jobSvr)
+
+	return grpcServer, lis, jobSvr, nil
 }
 
 func main() {
@@ -68,9 +72,17 @@ func main() {
 	}
 	defer conn.Close()
 
-	server, lis, err := makeJobServiceServer(port, extractorClient)
+	server, lis, jobSvr, err := makeJobServiceServer(port, extractorClient)
 	if err != nil {
 		log.Fatalf("%s\n", err)
 	}
-	server.Serve(lis)
+
+	var wg sync.WaitGroup
+	wg.Add(1)
+	go func() {
+		go jobSvr.ProcessJobs()
+		server.Serve(lis)
+		wg.Done()
+	}()
+	wg.Wait()
 }
