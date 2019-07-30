@@ -21,7 +21,7 @@ internet scraper is built, and CI/CD best practices.
 I visit IMDb almost on a daily basis. I use it to find new movies, look up
 critic reviews for TV episodes, and check out fun trivias for TV shows that I
 watch. While I love the service for how comprehensive and relevant it is, I
-thought the site's UI could use some improvement. Hence this project, an attempt
+wanted to do something to improve the site's UI. Hence this project, an attempt 
 to provide a better interface for dealing with IMDb's data.
 
 ## Architecture
