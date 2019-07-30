@@ -4,11 +4,16 @@ import logging.config
 import threading
 import requests
 
+import grpc
+
 from flask import jsonify, request
 from flask_restful import Resource, reqparse
 
 from common import settings, utils
 from db import Database
+
+import imdb_pb2
+import imdb_pb2_grpc
 
 
 try:
@@ -45,7 +50,14 @@ class TVSeries(Resource):
 
         if resp is None:
             logger.error(f"`{identifier}` could not be found in the database.")
-            self._start_bg_extracton_thread(series_name=identifier)
+            with grpc.insecure_channel('job-service:3777') as channel:
+                logger.info(("Going to submit a job creation request "
+                             f"for {identifier}"))
+                job_service_stub = imdb_pb2_grpc.JobServiceStub(channel)
+                resp = job_service_stub.CreateJob(
+                    imdb_pb2.CreateJobRequest(target_name=identifier)
+                )
+                logger.info(f"Job creation response: {resp}")
             return {"message": f"TVSeries '{identifier}' not found"}, 404
         else:
             logger.info((f"{identifier} found in database; "
@@ -77,11 +89,11 @@ class TVSeries(Resource):
         be found in the database.
         """
         t = threading.Thread(target=schedule_extraction_job,
-                                args=(series_name,), daemon=True)
+                             args=(series_name,), daemon=True)
         t.start()
         if t.ident is None:
             logger.error(("Unable to start a background thread for ",
-                            "extraction."))
+                          "extraction."))
         else:
             logger.info(("Start a background thread for extraction "
-                        f"job scheduling, TID={t.ident}"))
+                         f"job scheduling, TID={t.ident}"))
