@@ -8,7 +8,7 @@ services:
     networks: 
       - spiderweb
 
-  job-controller-service:
+  job-service:
     image: vicleelsh/imdbapp-job-service
     ports:
       - "3777:3777"
