@@ -24,14 +24,16 @@ type JobServer struct {
 	Ec              pb.ExtractorServiceClient
 }
 
-// CreateJob stores a new Job instance in JobServer, and enqueues the new job to the pendings list
+// CreateJob stores a new Job instance in JobServer, and enqueues the new job to the pendings list.
+// If a Job with the same TargetName is found, that job is returned instead (no job will be created).
+// Client can query that Job using its JobID, or delete this Job so that a new Job can be created.
 func (s *JobServer) CreateJob(ctx context.Context, req *pb.CreateJobRequest) (*pb.CreateJobResponse, error) {
 	reqName := fmt.Sprint(strings.ToLower(req.TargetName))
 
 	if existingJID, ok := s.JobsNameToIDMap[reqName]; ok {
 		jobFound := s.JobsMap[existingJID]
 		log.Printf("Found Job '%d' with matching target name '%s': {%+v}\n", existingJID, jobFound.TargetName, jobFound)
-		return &pb.CreateJobResponse{Successful: false, Job: jobFound}, nil
+		return &pb.CreateJobResponse{Created: false, Job: jobFound}, nil
 	}
 
 	jid := rand.Int63()
@@ -42,7 +44,7 @@ func (s *JobServer) CreateJob(ctx context.Context, req *pb.CreateJobRequest) (*p
 	s.PendingJobs = append(s.PendingJobs, jid)
 
 	log.Printf("Job '%d' created: {%+v}\n", jid, jobCreated)
-	return &pb.CreateJobResponse{Successful: true, Job: jobCreated}, nil
+	return &pb.CreateJobResponse{Created: true, Job: jobCreated}, nil
 }
 
 // GetJob returns a Job instance if found, or an NotFound error if not found
@@ -69,9 +71,22 @@ func (s *JobServer) GetJobStatus(ctx context.Context, req *pb.GetJobRequest) (*p
 func (s *JobServer) DeleteJob(ctx context.Context, req *pb.DeleteJobRequest) (*pb.DeleteJobResponse, error) {
 	_, ok := s.JobsMap[req.Id]
 	if ok {
+		s.Mu.Lock()
+		defer s.Mu.Unlock()
+
+		jobToBeDeleted := s.JobsMap[req.Id]
 		delete(s.JobsMap, req.Id)
+
+		k := targetNameToMapKey(jobToBeDeleted.TargetName)
+		if _, ok := s.JobsNameToIDMap[k]; ok {
+			delete(s.JobsNameToIDMap, k)
+		}
 	}
 	return &pb.DeleteJobResponse{Successful: ok}, nil
+}
+
+func targetNameToMapKey(targetName string) string {
+	return fmt.Sprint(strings.ToLower(targetName))
 }
 
 // ProcessJobs pops Jobs from the waiting queue, calls ExtractorService to perform job,
@@ -100,14 +115,23 @@ func (s *JobServer) ProcessJobs() {
 
 func (s *JobServer) popJob() (int64, bool) {
 	log.Printf("len of pending jobs: %d", len(s.PendingJobs))
-	if len(s.PendingJobs) > 0 {
-		s.Mu.Lock()
-		defer s.Mu.Unlock()
-		ret := s.PendingJobs[0]
-		s.PendingJobs = s.PendingJobs[1:]
-		return ret, true
+	s.Mu.Lock()
+	defer s.Mu.Unlock()
+	for {
+		if len(s.PendingJobs) > 0 {
+			ret := s.PendingJobs[0]
+			s.PendingJobs = s.PendingJobs[1:]
+			// It is possible a JobID exists in the PendingList, but not in the JobsMap.
+			// When performing Job deletion, the PendingList is not updated to remove Jobs
+			// that no longer exist. The function continues to find a pending JobID that
+			// exists in the JobsMap, or until there is no pending jobs left. 
+			if _, ok := s.JobsMap[ret]; !ok {
+				continue
+			}
+			return ret, true
+		}
+		return -1, false
 	}
-	return -1, false
 }
 
 func mapJobStatusToMsg(status pb.Job_Status) string {
