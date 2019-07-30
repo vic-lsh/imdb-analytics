@@ -74,8 +74,11 @@ message CreateJobRequest {
     bool is_high_priority = 2;
 }
 
+// Response from CreateJob(). `created` indicates whether a job has been created; 
+// if a new job isn't created and a job instance is returned, it indicates that
+// a Job with the same TargetName is already scheduled.
 message CreateJobResponse {
-    bool successful = 1;
+    bool created = 1;
     Job job = 2;
 }
 
