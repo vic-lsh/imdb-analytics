@@ -55,6 +55,7 @@ class ExtractionService(imdb_pb2_grpc.ExtractorServiceServicer):
 
 
 def serve():
+    """Serve the `ExtractionService` client on the RPC server. """
     PORT = ":8989"
     server = grpc.server(futures.ThreadPoolExecutor(max_workers=10))
 
