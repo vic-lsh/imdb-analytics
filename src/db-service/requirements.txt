@@ -15,7 +15,7 @@ grpcio-tools==1.22.0
 idna==2.8
 importlib-metadata==0.18
 itsdangerous==1.1.0
-Jinja2==2.10.1
+Jinja2==2.11.3
 kiwisolver==1.1.0
 lxml==4.3.4
 MarkupSafe==1.1.1
