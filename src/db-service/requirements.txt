@@ -42,7 +42,7 @@ rope==0.14.0
 selenium==3.141.0
 six==1.12.0
 soupsieve==1.9.2
-urllib3==1.25.3
+urllib3==1.25.8
 virtualenv==16.6.1
 wcwidth==0.1.7
 Werkzeug==0.15.4
