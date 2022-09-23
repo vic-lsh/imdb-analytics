@@ -13,7 +13,7 @@ kiwisolver==1.1.0
 MarkupSafe==1.1.1
 mongoengine==0.17.0
 numpy==1.16.4
-protobuf==3.8.0
+protobuf==3.18.3
 pycodestyle==2.5.0
 pymongo==3.8.0
 pypaca==0.0.2
